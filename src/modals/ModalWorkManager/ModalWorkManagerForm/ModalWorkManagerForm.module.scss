@@ -1,0 +1,33 @@
+@import "../../../assets/styles/helpers";
+
+.form {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 100%;
+
+    &__header {
+        display: flex;
+        justify-content: center;
+        margin: 20px 0 20px;
+    }
+
+    &__content {
+        padding-top: 5px;
+        height: 280px;
+        margin-right: -20px;
+        padding-right: 10px;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 30px;
+    }
+
+    &__footer {
+        margin-top: auto;
+    }
+}
+
+.form_control {
+    margin-bottom: 14px !important;
+}

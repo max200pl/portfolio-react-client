@@ -1,0 +1,17 @@
+FROM node as build
+
+WORKDIR /app
+
+COPY package.json .
+
+RUN npm install
+
+COPY . .
+
+RUN npm run build
+
+## Stage 2 - multi-stage build
+
+EXPOSE 3000
+
+CMD ["npm", "start"]
