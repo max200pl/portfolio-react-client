@@ -1,0 +1,26 @@
+@import "../../styles/helpers";
+
+.button {
+    position: absolute;
+    z-index: 1;
+    top: 20px;
+    right: 20px;
+
+    width: 24px;
+    height: 29px;
+
+    border: 0;
+    cursor: pointer;
+    background: none;
+
+    transition: transform 0.2s linear;
+
+    &:hover {
+        transform: translateY(-3px);
+    }
+
+    @include xs-lg {
+        top: 20px;
+        right: 20px;
+    }
+}
