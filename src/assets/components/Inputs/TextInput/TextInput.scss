@@ -8,7 +8,6 @@
         width: 100%;
         height: 40px;
         padding: 0 15px;
-        border-radius: 20px;
         border: 1px solid transparent;
         font-size: 14px;
         line-height: 19px;
@@ -31,7 +30,6 @@
             bottom: 0;
             left: 1px;
             opacity: 0;
-            border-radius: 20px;
             z-index: -1;
             transition: opacity linear 0.2s;
             width: 100%;
