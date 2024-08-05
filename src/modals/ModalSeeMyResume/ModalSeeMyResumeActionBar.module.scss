@@ -8,7 +8,6 @@
     top: 10px;
     display: flex;
     justify-content: center;
-    width: 80%;
     padding-bottom: 20px;
 
     margin: 0 auto;
@@ -21,6 +20,7 @@
         flex-basis: 20%;
         min-width: 170px;
         padding: 5px;
+        max-width: 200px;
         transition:
             background-color 0.2s linear,
             color 0.2s linear,

@@ -12,7 +12,6 @@ import ModalSeeMyResumeActionBar from "./ModalSeeMyResumeActionBar";
 
 import ModalHireMe from "../ModalHireMe/ModalHireMe";
 import Modal from "../../assets/components/Modal/Modal";
-
 const nameFile = "Maksym_Poskannyi_Frontend_Developer_Resume";
 
 const ModalSeeMyResume = ({ isOpen, handleClose }) => {
@@ -63,7 +62,11 @@ const ModalSeeMyResume = ({ isOpen, handleClose }) => {
                     filename: nameFile,
                     image: { type: "jpeg", quality: 1 },
                     html2canvas: { scale: 3 },
-                    jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
+                    jsPDF: {
+                        unit: "in",
+                        format: "letter",
+                        orientation: "portrait",
+                    },
                 });
                 exporter.getPdf(true);
             }
@@ -77,14 +80,12 @@ const ModalSeeMyResume = ({ isOpen, handleClose }) => {
     return (
         <div className={s.modal__dialog} onClick={(e) => e.stopPropagation()}>
             <div className={s.modal__content}>
-                <button className={s.modal__close} onClick={handleClose} type="button">
-                    <img className={s.modal__close_image} src={exitImg} alt="Close" />
-                </button>
                 <ModalSeeMyResumeActionBar
                     isPrinting={isPrinting}
                     handlePrint={() => handlePrint()}
                     handleSavePDF={() => handleSavePDF()}
                     openHireMeModal={() => setIsOpenHireMeModal(true)}
+                    handleClose={handleClose}
                 />
                 <Resume ref={componentRef} isPrinting={isPrinting} />
 
@@ -93,7 +94,7 @@ const ModalSeeMyResume = ({ isOpen, handleClose }) => {
                     isOpen={isOpenHireMeModal}
                 >
                     <ModalHireMe
-                        handleClose={() => setIsOpenHireMeModal(false)}
+                        onClose={() => setIsOpenHireMeModal(false)}
                         isOpen={isOpenHireMeModal}
                     />
                 </Modal>
