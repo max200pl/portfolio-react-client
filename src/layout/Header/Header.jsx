@@ -6,6 +6,8 @@ import AboutImg from "../../assets/images/header/about.svg";
 import ContactImg from "../../assets/images/header/contact.svg";
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../../context/user-context";
+import Modal from "../../assets/components/Modal/Modal";
+import ModalHireMe from "../../modals/ModalHireMe/ModalHireMe";
 
 const dataNavLink = (isAuth, logOutUserHandler) => [
     {
@@ -31,78 +33,106 @@ const dataNavLink = (isAuth, logOutUserHandler) => [
         to: isAuth ? "/" : "/auth/login",
         alt: "authorization",
         iconUrl: AboutImg,
-    }
-]
+    },
+];
 
 const Header = (props) => {
     const userCtx = useContext(UserContext);
     // console.log(userCtx.isAuth, "userCtx.isAuth", userCtx.user, "userCtx.user")
     const [user, setUser] = useState();
     const [isAuth, setIsAuth] = useState();
+    const [isOpenHireMeModal, setIsOpenHireMeModal] = useState(false);
 
     useEffect(() => {
         setUser(userCtx.user);
         setIsAuth(userCtx.isAuth);
-    }, [
-        userCtx.isAuth,
-        userCtx.user,
-    ])
-
+    }, [userCtx.isAuth, userCtx.user]);
 
     return (
         <div className="container">
-            {user &&
+            {user && (
                 <div className={s.auth_info}>
-                    <img src={user.avatarUrl} alt="avatar" className={s.auth_info__avatar} />
+                    <img
+                        src={user.avatarUrl}
+                        alt="avatar"
+                        className={s.auth_info__avatar}
+                    />
                     <div className={s.auth_info__data}>
                         <span>You: </span>
-                        {user.name ?
+                        {user.name ? (
                             <span>{user.name}</span>
-                            : <>
+                        ) : (
+                            <>
                                 <span>{user.firstName} </span>
                                 <span>{user.lastName}</span>
                             </>
-                        }
+                        )}
                     </div>
                 </div>
-            }
+            )}
 
             <header className={s.header}>
                 <div className={s.container}>
                     <nav className={s.nav} id="nav">
-                        {dataNavLink(isAuth, userCtx.logOutUser).map((data, id) => {
-                            return (
-                                <NavLink key={id}
-                                    className={({ isActive }) => isActive ? s.nav__link_active : s.nav__link}
-                                    to={data.to}
-                                    target={data.target}
-                                    rel={data.rel}
-                                    onClick={() => {
-                                        data.name === "LogOut" &&
-                                            userCtx.logOutUser()
-                                    }}
-                                >
-                                    <img className={s.nav__img} src={data.iconUrl} alt={data.alt}></img>
-                                    <span>{data.name}</span>
-                                </NavLink>
-                            )
-                        })
-                        }
+                        {dataNavLink(isAuth, userCtx.logOutUser).map(
+                            (data, id) => {
+                                return (
+                                    <NavLink
+                                        key={id}
+                                        className={({ isActive }) =>
+                                            isActive
+                                                ? s.nav__link_active
+                                                : s.nav__link
+                                        }
+                                        to={data.to}
+                                        target={data.target}
+                                        rel={data.rel}
+                                        onClick={() => {
+                                            data.name === "LogOut" &&
+                                                userCtx.logOutUser();
+                                        }}
+                                    >
+                                        <img
+                                            className={s.nav__img}
+                                            src={data.iconUrl}
+                                            alt={data.alt}
+                                        ></img>
+                                        <span>{data.name}</span>
+                                    </NavLink>
+                                );
+                            }
+                        )}
 
                         {/*  <a className={s.nav__link} href="https://github.com/max200pl" target="_blank" rel="noreferrer">
                             <img className={s.nav__img} src={GithubImg} alt="link github" />
                             <span>My github</span>
                         </a> */}
-                        <button className={s.nav__link + " " + s.nav__link_btn} >
-                            <img className={s.nav__img} src={ContactImg} alt="contact me"></img>
+                        <button
+                            onClick={() => setIsOpenHireMeModal(true)}
+                            className={s.nav__link + " " + s.nav__link_btn}
+                        >
+                            <img
+                                className={s.nav__img}
+                                src={ContactImg}
+                                alt="contact me"
+                            ></img>
                             <span>Contact me</span>
                         </button>
                     </nav>
                 </div>
-            </header >
-        </div >
-    )
-}
+            </header>
 
+            <Modal
+                handleClose={() => setIsOpenHireMeModal(false)}
+                isOpen={isOpenHireMeModal}
+            >
+                <ModalHireMe
+                    onClose={() => setIsOpenHireMeModal(false)}
+                    isOpen={isOpenHireMeModal}
+                />
+            </Modal>
+        </div>
+    );
+};
 
 export default Header;
