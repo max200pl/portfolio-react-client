@@ -1,4 +1,4 @@
-const baseURL = "https://portfolio-server-894y.onrender.com";
+const baseURL = "https://portfolio-server-little-lake-1018.fly.dev";
 
 export const AUTH_API_BASE_URL = `${baseURL}/api/auth`;
 export const WORKS_API_BASE_URL = `${baseURL}/api/works`;
