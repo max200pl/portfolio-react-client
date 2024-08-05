@@ -4,7 +4,6 @@
     position: relative;
     margin: 15px;
     box-shadow: 0 0 4px $color-white;
-    border-radius: 10px;
     transition: box-shadow 0.2s linear;
 
     cursor: pointer;
@@ -33,7 +32,6 @@
         }
 
         padding: 0 20px 10px;
-        border-radius: 10px;
         box-shadow: 0 0 25px $color-white;
         border: 1px solid $color-white;
         border-width: 1px 1px 0 1px;
