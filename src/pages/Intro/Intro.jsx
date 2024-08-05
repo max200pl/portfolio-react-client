@@ -93,7 +93,7 @@ const Intro = () => {
 
                 <Works />
 
-                <div className={s.intro__footer}>
+                {/* <div className={s.intro__footer}>
                     <NavLink className={s.next_button} to="/portfolio">
                         <img
                             className={s.next_button__icon}
@@ -101,7 +101,7 @@ const Intro = () => {
                             alt="arrow button"
                         />
                     </NavLink>
-                </div>
+                </div> */}
             </div>
 
             <Modal
