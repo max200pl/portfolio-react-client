@@ -1,9 +1,6 @@
 import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 
-
-
-
 import s from "./Intro.module.scss";
 
 import Works from "./Works/Works";
@@ -21,35 +18,45 @@ import Modal from "../../assets/components/Modal/Modal";
 const dataSocialLinks = [
     {
         icon_link: socialLink1,
-        social_link: "https://www.instagram.com/maksym.poskannyi/?hl=ru"
+        social_link: "https://www.instagram.com/maksym.poskannyi/?hl=ru",
     },
     {
         icon_link: socialLink2,
-        social_link: "https://www.linkedin.com/in/maksym-poskannyi-114b08155/"
+        social_link: "https://www.linkedin.com/in/maksym-poskannyi-114b08155/",
     },
     {
         icon_link: socialLink3,
-        social_link: "https://www.facebook.com/Maksym.Poskannyi"
+        social_link: "https://www.facebook.com/Maksym.Poskannyi",
     },
     {
         icon_link: socialLink4,
-        social_link: "viber://chat?number=+380508669945"
+        social_link: "viber://chat?number=+380508669945",
     },
     {
         icon_link: socialLink5,
-        social_link: "https://t.me/max200pl"
+        social_link: "https://t.me/max200pl",
     },
-]
+];
 
 const SocialLink = (props) => (
-    <a className={s.social__link} rel="noreferrer" href={props.social_link} target="_blank" >
+    <a
+        className={s.social__link}
+        rel="noreferrer"
+        href={props.social_link}
+        target="_blank"
+    >
         <img src={props.icon_link} alt="link instagram" />
     </a>
-)
+);
 
-const SocialLinks = (props) => props.dataSocialLinks.map((link, id) =>
-    <SocialLink key={id} icon_link={link.icon_link} social_link={link.social_link} />
-)
+const SocialLinks = (props) =>
+    props.dataSocialLinks.map((link, id) => (
+        <SocialLink
+            key={id}
+            icon_link={link.icon_link}
+            social_link={link.social_link}
+        />
+    ));
 
 const Intro = () => {
     const [isOpenHireMeModal, setIsOpenHireMeModal] = useState(false);
@@ -68,8 +75,18 @@ const Intro = () => {
                         </div>
 
                         <div className={s.link}>
-                            <button className={"btn"} onClick={() => setIsOpenHireMeModal(true)}>Hire Me</button>
-                            <button className={"btn"} onClick={() => setIsOpenSeeMyResumeModal(true)}>See My Resume</button>
+                            <button
+                                className={"btn"}
+                                onClick={() => setIsOpenHireMeModal(true)}
+                            >
+                                Hire Me
+                            </button>
+                            <button
+                                className={"btn"}
+                                onClick={() => setIsOpenSeeMyResumeModal(true)}
+                            >
+                                See My Resume
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -77,22 +94,37 @@ const Intro = () => {
                 <Works />
 
                 <div className={s.intro__footer}>
-                    <NavLink className={s.next_button} to="/portfolio" >
-                        <img className={s.next_button__icon} src={arrowNext} alt="arrow button" />
+                    <NavLink className={s.next_button} to="/portfolio">
+                        <img
+                            className={s.next_button__icon}
+                            src={arrowNext}
+                            alt="arrow button"
+                        />
                     </NavLink>
                 </div>
             </div>
 
-            <Modal handleClose={() => setIsOpenHireMeModal(false)} isOpen={isOpenHireMeModal}>
-                <ModalHireMe handleClose={() => setIsOpenHireMeModal(false)} isOpen={isOpenHireMeModal} />
+            <Modal
+                handleClose={() => setIsOpenHireMeModal(false)}
+                isOpen={isOpenHireMeModal}
+            >
+                <ModalHireMe
+                    onClose={() => setIsOpenHireMeModal(false)}
+                    isOpen={isOpenHireMeModal}
+                />
             </Modal>
 
-            <Modal handleClose={() => setIsOpenSeeMyResumeModal(false)} isOpen={isOpenResumeModal}>
-                <ModalSeeMyResume handleClose={() => setIsOpenSeeMyResumeModal(false)} isOpen={isOpenResumeModal} />
+            <Modal
+                handleClose={() => setIsOpenSeeMyResumeModal(false)}
+                isOpen={isOpenResumeModal}
+            >
+                <ModalSeeMyResume
+                    handleClose={() => setIsOpenSeeMyResumeModal(false)}
+                    isOpen={isOpenResumeModal}
+                />
             </Modal>
         </section>
-    )
-}
-
+    );
+};
 
 export default Intro;
