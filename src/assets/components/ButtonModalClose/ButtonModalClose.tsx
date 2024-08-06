@@ -12,7 +12,7 @@ const ButtonModalClose: FC<ButtonModalCloseProps> = ({ onClick, mixin }) => {
     return (
         <button
             className={classNames(s.button, mixin)}
-            onClick={onClick}
+            onClick={() => onClick()}
             type="button"
         >
             <img className={s.button__image} src={exitImg} alt="Close" />
