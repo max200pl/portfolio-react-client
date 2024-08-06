@@ -1,10 +1,7 @@
 @import "../../../assets/styles/helpers";
 
 .skills {
-    &[mixin="works"] {
-        margin: 0;
-        padding: 0;
-    }
+    margin-top: 20px;
 }
 
 .skills__header {
@@ -16,4 +13,11 @@
 }
 
 .skills__group {
+    &_title {
+        padding: 0;
+        margin-bottom: 0.2rem;
+        font-size: 0.9rem;
+        color: $color-white;
+        font-weight: 400;
+    }
 }

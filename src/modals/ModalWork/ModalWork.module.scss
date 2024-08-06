@@ -5,143 +5,96 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    background: rgba($color: #008000, $alpha: 0.6);
-    padding: 30px;
+    margin: 30px;
+    height: 100%;
 
     @include xs-mb {
         margin: 0;
     }
 
-    // max-width: 960px;
-    // height: 100%;
-    // margin: 0 auto;
-    // padding-top: 200px;
-
-    height: 100vh;
-
-    @include xs-lg {
-        overflow: auto;
-        padding-top: 60px;
-    }
-
-    &__header {
-        margin-bottom: 100px;
-        text-align: center;
-
-        @include mb-lg {
-            margin-bottom: 50px;
-        }
-    }
-
-    &__close {
-        position: sticky;
-        z-index: 1;
-        top: 20px;
-        right: 20px;
-        left: auto;
-        width: 24px;
-        height: 29px;
-
-        margin-left: auto;
-
-        border: 0;
-        cursor: pointer;
-        background: none;
-
-        transition: transform 0.2s linear;
-
-        &:hover {
-            transform: translateY(-3px);
-        }
-
-        // @include xs-lg {
-        //     top: 20px;
-        //     right: 20px;
-        // }
-    }
-
-    .content {
-        width: 100%;
-
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-
-        @include xs-lg {
-            padding: 20px;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        @include mb-lg {
-            padding: 40px;
-        }
-
-        &__slider {
-            width: 60%;
-
-            @include xs-lg {
-                width: 100%;
-                margin-bottom: 40px;
-            }
-        }
-
-        &__panel {
-            width: 60%;
-            padding: 20px;
-            margin-left: 20px;
-            border: 1px solid white;
-
-            @include xs-mb {
-                width: 100%;
-
-                margin-left: 0;
-            }
-        }
-    }
-}
-
-.modal {
     &__title {
-        margin-bottom: 1rem;
-        font-size: 2.5rem;
-        color: $color-blue;
+        font-size: 1.5rem;
+        color: rgba($color: white, $alpha: 0.9);
         font-weight: 700;
         text-transform: uppercase;
     }
 
     &__subtitle {
-        margin: 0.2rem 0 0px;
+        font-size: 1rem;
+        color: rgba($color: white, $alpha: 0.9);
+        font-weight: 500;
 
-        text-transform: capitalize;
-
-        font-size: 1.6rem;
-        color: $color-white;
-        font-weight: 400;
-
-        &_divider {
-            margin: 0 1rem;
+        @include mb-lg {
+            font-size: 2rem;
+        }
+        @include xs-mb {
+            font-size: 1.5rem;
         }
 
-        @include xs-mb {
-            font-size: 1rem;
+        &_divider {
+            display: inline-block;
+            padding: 0 4px;
         }
     }
 
-    &__work_link {
-        background: none; // rest button
-        border: 0; // rest button
-        cursor: pointer; // rest button
-        margin-bottom: 0.2rem;
-        padding: 15px 0 15px 0;
-
-        text-transform: uppercase;
-        font-family: inherit;
-        font-size: 1rem;
+    &__link {
         color: $color-white;
 
-        & > a {
-            color: inherit;
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+
+    &__header {
+        text-align: left;
+    }
+
+    &__footer {
+        margin-top: 20px;
+        display: flex;
+        justify-content: end;
+    }
+
+    .content {
+        background: linear-gradient(to left top, #000000, #000, #006770, #000000, #000) no-repeat center center fixed;
+        background-size: 100% 100%;
+        position: relative;
+
+        padding: 20px 40px 40px;
+        border: 1px solid $color-white;
+        min-height: 500px;
+
+        margin: auto;
+        overflow: hidden;
+        max-height: 70vh;
+        @include lg {
+            position: relative;
+            top: -100px;
+            min-width: 580px;
+            max-width: 580px;
+        }
+
+        @include mb-lg {
+            min-width: 480px;
+            padding: 30px 40px 30px 30px;
+            max-width: 480px;
+        }
+
+        @include xs-mb {
+            max-width: 380px;
+            padding: 20px 30px 20px 20px;
+            width: 100%;
+        }
+
+        &__container {
+            margin-right: -20px;
+            padding-right: 10px;
+            overflow: auto;
+            max-height: 400px;
+
+            @include xs-mb {
+                max-width: 380px;
+            }
         }
     }
 }
