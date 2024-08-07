@@ -87,10 +87,18 @@
         }
 
         &__container {
-            margin-right: -20px;
-            padding-right: 10px;
+            position: relative;
+            margin: 0 -20px;
+            padding: 0 20px;
             overflow: auto;
             max-height: 400px;
+
+            .button_edit {
+                position: absolute;
+                top: 20px;
+                right: 20px;
+                z-index: 1;
+            }
 
             @include xs-mb {
                 max-width: 380px;

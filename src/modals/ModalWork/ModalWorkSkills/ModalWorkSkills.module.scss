@@ -4,6 +4,21 @@
     margin-top: 20px;
 }
 
+.skills__group_edit {
+    padding: 0 14px;
+    position: relative;
+    margin-top: 10px;
+
+    &_title {
+        position: absolute;
+        top: -0.7rem;
+        padding: 0;
+        font-size: 0.8rem;
+        color: $color-white;
+        font-weight: 400;
+    }
+}
+
 .skills__header {
     margin-bottom: 0.5rem;
     font-size: 1.3rem;
@@ -15,7 +30,7 @@
 .skills__group {
     &_title {
         padding: 0;
-        margin-bottom: 0.2rem;
+
         font-size: 0.9rem;
         color: $color-white;
         font-weight: 400;

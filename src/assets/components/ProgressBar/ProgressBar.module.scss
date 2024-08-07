@@ -11,9 +11,10 @@
     align-items: center;
     position: relative;
     margin-bottom: 10px;
-    border: 1px solid $color-white;
+    // border: 1px solid $color-white;
     border-radius: 5px;
     z-index: 2;
+    background: rgba(66, 66, 66, 0.5);
 
     overflow: hidden;
 
@@ -21,14 +22,14 @@
     white-space: nowrap;
     /* keeps the text in a single line */
 
-    height: 18px;
+    height: 16px;
 
     &__text {
         position: absolute;
         left: 0;
         top: 0;
         display: block;
-        font-size: 14px;
+        font-size: 12px;
         font-weight: 400;
         line-height: 1;
         padding: 2px 0 2px 5px;
@@ -43,7 +44,8 @@
         position: absolute;
         display: block;
         height: 100%;
-        background-color: $color-blue;
+        border-radius: 5px;
+        background-color: rgba(48, 143, 232, 0.8);
         transition: width 5s ease-in-out;
     }
 }
