@@ -7,6 +7,7 @@ import { FC, useEffect, useState } from "react";
 import { IWork } from "../../assets/interfaces/interfaces";
 import { Button, Stack } from "@mui/material";
 import editImg from "../../assets/images/modal/edit.svg";
+import { updateTechnology } from "./ModalWork.helpres";
 
 interface ModalWorkProps {
     onClose: () => {};
@@ -15,6 +16,12 @@ interface ModalWorkProps {
 
 const ModalWork: FC<ModalWorkProps> = ({ onClose, work }) => {
     const [editSkills, setEditSkills] = useState(false);
+    const [currentWork, setCurrentWork] = useState(work);
+
+    useEffect(() => {
+        console.log(currentWork);
+    }, [currentWork]);
+
     useEffect(() => {
         const isFirefox = typeof (window as any).InstallTrigger !== "undefined";
         const container = document.querySelector(
@@ -77,8 +84,19 @@ const ModalWork: FC<ModalWorkProps> = ({ onClose, work }) => {
                         title={"Frontend"}
                         mixin="works"
                         editSkills={editSkills}
-                        technology={work.frontTech}
-                        onChange={() => {}}
+                        technology={currentWork.frontTech}
+                        onChange={(apply, nameTeh) => {
+                            setCurrentWork((prevWork) => {
+                                return {
+                                    ...prevWork,
+                                    frontTech: updateTechnology(
+                                        prevWork,
+                                        apply,
+                                        nameTeh
+                                    ),
+                                };
+                            });
+                        }}
                     />
 
                     {work.backTech.length ? (
@@ -86,21 +104,34 @@ const ModalWork: FC<ModalWorkProps> = ({ onClose, work }) => {
                             title={"Backend"}
                             mixin="works"
                             editSkills={editSkills}
-                            technology={work.backTech}
-                            onChange={() => {}}
+                            technology={currentWork.backTech}
+                            onChange={(apply, nameTeh) => {
+                                setCurrentWork((prevWork) => {
+                                    return {
+                                        ...prevWork,
+                                        backTech: updateTechnology(
+                                            prevWork,
+                                            apply,
+                                            nameTeh
+                                        ),
+                                    };
+                                });
+                            }}
                         />
                     ) : null}
                 </div>
 
                 <div className={s.modal__footer}>
                     <Stack direction="row" spacing={2}>
-                        <Button
-                            className="action_button_primary"
-                            variant="contained"
-                            type="submit"
-                        >
-                            Save
-                        </Button>
+                        {editSkills && (
+                            <Button
+                                className="action_button_primary"
+                                variant="contained"
+                                type="submit"
+                            >
+                                Save
+                            </Button>
+                        )}
                         <Button variant="outlined" onClick={() => onClose()}>
                             Close
                         </Button>
