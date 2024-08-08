@@ -8,6 +8,7 @@ import { IWork } from "../../assets/interfaces/interfaces";
 import { Button, Stack } from "@mui/material";
 import editImg from "../../assets/images/modal/edit.svg";
 import { updateTechnology } from "./ModalWork.helpres";
+import { useUpdateWorkMutation } from "../../assets/api/works.api";
 
 interface ModalWorkProps {
     onClose: () => {};
@@ -17,10 +18,17 @@ interface ModalWorkProps {
 const ModalWork: FC<ModalWorkProps> = ({ onClose, work }) => {
     const [editSkills, setEditSkills] = useState(false);
     const [currentWork, setCurrentWork] = useState(work);
+    const [skillsUpdated, setSkillsUpdated] = useState(false);
 
-    useEffect(() => {
-        console.log(currentWork);
-    }, [currentWork]);
+    const { mutate: updateWork } = useUpdateWorkMutation();
+
+    const onHandleEditSkills = () => {
+        setEditSkills(!editSkills);
+    };
+
+    const updateWorkHandler = () => {
+        updateWork(currentWork);
+    };
 
     useEffect(() => {
         const isFirefox = typeof (window as any).InstallTrigger !== "undefined";
@@ -70,7 +78,7 @@ const ModalWork: FC<ModalWorkProps> = ({ onClose, work }) => {
                 <div className={s.content__container + " custom_scroll"}>
                     <button
                         className={s.button_edit}
-                        onClick={() => setEditSkills(!editSkills)}
+                        onClick={() => onHandleEditSkills()}
                         type="button"
                     >
                         <img
@@ -86,6 +94,7 @@ const ModalWork: FC<ModalWorkProps> = ({ onClose, work }) => {
                         editSkills={editSkills}
                         technology={currentWork.frontTech}
                         onChange={(apply, nameTeh) => {
+                            setSkillsUpdated(true);
                             setCurrentWork((prevWork) => {
                                 return {
                                     ...prevWork,
@@ -106,6 +115,7 @@ const ModalWork: FC<ModalWorkProps> = ({ onClose, work }) => {
                             editSkills={editSkills}
                             technology={currentWork.backTech}
                             onChange={(apply, nameTeh) => {
+                                setSkillsUpdated(true);
                                 setCurrentWork((prevWork) => {
                                     return {
                                         ...prevWork,
@@ -123,11 +133,12 @@ const ModalWork: FC<ModalWorkProps> = ({ onClose, work }) => {
 
                 <div className={s.modal__footer}>
                     <Stack direction="row" spacing={2}>
-                        {editSkills && (
+                        {skillsUpdated && (
                             <Button
                                 className="action_button_primary"
                                 variant="contained"
                                 type="submit"
+                                onClick={updateWorkHandler}
                             >
                                 Save
                             </Button>

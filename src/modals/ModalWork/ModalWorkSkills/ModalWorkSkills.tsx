@@ -2,7 +2,7 @@ import s from "./ModalWorkSkills.module.scss";
 
 import ProgressBar from "../../../assets/components/ProgressBar/ProgressBar";
 import { parseCamelCase } from "../../../assets/helpers/helpers";
-import { FC } from "react";
+import { FC, useState } from "react";
 import { IWork, Technology } from "../../../assets/interfaces/interfaces";
 import { Slider } from "@mui/material";
 
@@ -21,6 +21,18 @@ const Skills: FC<SkillsProps> = ({
     editSkills,
     onChange,
 }) => {
+    const [sliderValues, setSliderValues] = useState<{ [key: string]: number }>(
+        {}
+    );
+
+    const handleSliderChange = (name: string, newValue: number) => {
+        setSliderValues((prevValues) => ({
+            ...prevValues,
+            [name]: newValue,
+        }));
+        onChange(newValue, name);
+    };
+
     return (
         <div className={`${mixin} ${s.skills}`}>
             <div className={s.skills__header}>{title}</div>
@@ -43,10 +55,14 @@ const Skills: FC<SkillsProps> = ({
                                                 {skill.name}
                                             </div>
                                             <Slider
+                                                value={
+                                                    sliderValues[skill.name] ||
+                                                    skill.apply
+                                                }
                                                 onChange={(e, v) =>
-                                                    onChange(
-                                                        v as number,
-                                                        skill.name
+                                                    handleSliderChange(
+                                                        skill.name,
+                                                        v as number
                                                     )
                                                 }
                                                 component={"div"}
@@ -58,7 +74,7 @@ const Skills: FC<SkillsProps> = ({
                                                 min={10}
                                                 max={100}
                                                 color="info"
-                                                size="small"
+                                                size="medium"
                                             />
                                         </div>
                                     ) : (
