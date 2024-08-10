@@ -5,6 +5,9 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+
+    height: 100vh;
+
     margin: 30px;
 
     @include xs-mb {
@@ -24,12 +27,6 @@
         @include xs-mb {
             font-size: 1.5rem;
         }
-    }
-
-    &__header {
-        display: flex;
-        justify-content: space-between;
-        text-align: left;
     }
 
     &__close {
@@ -89,7 +86,6 @@
 
         @include xs-mb {
             width: 100%;
-            margin-top: 50px;
             max-width: 380px;
             padding: 20px 30px 20px 20px;
         }

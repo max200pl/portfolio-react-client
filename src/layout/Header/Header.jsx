@@ -122,7 +122,9 @@ const Header = (props) => {
                                         ) : (
                                             <button
                                                 onClick={() =>
-                                                    setIsOpenHireMeModal(true)
+                                                    setIsOpenHireMeModal(
+                                                        !isOpenHireMeModal
+                                                    )
                                                 }
                                                 className={
                                                     s.nav__link +
@@ -142,11 +144,6 @@ const Header = (props) => {
                                 );
                             }
                         )}
-
-                        {/*  <a className={s.nav__link} href="https://github.com/max200pl" target="_blank" rel="noreferrer">
-                            <img className={s.nav__img} src={GithubImg} alt="link github" />
-                            <span>My github</span>
-                        </a> */}
                     </nav>
                 </CSSTransition>
             </header>
