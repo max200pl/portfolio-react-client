@@ -1,48 +1,113 @@
-
+import { useState } from "react";
 import s from "./About.module.scss";
+import Modal from "../../assets/components/Modal/Modal";
+import ModalHireMe from "../../modals/ModalHireMe/ModalHireMe";
+import ModalSeeMyResume from "../../modals/ModalSeeMyResume/ModalSeeMyResume";
 
 //import aboutPhoto from "../../img/About__me/about__photo.png";
 
 const About = () => {
+    const [isOpenHireMeModal, setIsOpenHireMeModal] = useState(false);
+    const [isOpenResumeModal, setIsOpenSeeMyResumeModal] = useState(false);
+
     return (
         <section className={s.about}>
             <div className="container">
-                <div className={s.about__inner}>
-                    <div className={s.about__content}>
+                <div className={s.about__content}>
+                    <h2 className={s.about__subTitle}>Who Am I ?</h2>
+
+                    <div className={s.about__text}>
                         <h3 className={s.about__title}>About me</h3>
-                        <h2 className={s.about__subTitle}>Who Am I ?</h2>
+                        <p className={s.about__description}>
+                            Hello! I'm Maksym, a full-stack web developer with a
+                            passion for creating engaging and efficient digital
+                            solutions.
+                        </p>
+                        <h3 className={s.about__title}>
+                            Background and Experience
+                        </h3>
+                        <p className={s.about__description}>
+                            I hold a degree in a technical field and have honed
+                            my skills through diverse experiences in both
+                            outsourcing firms and a major product company,
+                            Avanquest. My journey has taken me from front-end
+                            development, focusing on visual web and desktop
+                            applications, to becoming a full-stack developer.
+                            This transition has allowed me to broaden my
+                            expertise and contribute to projects from inception
+                            to deployment.
+                        </p>
+                        <h3 className={s.about__title}>Technical Expertise</h3>
+                        <p className={s.about__description}>
+                            My toolkit includes a range of technologies, but I
+                            have a particular affinity for React, which I find
+                            to be the most versatile library for building
+                            dynamic applications. I've also leveraged the
+                            Sciter.js framework to craft intuitive desktop
+                            application interfaces. In addition to web
+                            development, I have ventured into projects involving
+                            Arduino, further expanding my technical repertoire.
+                        </p>
+                        <h3 className={s.about__title}>
+                            Professional Philosophy
+                        </h3>
+                        <p className={s.about__description}>
+                            I am driven by a commitment to self-improvement and
+                            a relentless pursuit of professional growth in the
+                            IT industry. I thrive on creating new and innovative
+                            solutions and am constantly seeking out
+                            opportunities to evolve as a developer.
+                        </p>
+                        <h3 className={s.about__title}>Future Aspirations</h3>
+                        <p className={s.about__description}>
+                            Looking ahead, I am excited to deepen my expertise
+                            in full-stack development, exploring new
+                            technologies and methodologies that enhance my
+                            ability to deliver robust and scalable solutions. My
+                            ultimate goal is to continue learning, growing, and
+                            contributing to projects that make a meaningful
+                            impact.
+                        </p>
+                    </div>
 
-                        <div className={s.about__text}>
-                            <p>
-                                Hello! My name is Maksym. I'm a front-end developer.
-                            </p>
-                            <p>
-                                I have a complete higher education in the technical direction.
-                            </p>
-                            <p>
-                                I have experience both in outsourcing companies and in one large product company Avanquest.
-                            </p>
-                            <p>I specialize in developing visual web and desktop applications.</p>
-                            <p>
-                                I use the React library to develop dynamic applications because I think it’s the most convenient one.
-                            </p>
-                            <p>
-                                This technology also allowed to develop desktop application interfaces using the Sciter.js framework.
-                            </p>
-                            <p>
-                                In the future I want to become a Engineer developer.
-                            </p>
-
-                            <p>
-                                My main goal is self-improvement and I see my professional growth in the IT industry.
-                            </p>
-                        </div>
-
-                        <button className="btn">Hire Me</button>
-                        <button className="btn">See My Resume</button>
+                    <div className={s.about__footer}>
+                        <button
+                            className={"btn"}
+                            onClick={() => setIsOpenHireMeModal(true)}
+                        >
+                            Hire Me
+                        </button>
+                        <button
+                            className={"btn"}
+                            onClick={() => setIsOpenSeeMyResumeModal(true)}
+                        >
+                            See My Resume
+                        </button>
                     </div>
                 </div>
             </div>
+
+            <Modal
+                handleClose={() => {
+                    setIsOpenHireMeModal(false);
+                }}
+                isOpen={isOpenHireMeModal}
+            >
+                <ModalHireMe
+                    onClose={() => setIsOpenHireMeModal(false)}
+                    isOpen={isOpenHireMeModal}
+                />
+            </Modal>
+
+            <Modal
+                handleClose={() => setIsOpenSeeMyResumeModal(false)}
+                isOpen={isOpenResumeModal}
+            >
+                <ModalSeeMyResume
+                    handleClose={() => setIsOpenSeeMyResumeModal(false)}
+                    isOpen={isOpenResumeModal}
+                />
+            </Modal>
         </section>
     );
 };
