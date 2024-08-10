@@ -1,10 +1,8 @@
-
 import { FC } from "react";
 import Header from "../Header/Header";
-import { Outlet } from 'react-router-dom';
+import { Outlet } from "react-router-dom";
 
 import "./Root.scss";
-
 
 const Root: FC = () => {
     return (
