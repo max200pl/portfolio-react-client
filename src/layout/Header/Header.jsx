@@ -54,7 +54,25 @@ const Header = (props) => {
     const [user, setUser] = useState();
     const [isAuth, setIsAuth] = useState();
     const [isOpenHireMeModal, setIsOpenHireMeModal] = useState(false);
-    const [showMobileMenu, setShowMobileMenu] = useState(true);
+    const [showMobileMenu, setShowMobileMenu] = useState(false);
+
+    useEffect(() => {
+        const handleResize = () => {
+            if (window.innerWidth > 768) {
+                setShowMobileMenu(true);
+            } else {
+                setShowMobileMenu(false);
+            }
+        };
+
+        handleResize();
+
+        window.addEventListener("resize", handleResize);
+
+        return () => {
+            window.removeEventListener("resize", handleResize);
+        };
+    }, []);
 
     useEffect(() => {
         setUser(userCtx.user);
@@ -76,7 +94,7 @@ const Header = (props) => {
 
             <header className={s.header}>
                 <CSSTransition
-                    in={!showMobileMenu}
+                    in={showMobileMenu}
                     timeout={300}
                     classNames={{
                         enter: s["fade-enter"],
