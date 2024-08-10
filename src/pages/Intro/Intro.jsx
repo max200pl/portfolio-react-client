@@ -10,6 +10,7 @@ import socialLink2 from "../../assets/images/intro/2.png";
 import socialLink3 from "../../assets/images/intro/3.png";
 import socialLink4 from "../../assets/images/intro/4.png";
 import socialLink5 from "../../assets/images/intro/5.png";
+import socialLink6 from "../../assets/images/intro/6.svg";
 import arrowNext from "../../assets/images/intro/nex-page__arrow.svg";
 import ModalHireMe from "../../modals/ModalHireMe/ModalHireMe";
 import ModalSeeMyResume from "../../modals/ModalSeeMyResume/ModalSeeMyResume";
@@ -23,6 +24,10 @@ const dataSocialLinks = [
     {
         icon_link: socialLink2,
         social_link: "https://www.linkedin.com/in/maksym-poskannyi-114b08155/",
+    },
+    {
+        icon_link: socialLink6,
+        social_link: "https://github.com/max200pl",
     },
     {
         icon_link: socialLink3,
