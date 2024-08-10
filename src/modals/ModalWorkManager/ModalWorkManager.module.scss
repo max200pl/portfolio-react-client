@@ -12,6 +12,7 @@
 
     @include xs-mb {
         margin: 0;
+        overflow: auto;
     }
 
     &__title {
@@ -39,7 +40,6 @@
 
         padding: 20px 40px 40px;
         border: 1px solid $color-white;
-        min-height: 500px;
 
         margin: auto;
 

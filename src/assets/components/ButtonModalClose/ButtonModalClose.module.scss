@@ -1,7 +1,8 @@
 @import "../../styles/helpers";
 
 .button {
-    position: absolute;
+    position: fixed;
+
     z-index: 1;
     top: 20px;
     right: 20px;

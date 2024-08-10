@@ -5,10 +5,10 @@
 
     @include xs-mb {
         display: block;
-        position: absolute;
+        position: fixed;
         right: 20px;
         top: 12px;
-        z-index: 1000;
+        z-index: 1;
     }
 }
 
@@ -55,7 +55,7 @@
     @include xs-mb {
         position: fixed;
         width: 300px;
-        z-index: 1000;
+        z-index: 1;
         padding: 0;
         left: 50%;
         transform: translateX(-50%);
@@ -162,7 +162,7 @@
         left: 5px;
         top: 50%;
         transform: translateY(-50%);
-        z-index: 1000;
+        z-index: 1;
 
         @include xs-mb {
             display: block;
