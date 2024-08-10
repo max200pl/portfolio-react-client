@@ -48,6 +48,11 @@
         .img {
             background: #000;
         }
+
+        @include xs-mb {
+            min-width: 100%;
+            min-height: 100%;
+        }
     }
 
     &__content {

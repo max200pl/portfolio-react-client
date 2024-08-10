@@ -27,12 +27,6 @@
     }
 }
 
-.content {
-    @include xs-mb {
-        flex-basis: 80%;
-    }
-}
-
 .link {
     .btn {
         min-width: 196px;
