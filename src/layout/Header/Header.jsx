@@ -55,13 +55,17 @@ const Header = (props) => {
     const [isAuth, setIsAuth] = useState();
     const [isOpenHireMeModal, setIsOpenHireMeModal] = useState(false);
     const [showMobileMenu, setShowMobileMenu] = useState(false);
+    const [isInitialized, setIsInitialized] = useState(false);
 
     useEffect(() => {
         const handleResize = () => {
-            if (window.innerWidth > 768) {
-                setShowMobileMenu(true);
-            } else {
-                setShowMobileMenu(false);
+            if (!isInitialized) {
+                if (window.innerWidth > 768) {
+                    setShowMobileMenu(true);
+                } else {
+                    setShowMobileMenu(false);
+                }
+                setIsInitialized(true);
             }
         };
 
@@ -72,7 +76,7 @@ const Header = (props) => {
         return () => {
             window.removeEventListener("resize", handleResize);
         };
-    }, []);
+    }, [isInitialized]);
 
     useEffect(() => {
         setUser(userCtx.user);
