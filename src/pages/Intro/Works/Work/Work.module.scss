@@ -5,14 +5,11 @@
     margin: 15px;
     box-shadow: 0 0 4px $color-white;
     transition: box-shadow 0.2s linear;
-
+    overflow: hidden;
     cursor: pointer;
 
     &:hover {
-        box-shadow: 0 0 25px $color-white;
-        .work__edit_button {
-            top: -35px;
-        }
+        box-shadow: 0 0 4px#4dcfe0;
     }
 
     @include xs-mb {
@@ -20,21 +17,12 @@
         margin: 15px auto;
     }
 
-    &__edit_button {
+    &__container_edit_button {
         position: absolute;
-        top: 0;
-        right: 8px;
+        top: 3px;
+        right: 5px;
         height: 50px;
-        transition: top 0.3s ease;
-
-        &:hover {
-            box-shadow: 0 0 25px $color-blue;
-        }
-
-        padding: 0 20px 10px;
-        box-shadow: 0 0 25px $color-white;
-        border: 1px solid $color-white;
-        border-width: 1px 1px 0 1px;
+        z-index: 2;
     }
 
     &__container {
@@ -45,6 +33,7 @@
         position: relative;
         min-width: 299.983px;
         min-height: 234.219px;
+
         .img {
             background: #000;
         }
