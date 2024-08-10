@@ -5,6 +5,7 @@ import { FC } from "react";
 import ButtonModalClose from "../../assets/components/ButtonModalClose/ButtonModalClose";
 import { Fade } from "react-awesome-reveal";
 import ModalHireMeForm from "./ModalHireMeForm/ModalHireMeForm";
+import { SocialLinks } from "../../assets/components/SocialLinks/SocialLinks";
 
 interface IModalWorkManager {
     onClose: () => {};
@@ -58,6 +59,7 @@ const ModalHireMe: FC<IModalWorkManager> = ({ onClose }) => {
                                 max2000pl@gmail.com
                             </a>
                         </li>
+                        <SocialLinks />
                     </ul>
 
                     <ModalHireMeForm onClose={onClose} />

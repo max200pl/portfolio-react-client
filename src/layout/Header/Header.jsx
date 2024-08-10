@@ -28,7 +28,7 @@ const dataNavLink = (isAuth, logOutUserHandler) => [
         iconUrl: AboutImg,
     },
     {
-        name: "Gallery photos",
+        name: "Certificates",
         to: "/gallery",
         alt: "my works photos",
         iconUrl: PortfolioImg,
