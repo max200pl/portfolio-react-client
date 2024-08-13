@@ -47,18 +47,24 @@ export const getAuthGitHub = (
     });
 };
 
-export const logOutUser = () => {
+export const logOutUser = async () => {
     const baseQueryFn = baseQuery;
+    console.log(AUTH_API_BASE_URL, "AUTH_API_BASE_URL");
+    try {
+        const response = await baseQueryFn({
+            url: `${AUTH_API_BASE_URL}/logout`,
+            method: "post",
+            contentType: "application/json",
+            credentials: "include",
+        });
 
-    console.log(
-        AUTH_API_BASE_URL,
-        "____https://portfolio-server-little-lake-1018.fly.dev______________"
-    );
+        if (!response.ok) {
+            throw new Error("Failed to log out");
+        }
 
-    return baseQueryFn({
-        url: `${AUTH_API_BASE_URL}/logout`,
-        method: "post",
-        contentType: "application/json",
-        credentials: "include",
-    });
+        return response.json();
+    } catch (error) {
+        console.error("Error logging out user:", error);
+        throw error;
+    }
 };
