@@ -50,6 +50,11 @@ export const getAuthGitHub = (
 export const logOutUser = () => {
     const baseQueryFn = baseQuery;
 
+    console.log(
+        AUTH_API_BASE_URL,
+        "____https://portfolio-server-little-lake-1018.fly.dev______________"
+    );
+
     return baseQueryFn({
         url: `${AUTH_API_BASE_URL}/logout`,
         method: "post",
