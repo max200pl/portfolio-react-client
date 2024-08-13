@@ -17,25 +17,28 @@ const ButtonAuthGoole = ({ typeAction }: { typeAction: TypeActionAuth }) => {
     const googleLoginHandler = useGoogleLogin({
         onSuccess: async (codeResponse) => {
             try {
+                console.log("codeResponse", codeResponse);
+
                 const authGooleResponse = await getAuthGoole(
                     typeAction,
                     codeResponse
                 );
+
+                console.log("authGooleResponse", authGooleResponse);
                 if (authGooleResponse.user === undefined) {
                     throw new Error("User not found");
                 }
                 userCtx.authUser(authGooleResponse.user);
                 navigate("/");
-            } catch (error) {
-                const { response } = error as {
-                    response: { data: { message: string } };
-                };
-                setError(
-                    response.data as SetStateAction<
-                        { message: "string" } | undefined
-                    >
-                );
-                console.log(error);
+            } catch (error: any) {
+                if (error.response && error.response.data) {
+                    setError({
+                        message: error.response.data.message,
+                    });
+                } else {
+                    setError({ message: error.message });
+                }
+                console.error("Error during Google authentication:", error);
             }
         },
         onError: (error) => console.log("Login with Goole Failed:", error),

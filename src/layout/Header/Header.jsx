@@ -112,7 +112,7 @@ const Header = (props) => {
                         {dataNavLink(isAuth, userCtx.logOutUser).map(
                             (data, id) => {
                                 return (
-                                    <>
+                                    <div key={id}>
                                         {!data.isButton ? (
                                             <NavLink
                                                 key={id}
@@ -144,6 +144,7 @@ const Header = (props) => {
                                             </NavLink>
                                         ) : (
                                             <button
+                                                key={id}
                                                 onClick={() =>
                                                     setIsOpenHireMeModal(
                                                         !isOpenHireMeModal
@@ -163,7 +164,7 @@ const Header = (props) => {
                                                 <span>Contact me</span>
                                             </button>
                                         )}
-                                    </>
+                                    </div>
                                 );
                             }
                         )}
