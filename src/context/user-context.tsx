@@ -41,12 +41,18 @@ const UserContextProvider: FC<Props> = ({ children }) => {
 
     const logOutUserHandler = async () => {
         try {
-            await logOutUser();
+            console.info("Attempting to log out user");
+            const response = await logOutUser();
+            console.info("Response from server:", response);
 
             setUser(undefined);
+            console.info("User state set to undefined");
+
             Cookies.remove("user");
             Cookies.remove("session");
             Cookies.remove("session.sig");
+            console.info("Cookies removed");
+
             console.info("User logged out");
         } catch (error) {
             console.error("Error logging out user:", error);
