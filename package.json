@@ -47,8 +47,8 @@
     "yup": "^1.3.2"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "cross-env REACT_APP_MODE=development react-scripts start",
+    "build": "cross-env REACT_APP_MODE=production react-scripts build",
     "test": "react-scripts test --passWithNoTests",
     "eject": "react-scripts eject"
   },
@@ -73,6 +73,7 @@
   "devDependencies": {
     "@tanstack/eslint-plugin-query": "^5.12.1",
     "@types/react-datepicker": "^4.19.3",
+    "cross-env": "^7.0.3",
     "jest": "^27.5.1",
     "react-transition-group": "^4.4.5",
     "sass": "^1.69.5"
