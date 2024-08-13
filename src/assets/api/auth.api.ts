@@ -12,8 +12,6 @@ export const getAuthGoole = (
 ) => {
     const baseQueryFn = baseQuery;
 
-
-
     return baseQueryFn({
         url: `${AUTH_API_BASE_URL}/${type}/google`,
         body: codeResponse,
@@ -55,6 +53,7 @@ export const logOutUser = () => {
     return baseQueryFn({
         url: `${AUTH_API_BASE_URL}/logout`,
         method: "post",
+        contentType: "application/json",
         credentials: "include",
     });
 };
