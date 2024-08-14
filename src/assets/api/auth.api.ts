@@ -51,18 +51,12 @@ export const logOutUser = async () => {
     const baseQueryFn = baseQuery;
     console.log(AUTH_API_BASE_URL, "AUTH_API_BASE_URL");
     try {
-        const response = await baseQueryFn({
+        await baseQueryFn({
             url: `${AUTH_API_BASE_URL}/logout`,
             method: "post",
             contentType: "application/json",
             credentials: "include",
         });
-
-        if (!response.ok) {
-            throw new Error("Failed to log out");
-        }
-
-        return response.json();
     } catch (error) {
         console.error("Error logging out user:", error);
         throw error;
