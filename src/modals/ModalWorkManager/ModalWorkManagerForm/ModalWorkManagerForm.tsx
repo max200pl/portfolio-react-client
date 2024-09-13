@@ -126,7 +126,7 @@ const ModalWorkManagerForm: FC<Props> = ({ onClose, work }) => {
             const name = getImageName(nameCardImage);
             const project = getFolderName(nameCardImage);
 
-            setUrlImage(defUrlWorkImage(name, project));
+            setUrlImage(defUrlWorkImage(project, name));
         }
     }, [typeActionForm, work]);
 
