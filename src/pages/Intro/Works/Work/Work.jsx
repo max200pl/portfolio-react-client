@@ -11,7 +11,7 @@ import { Fade } from "react-awesome-reveal";
 
 export const Work = ({
     category,
-    date,
+    dateFinished,
     name,
     cardImage,
     onCardClick,
@@ -60,7 +60,9 @@ export const Work = ({
                     <div className={s.work__cat}>{category}</div>
                     <div className={s.work__title}>
                         {name}
-                        <time className={s.work__date}>{getYear(date)}</time>
+                        <time className={s.work__date}>
+                            {getYear(dateFinished)}
+                        </time>
                     </div>
                 </div>
             </div>

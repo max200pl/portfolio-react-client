@@ -40,6 +40,10 @@
 
     &__link {
         color: $color-white;
+        align-self: center;
+        display: block;
+        font-size: 19px;
+        text-align: center;
 
         &:hover {
             text-decoration: underline;

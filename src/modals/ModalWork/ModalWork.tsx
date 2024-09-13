@@ -67,7 +67,7 @@ const ModalWork: FC<ModalWorkProps> = ({ onClose, work }) => {
                 </div>
 
                 <a
-                    href="https://devmax.info/"
+                    href={work.link}
                     target="_blank"
                     rel="noopener noreferrer"
                     className={s.modal__link}
