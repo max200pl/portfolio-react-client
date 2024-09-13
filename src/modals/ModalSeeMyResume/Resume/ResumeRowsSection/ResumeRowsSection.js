@@ -5,10 +5,11 @@ const ResumeRowsSection = (props) => {
     const { isPrinting, experience } = props;
     const [currentOpen, setCurrentOpen] = useState(undefined);
 
-
     let toggleHandler = (current) => {
-        currentOpen === current ? setCurrentOpen(undefined) : setCurrentOpen(current)
-    }
+        currentOpen === current
+            ? setCurrentOpen(undefined)
+            : setCurrentOpen(current);
+    };
 
     return (
         <div>
@@ -21,58 +22,84 @@ const ResumeRowsSection = (props) => {
                                 <div className={s.data__title}>
                                     {data.title}
                                 </div>
-                                {data.subtitle &&
-                                    <div className={s.data__subtitle}>{data.subtitle}</div>
-                                }
+                                {data.subtitle && (
+                                    <div className={s.data__subtitle}>
+                                        {data.subtitle}
+                                    </div>
+                                )}
 
                                 <div className={s.data__time}>
-                                    <span className={s.data__startDate}>{data.time.start}</span>
-                                    {data.time.end &&
-                                        <span className={s.data__endDate}>{data.time.end}</span>
-                                    }
+                                    <span className={s.data__startDate}>
+                                        {data.time.start}
+                                    </span>
+                                    {data.time.end && (
+                                        <span className={s.data__endDate}>
+                                            {data.time.end}
+                                        </span>
+                                    )}
                                     {data.time.full && (
-                                        <span className={s.data__fulDate}>({data.time.full})</span>
+                                        <span className={s.data__fulDate}>
+                                            ({data.time.full})
+                                        </span>
                                     )}
                                 </div>
-                                {data.link &&
-                                    <a className={s.data__link} href={data.link}>Link</a>
-                                }
+                                {data.link && (
+                                    <a
+                                        className={s.data__link}
+                                        href={data.link}
+                                    >
+                                        Link
+                                    </a>
+                                )}
                             </div>
 
                             <div
                                 openDescription={`${currentOpen === id}`}
                                 className={s.description}
-                                isPrintingExperience={`${isPrinting && experience}`}
-                                isprinting={
-                                    isPrinting
-                                        ? "true"
-                                        : undefined
-                                }
+                                isPrintingExperience={`${
+                                    isPrinting && experience
+                                }`}
+                                isprinting={isPrinting ? "true" : undefined}
                                 onClick={() => toggleHandler(id)}
                             >
-
                                 <div className={s.description__title}>
                                     {description.title}
                                     {description.descriptionList.length > 0 && (
-                                        <span className={s.description__arrow}></span>
+                                        <span
+                                            className={s.description__arrow}
+                                        ></span>
                                     )}
                                 </div>
 
                                 <ul className={s.description__list}>
-                                    {description.descriptionList.map((el, id) => {
-                                        if (typeof el === "object") {
-                                            return <li>
-                                                <div>{el.nameSection}</div>
-                                                <ul>
-                                                    {el.section.map((item) => {
-                                                        return <li>{item} </li>
-                                                    })}
-                                                </ul>
-                                            </li>
-                                        } else {
-                                            return <li key={id}>{el}</li>;
+                                    {description.descriptionList.map(
+                                        (el, id) => {
+                                            if (typeof el === "object") {
+                                                return (
+                                                    <li key={id}>
+                                                        <div>
+                                                            {el.nameSection}
+                                                        </div>
+                                                        <ul>
+                                                            {el.section.map(
+                                                                (item) => {
+                                                                    return (
+                                                                        <li>
+                                                                            {
+                                                                                item
+                                                                            }{" "}
+                                                                        </li>
+                                                                    );
+                                                                }
+                                                            )}
+                                                        </ul>
+                                                    </li>
+                                                );
+                                            } else {
+                                                return <li key={id}>{el}</li>;
+                                            }
                                         }
-                                    })}
+                                    )}
                                 </ul>
                             </div>
                         </div>
