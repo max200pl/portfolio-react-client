@@ -8,7 +8,7 @@ import ModalHireMeForm from "./ModalHireMeForm/ModalHireMeForm";
 import { SocialLinks } from "../../assets/components/SocialLinks/SocialLinks";
 
 interface IModalWorkManager {
-    onClose: () => {};
+    onClose: () => void;
 }
 
 const ModalHireMe: FC<IModalWorkManager> = ({ onClose }) => {

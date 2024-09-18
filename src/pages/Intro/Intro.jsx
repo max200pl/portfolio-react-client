@@ -39,7 +39,7 @@ const Intro = () => {
                     </div>
                 </div>
 
-                <Works />
+                {/* <Works /> */}
             </div>
 
             <Modal

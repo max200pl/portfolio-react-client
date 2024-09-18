@@ -84,7 +84,7 @@ export const getUrlWorkImage = (image) => {
     return defUrlWorkImage(folderName, imageName);
 };
 
-export const getUniqCategoriesWork = (categories) => {
+export const getUniqCategories = (categories) => {
     return categories?.reduce((acc, { category }) => {
         if (!acc.includes(category)) {
             acc.push(category);

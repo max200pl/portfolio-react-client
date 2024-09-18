@@ -1,0 +1,28 @@
+@import "../../../assets/styles/helpers";
+
+.action_panel {
+    position: relative;
+
+    &__filter {
+        flex-grow: 1;
+    }
+
+    &__edit_section {
+        display: flex;
+
+        position: absolute;
+        top: -7px;
+        right: 0;
+
+        @include xs-mb {
+            position: relative;
+            top: 0;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+
+        &__button {
+            margin-left: 15px;
+        }
+    }
+}

@@ -2,8 +2,7 @@ import React, { useState } from "react";
 import { Work as WorkComponent } from "./Work/Work";
 import { Fade } from "react-awesome-reveal";
 import s from "./Works.module.scss";
-import FilterWorks from "./FilterWorks/FilterWorks";
-import { getUniqCategoriesWork } from "../../../assets/helpers/helpers";
+import { getUniqCategories } from "../../../assets/helpers/helpers";
 import ModalWork from "../../../modals/ModalWork/ModalWork";
 import Modal from "../../../assets/components/Modal/Modal";
 import { LazyLoadComponent } from "react-lazy-load-image-component";
@@ -16,6 +15,7 @@ import {
 import editIcon from "../../../assets/images/intro/edit.svg";
 
 import { ReactComponent as PlusImage } from "../../../assets/images/plus.svg";
+import Filter from "../../../assets/components/Filter/Filter";
 
 const Works = () => {
     const [filter, setFilter] = useState({ category: "" });
@@ -23,7 +23,7 @@ const Works = () => {
 
     const { status: statusCategories, data: categories } =
         useGetCategoriesQuery();
-    const uniqCategoriesWork = getUniqCategoriesWork(categories);
+    const uniqCategoriesWork = getUniqCategories(categories);
 
     const [isOpenModal, toggleOpenModal] = useState(false);
     const [isOpenEditWorkModal, toggleEditWorkOpenModal] = useState(false);
@@ -35,7 +35,7 @@ const Works = () => {
             <div className={s.portfolio__header}>
                 <div className={s.portfolio__header_filter}>
                     {statusCategories === "success" && (
-                        <FilterWorks
+                        <Filter
                             onFilterChange={setFilter}
                             categories={uniqCategoriesWork}
                         />

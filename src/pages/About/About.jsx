@@ -3,6 +3,7 @@ import s from "./About.module.scss";
 import Modal from "../../assets/components/Modal/Modal";
 import ModalHireMe from "../../modals/ModalHireMe/ModalHireMe";
 import ModalSeeMyResume from "../../modals/ModalSeeMyResume/ModalSeeMyResume";
+import SectionTitle from "../../assets/components/SectionTitle/SectionTitle";
 
 //import aboutPhoto from "../../img/About__me/about__photo.png";
 
@@ -14,7 +15,7 @@ const About = () => {
         <section className={s.about}>
             <div className="container">
                 <div className={s.about__content}>
-                    <h2 className={s.about__subTitle}>Who Am I ?</h2>
+                    <SectionTitle text="Who Am I ?" />
 
                     <div className={s.about__text}>
                         <h3 className={s.about__title}>About me</h3>

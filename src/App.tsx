@@ -5,43 +5,46 @@ import Intro from "./pages/Intro/Intro";
 import About from "./pages/About/About";
 import AuthSignIn from "./pages/Auth/AuthSignIn/AuthSignIn";
 import AuthSignUp from "./pages/Auth/AuthSignUp/AuthSignUp";
-
+import Certificates from "./pages/Certificates/Certificates";
 
 const router = createBrowserRouter([
     {
-        path: '/',
+        path: "/",
         element: <Root />,
         children: [
             {
-                path: '',
+                path: "",
                 element: <Intro />,
             },
             {
-                path: '/about',
+                path: "/about",
                 element: <About />,
             },
             {
-                path: '/gallery',
-                element: <About />,
+                path: "/works",
+                element: <Certificates />,
             },
             {
-                path: '/auth',
+                path: "/certificates",
+                element: <Certificates />,
+            },
+            {
+                path: "/auth",
                 children: [
                     {
-                        path: 'login',
-                        element: <AuthSignIn />
+                        path: "login",
+                        element: <AuthSignIn />,
                     },
                     {
-                        path: 'sign-up',
-                        element: <AuthSignUp />
-                    }
-                ]
+                        path: "sign-up",
+                        element: <AuthSignUp />,
+                    },
+                ],
             },
-        ]
+        ],
     },
 ]);
 
-const App: FC = () =>
-    <RouterProvider router={router} />
+const App: FC = () => <RouterProvider router={router} />;
 
 export default App;
