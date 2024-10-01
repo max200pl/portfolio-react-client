@@ -1,16 +1,19 @@
 import { FC } from "react";
 import { Fade } from "react-awesome-reveal";
-import { IWork } from "../../assets/interfaces/interfaces";
+import { ICertificate } from "../../assets/interfaces/interfaces";
 import s from "./ModalCertificateManager.module.scss";
-import ModalWorkManagerForm from "./ModalCertificateManagerForm/ModalCertificateManagerForm";
+import ModalCertificateManagerForm from "./ModalCertificateManagerForm/ModalCertificateManagerForm";
 import ButtonModalClose from "../../assets/components/ButtonModalClose/ButtonModalClose";
 
-interface IModalWorkManager {
+interface IModalCertificateManager {
     onClose: () => {};
-    work: IWork;
+    certificate: ICertificate;
 }
 
-const ModalWorkManager: FC<IModalWorkManager> = ({ onClose, work }) => {
+const ModalCertificateManager: FC<IModalCertificateManager> = ({
+    onClose,
+    certificate,
+}) => {
     return (
         <div className={s.modal}>
             <div className={s.content} onClick={(e) => e.stopPropagation()}>
@@ -23,13 +26,18 @@ const ModalWorkManager: FC<IModalWorkManager> = ({ onClose, work }) => {
                         cascade
                         className={s.modal__title}
                     >
-                        {work ? "Update Work" : "Create Work"}
+                        {certificate
+                            ? "Update Certificate"
+                            : "Create Certificate"}
                     </Fade>
                 </div>
-                <ModalWorkManagerForm onClose={onClose} work={work} />
+                <ModalCertificateManagerForm
+                    onClose={onClose}
+                    certificate={certificate}
+                />
             </div>
         </div>
     );
 };
 
-export default ModalWorkManager;
+export default ModalCertificateManager;

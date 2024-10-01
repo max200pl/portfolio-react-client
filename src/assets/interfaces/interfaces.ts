@@ -11,15 +11,29 @@ export type IWork = {
     images?: Image[];
 };
 
-export type Image = { name: string, blurHash?: string }
+export type ICertificate = {
+    _id?: string;
+    name: string;
+    dateFinished?: Date;
+    category: string;
+    client?: string;
+    link?: string;
+    frontTech: InterfaceTechWithApply[];
+    backTech: InterfaceTechWithApply[];
+    cardImage: Image;
+    images?: Image[];
+};
+
+export type Image = { name: string; blurHash?: string };
 
 export interface ITechnology {
-    [key: string]: undefined | TechnologyName[]
+    [key: string]: undefined | TechnologyName[];
 }
 
-export type TechnologyName = string
+export type TechnologyName = string;
 export interface Technology {
-    apply: number, name: string
+    apply: number;
+    name: string;
 }
 export interface InterfaceTechWithApply {
     [key: string]: Technology[];
@@ -33,4 +47,4 @@ export interface InterfaceTechWithApplyAll {
     frontTech: InterfaceTechWithApply[];
 }
 
-export type Categories = string[]
+export type Categories = string[];

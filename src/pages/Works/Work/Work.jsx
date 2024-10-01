@@ -1,4 +1,4 @@
-import s from "./Certificate.module.scss";
+import s from "./Work.module.scss";
 import {
     getFolderName,
     getImageName,
@@ -9,11 +9,12 @@ import { defUrlWorkImage } from "../../../assets/api/constants";
 import editIcon from "../../../assets/images/intro/edit.svg";
 import { Fade } from "react-awesome-reveal";
 
-export const Certificate = ({
+export const Work = ({
     category,
     dateFinished,
     name,
     cardImage,
+    onCardClick,
     onClickEditWork,
     editSection,
 }) => {
@@ -22,15 +23,15 @@ export const Certificate = ({
     const urlImage = defUrlWorkImage(folderName, imageName);
 
     return (
-        <div className={s.certificate}>
+        <div className={s.work} onClick={() => onCardClick()}>
             {editSection && (
                 <Fade
-                    className={s.certificate__container_edit_button}
+                    className={s.work__container_edit_button}
                     triggerOnce="true"
                     direction="right"
                 >
                     <button
-                        className={s.certificate__edit_button}
+                        className={s.work__edit_button}
                         onClick={(e) => {
                             e.stopPropagation();
                             onClickEditWork();
@@ -41,7 +42,7 @@ export const Certificate = ({
                 </Fade>
             )}
 
-            <div className={s.certificate__image}>
+            <div className={s.work__image}>
                 <ImageLazyLoad
                     mixin="work"
                     blurHash={cardImage.blurHash}

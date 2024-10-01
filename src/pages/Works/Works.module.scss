@@ -1,0 +1,41 @@
+@import "../../assets/styles/helpers";
+
+.works {
+    overflow: hidden;
+
+    &__footer {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 2rem;
+
+        @include xs-mb {
+            flex-direction: column;
+        }
+    }
+}
+
+.card {
+    &__container {
+        display: flex;
+        flex-wrap: wrap;
+        margin: -15px;
+        margin-bottom: 25px;
+
+        @include xs-mb {
+            margin: 0;
+        }
+    }
+
+    &__col {
+        flex-basis: 33.33333%;
+
+        @include mb-lg {
+            flex-basis: 50%;
+        }
+
+        @include xs-mb {
+            flex-basis: 100%;
+        }
+    }
+}

@@ -1,60 +1,35 @@
 import { useState } from "react";
-import s from "./Certificates.module.scss";
+import s from "./Works.module.scss";
 import Modal from "../../assets/components/Modal/Modal";
 import ModalHireMe from "../../modals/ModalHireMe/ModalHireMe";
 import ModalSeeMyResume from "../../modals/ModalSeeMyResume/ModalSeeMyResume";
 import { Fade } from "react-awesome-reveal";
 import { LazyLoadComponent } from "react-lazy-load-image-component";
-import { Certificate } from "./Certificate/Certificate";
+import { useGetWorksQuery } from "../../assets/api/works.api";
 import ModalWork from "../../modals/ModalWork/ModalWork";
+import ModalWorkManager from "../../modals/ModalWorkManager/ModalWorkManager";
 import SectionTitle from "../../assets/components/SectionTitle/SectionTitle";
 import ActionPanel from "../../assets/components/ActionPanel/ActionPanel";
-import {
-    useGetCategoriesCertificatesQuery,
-    useGetCertificatesQuery,
-} from "../../assets/api/certificates.api";
+import { Work } from "./Work/Work";
 import Loader from "../../assets/components/Loader/Loader";
-import ModalCertificateManager from "../../modals/ModalCertificateManager/ModalCertificateManager";
 
-const Certificates = () => {
+const Works = () => {
     const [isOpenHireMeModal, setIsOpenHireMeModal] = useState(false);
     const [isOpenResumeModal, setIsOpenSeeMyResumeModal] = useState(false);
     const [isOpenModal, toggleOpenModal] = useState(false);
-    const [isOpenEditCertificateModal, toggleEditCertificateOpenModal] =
-        useState(false);
+    const [isOpenEditWorkModal, toggleEditWorkOpenModal] = useState(false);
     const [currentWork, setCurrentWork] = useState({});
     const [filter, setFilter] = useState("All");
-    const {
-        status,
-        data: certificates,
-        isLoading,
-    } = useGetCertificatesQuery(filter);
-    const {
-        statusCategories,
-        data: categories,
-        isLoadingCategories,
-    } = useGetCategoriesCertificatesQuery();
+    const { status, data: works, isLoading } = useGetWorksQuery(filter);
     const [editSection, setEditSection] = useState(false);
 
-    console.log(
-        "Categories",
-        certificates,
-        status,
-        isLoading,
-        categories,
-        statusCategories,
-        isLoadingCategories
-    );
-
     return (
-        <section className={s.certificates}>
+        <section className={s.works}>
             <div className="container">
-                <SectionTitle text="Certifications" />
-
+                <SectionTitle text="My Works" />
                 {isLoading && <Loader />}
-
                 <ActionPanel
-                    toggleEditWorkOpenModal={toggleEditCertificateOpenModal}
+                    toggleEditWorkOpenModal={toggleEditWorkOpenModal}
                     getCurrentFilter={(filter) => setFilter(filter)}
                     getStatusEditSection={(status) => setEditSection(status)}
                     setCurrentWork={(work) => setCurrentWork(work)}
@@ -69,22 +44,26 @@ const Certificates = () => {
                                 cascade
                                 className={s.card__col}
                             >
-                                {certificates?.map((work, id) => {
+                                {works?.map((work, id) => {
                                     return (
                                         <div
                                             key={work.name}
                                             className={s.card__col}
                                         >
                                             <LazyLoadComponent>
-                                                <Certificate
+                                                <Work
                                                     {...work}
                                                     key={work.name}
                                                     editSection={editSection}
                                                     onClickEditWork={() => {
                                                         setCurrentWork(work);
-                                                        toggleEditCertificateOpenModal(
+                                                        toggleEditWorkOpenModal(
                                                             true
                                                         );
+                                                    }}
+                                                    onCardClick={() => {
+                                                        setCurrentWork(work);
+                                                        toggleOpenModal(true);
                                                     }}
                                                 />
                                             </LazyLoadComponent>
@@ -96,7 +75,7 @@ const Certificates = () => {
                     </div>
                 )}
 
-                <div className={s.certificates__footer}>
+                <div className={s.works__footer}>
                     <button
                         className={"btn"}
                         onClick={() => setIsOpenHireMeModal(true)}
@@ -120,11 +99,11 @@ const Certificates = () => {
             </Modal>
 
             <Modal
-                handleClose={() => toggleEditCertificateOpenModal(false)}
-                isOpen={isOpenEditCertificateModal}
+                handleClose={() => toggleEditWorkOpenModal(false)}
+                isOpen={isOpenEditWorkModal}
             >
-                <ModalCertificateManager
-                    onClose={toggleEditCertificateOpenModal}
+                <ModalWorkManager
+                    onClose={toggleEditWorkOpenModal}
                     work={currentWork}
                 />
             </Modal>
@@ -151,4 +130,4 @@ const Certificates = () => {
     );
 };
 
-export default Certificates;
+export default Works;

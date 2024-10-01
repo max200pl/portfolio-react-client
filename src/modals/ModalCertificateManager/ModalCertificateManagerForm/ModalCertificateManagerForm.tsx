@@ -15,7 +15,7 @@ import AutocompleteTagsCheckboxes, {
 } from "../../../assets/components/AutocompleteTagsCheckboxesMUI/AutocompleteTagsCheckboxesMUI";
 import SelectMUI from "../../../assets/components/SelectMUI/SelectMUI";
 import {
-    IWork,
+    ICertificate,
     InterfaceTechWithApply,
 } from "../../../assets/interfaces/interfaces";
 import {
@@ -26,18 +26,18 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import dayjs from "dayjs";
 import {
     TypeActionForm,
-    SaveWork,
-    useCreateWorkMutation,
-    useGetTechnologiesQuery,
-    useUpdateWorkMutation,
-    useDeleteWorkMutation,
-} from "../../../assets/api/works.api";
+    SaveCertificate,
+    useCreateCertificateMutation,
+    useDeleteCertificateMutation,
+    useGetTechnologiesCertificatesQuery,
+    useUpdateCertificatesMutation as useUpdateCertificateMutation,
+} from "../../../assets/api/certificates.api";
 import ImageFileUpload from "../../../assets/components/ImageFileUpload/ImageFileUpload";
 import { getFolderName, getImageName } from "../../../assets/helpers/helpers";
 
-import s from "./ModalWorkManagerForm.module.scss";
+import s from "./ModalCertificateManagerForm.module.scss";
 import { getDirtyFields } from "../../../assets/helpers/reactHookForm.helpers";
-import { defUrlWorkImage } from "../../../assets/api/constants";
+import { defUrlCertificateImage } from "../../../assets/api/constants";
 
 export type IFormInput = {
     frontTech: CheckboxesTagsOptions | [];
@@ -58,7 +58,6 @@ const schema = yup.object({
         .string()
         .matches(/[^\d]/, "Field cannot consist only of digits")
         .required("Please write Name Project"),
-    client: yup.string(),
     category: yup.string().required("Please write Name Project"),
     dateFinished: yup.date(),
     link: yup.string(),
@@ -102,40 +101,47 @@ type DirtyFields<T> = Partial<
 
 interface Props {
     onClose: () => {};
-    work: IWork;
+    certificate: ICertificate;
 }
 
-const ModalWorkManagerForm: FC<Props> = ({ onClose, work }) => {
+const ModalCertificateManagerForm: FC<Props> = ({ onClose, certificate }) => {
     const [typeActionForm] = useState<TypeActionForm>(
-        work === undefined ? "create" : "update"
+        certificate === undefined ? "create" : "update"
     );
     const [showFrontTech, setShowFrontTech] = useState(false);
     const [showBackTech, setShowBackTech] = useState(false);
 
-    const { mutate: createWork } = useCreateWorkMutation();
-    const { mutate: updateWork } = useUpdateWorkMutation();
-    const { mutate: deleteWork } = useDeleteWorkMutation();
+    const { mutate: createCertificate } = useCreateCertificateMutation();
+    const { mutate: updateCertificate } = useUpdateCertificateMutation();
+    const { mutate: deleteCertificate } = useDeleteCertificateMutation();
 
     const [urlImage, setUrlImage] = useState<string | undefined>();
     const { data: technologies, status: statusTechnologies } =
-        useGetTechnologiesQuery();
+        useGetTechnologiesCertificatesQuery();
 
     useEffect(() => {
-        if (typeActionForm === "update" && work?.cardImage !== undefined) {
-            const nameCardImage = work.cardImage.name;
+        if (
+            typeActionForm === "update" &&
+            certificate?.cardImage !== undefined
+        ) {
+            const nameCardImage = certificate.cardImage.name;
             const name = getImageName(nameCardImage);
             const project = getFolderName(nameCardImage);
 
-            setUrlImage(defUrlWorkImage(project, name));
+            setUrlImage(defUrlCertificateImage(project, name));
         }
-    }, [typeActionForm, work]);
+    }, [typeActionForm, certificate]);
 
     useEffect(() => {
         if (statusTechnologies === "success") {
-            setShowFrontTech(work?.frontTech.length > 0);
-            setShowBackTech(work?.backTech.length > 0);
+            setShowFrontTech(certificate?.frontTech.length > 0);
+            setShowBackTech(certificate?.backTech.length > 0);
         }
-    }, [statusTechnologies, work?.backTech.length, work?.frontTech.length]);
+    }, [
+        statusTechnologies,
+        certificate?.backTech.length,
+        certificate?.frontTech.length,
+    ]);
 
     const {
         control,
@@ -148,28 +154,30 @@ const ModalWorkManagerForm: FC<Props> = ({ onClose, work }) => {
         resolver: yupResolver(schema),
         defaultValues: {
             image: undefined,
-            name: work?.name ?? undefined,
-            link: work?.link ?? undefined,
-            category: work?.category ?? undefined,
-            client: work?.client ?? undefined,
-            dateFinished: work?.dateFinished ? work.dateFinished : undefined,
-            frontTech: work?.frontTech
-                ? getOptionsGroupAutocomplete(work.frontTech)
+            name: certificate?.name ?? undefined,
+            link: certificate?.link ?? undefined,
+            category: certificate?.category ?? undefined,
+            client: certificate?.client ?? undefined,
+            dateFinished: certificate?.dateFinished
+                ? certificate.dateFinished
+                : undefined,
+            frontTech: certificate?.frontTech
+                ? getOptionsGroupAutocomplete(certificate.frontTech)
                 : [],
-            backTech: work?.backTech
-                ? getOptionsGroupAutocomplete(work.backTech)
+            backTech: certificate?.backTech
+                ? getOptionsGroupAutocomplete(certificate.backTech)
                 : [],
         },
     });
 
     const onDelete = () => {
-        console.log(work, " onDelete work._id");
+        console.log(certificate, " onDelete certificate._id");
         try {
-            const result = deleteWork(work._id);
-            console.log("Work was deleted successfully", result);
+            const result = deleteCertificate(certificate._id);
+            console.log("Certificate was deleted successfully", result);
             onClose();
         } catch (error) {
-            console.error("Error deleting work:", error);
+            console.error("Error deleting certificate:", error);
         }
     };
 
@@ -178,11 +186,11 @@ const ModalWorkManagerForm: FC<Props> = ({ onClose, work }) => {
             let result;
 
             if (typeActionForm === "create") {
-                result = await createWork({
+                result = await createCertificate({
                     ...data,
                     frontTech: prepareTech(data.frontTech),
                     backTech: prepareTech(data.backTech),
-                } as SaveWork);
+                } as SaveCertificate);
             }
 
             if (typeActionForm === "update") {
@@ -210,9 +218,9 @@ const ModalWorkManagerForm: FC<Props> = ({ onClose, work }) => {
                           }
                         : {};
 
-                result = await updateWork({
-                    _id: work._id,
-                    name: updatedFields.name ?? work.name,
+                result = await updateCertificate({
+                    _id: certificate._id,
+                    name: updatedFields.name ?? certificate.name,
                     ...updatedFields,
                     ...(prepareBackTech as {
                         backTech: InterfaceTechWithApply[];
@@ -220,12 +228,11 @@ const ModalWorkManagerForm: FC<Props> = ({ onClose, work }) => {
                     ...(prepareFrontTech as {
                         frontTech: InterfaceTechWithApply[];
                     }),
-                } as Partial<SaveWork>);
+                } as Partial<SaveCertificate>);
             }
-
-            console.log("Work created successfully", result);
+            console.log("Certificate created successfully", result);
         } catch (error) {
-            console.error("Error creating work:", error);
+            console.error("Error creating certificate:", error);
         }
     };
 
@@ -259,24 +266,6 @@ const ModalWorkManagerForm: FC<Props> = ({ onClose, work }) => {
                         />
                     )}
                 />
-                <Controller
-                    name="client"
-                    control={control}
-                    rules={{ required: true }}
-                    render={({ field }) => (
-                        <TextField
-                            className={s["form_control"]}
-                            {...field}
-                            variant="outlined"
-                            label="Client"
-                            size="small"
-                            margin="none"
-                            fullWidth
-                            error={!!errors.client}
-                            helperText={errors?.client?.message}
-                        />
-                    )}
-                />
 
                 <Controller
                     name="category"
@@ -289,7 +278,17 @@ const ModalWorkManagerForm: FC<Props> = ({ onClose, work }) => {
                             value={field.value}
                             name={field.name}
                             size="small"
-                            options={["Landing", "Website"]}
+                            options={[
+                                "Certificate of Completion", // – Сертификат о прохождении курса или обучения.
+                                "Diploma", // – Диплом, выданный образовательным учреждением, обычно после окончания учебной программы.
+                                "Certification", // – Сертификат, подтверждающий профессиональную квалификацию или успешное прохождение экзамена.
+                                "Award Certificate", // – Сертификат награды, выдаваемый за достижения или победы в конкурсах.
+                                "Professional License", // – Лицензия, подтверждающая право на профессиональную деятельность (например, в медицине или юриспруденции).
+                                "Certification of Participation", // – Сертификат участия в мероприятии или конференции.
+                                "Honorary Diploma", // – Сертификат за достижение определённых результатов или выполнение целей.
+                                "Training Certificate", // – Сертификат об окончании тренинга или курса.
+                                "Certificate of Achievement", // – Сертификат достижений, выдаваемый за успешное выполнение определённых задач или проектов.
+                            ]}
                             onChange={(e) => field.onChange(e.target.value)}
                             errors={errors.category}
                         />
@@ -305,7 +304,7 @@ const ModalWorkManagerForm: FC<Props> = ({ onClose, work }) => {
                             className={s["form_control"]}
                             {...field}
                             variant="outlined"
-                            label="Link"
+                            label="Link to credential"
                             size="small"
                             margin="none"
                             fullWidth
@@ -330,7 +329,7 @@ const ModalWorkManagerForm: FC<Props> = ({ onClose, work }) => {
                 />
 
                 {(typeActionForm === "create" ||
-                    work?.frontTech.length === 0) && (
+                    certificate?.frontTech.length === 0) && (
                     <FormControlLabel
                         control={
                             <Checkbox
@@ -340,7 +339,7 @@ const ModalWorkManagerForm: FC<Props> = ({ onClose, work }) => {
                             />
                         }
                         label={
-                            work?.frontTech.length === 0
+                            certificate?.frontTech.length === 0
                                 ? "Do you want add frontend technologies?"
                                 : "Did you use frontend technologies?"
                         }
@@ -361,7 +360,7 @@ const ModalWorkManagerForm: FC<Props> = ({ onClose, work }) => {
                 )}
 
                 {(typeActionForm === "create" ||
-                    work?.backTech.length === 0) && (
+                    certificate?.backTech.length === 0) && (
                     <FormControlLabel
                         control={
                             <Checkbox
@@ -369,7 +368,7 @@ const ModalWorkManagerForm: FC<Props> = ({ onClose, work }) => {
                             />
                         }
                         label={
-                            work?.frontTech.length === 0
+                            certificate?.frontTech.length === 0
                                 ? "Do you want add backend technologies?"
                                 : "Did you use backend technologies?"
                         }
@@ -427,4 +426,4 @@ const ModalWorkManagerForm: FC<Props> = ({ onClose, work }) => {
     );
 };
 
-export default ModalWorkManagerForm;
+export default ModalCertificateManagerForm;

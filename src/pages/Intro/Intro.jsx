@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import Works from "./Works/Works";
 import ModalSeeMyResume from "../../modals/ModalSeeMyResume/ModalSeeMyResume";
 import Modal from "../../assets/components/Modal/Modal";
 import { SocialLinks } from "../../assets/components/SocialLinks/SocialLinks";
@@ -38,8 +37,6 @@ const Intro = () => {
                         </div>
                     </div>
                 </div>
-
-                {/* <Works /> */}
             </div>
 
             <Modal

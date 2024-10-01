@@ -6,6 +6,7 @@ import About from "./pages/About/About";
 import AuthSignIn from "./pages/Auth/AuthSignIn/AuthSignIn";
 import AuthSignUp from "./pages/Auth/AuthSignUp/AuthSignUp";
 import Certificates from "./pages/Certificates/Certificates";
+import Works from "./pages/Works/Works";
 
 const router = createBrowserRouter([
     {
@@ -22,7 +23,7 @@ const router = createBrowserRouter([
             },
             {
                 path: "/works",
-                element: <Certificates />,
+                element: <Works />,
             },
             {
                 path: "/certificates",
