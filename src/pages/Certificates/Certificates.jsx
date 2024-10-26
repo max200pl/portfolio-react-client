@@ -6,7 +6,6 @@ import ModalSeeMyResume from "../../modals/ModalSeeMyResume/ModalSeeMyResume";
 import { Fade } from "react-awesome-reveal";
 import { LazyLoadComponent } from "react-lazy-load-image-component";
 import { Certificate } from "./Certificate/Certificate";
-import ModalWork from "../../modals/ModalWork/ModalWork";
 import SectionTitle from "../../assets/components/SectionTitle/SectionTitle";
 import ActionPanel from "../../assets/components/ActionPanel/ActionPanel";
 import {
@@ -19,10 +18,9 @@ import ModalCertificateManager from "../../modals/ModalCertificateManager/ModalC
 const Certificates = () => {
     const [isOpenHireMeModal, setIsOpenHireMeModal] = useState(false);
     const [isOpenResumeModal, setIsOpenSeeMyResumeModal] = useState(false);
-    const [isOpenModal, toggleOpenModal] = useState(false);
     const [isOpenEditCertificateModal, toggleEditCertificateOpenModal] =
         useState(false);
-    const [currentWork, setCurrentWork] = useState({});
+    const [currentCertificate, setCurrentWork] = useState({});
     const [filter, setFilter] = useState("All");
     const {
         status,
@@ -34,17 +32,8 @@ const Certificates = () => {
         data: categories,
         isLoadingCategories,
     } = useGetCategoriesCertificatesQuery();
-    const [editSection, setEditSection] = useState(false);
 
-    console.log(
-        "Categories",
-        certificates,
-        status,
-        isLoading,
-        categories,
-        statusCategories,
-        isLoadingCategories
-    );
+    const [editSection, setEditSection] = useState(false);
 
     return (
         <section className={s.certificates}>
@@ -113,19 +102,12 @@ const Certificates = () => {
             </div>
 
             <Modal
-                handleClose={() => toggleOpenModal(false)}
-                isOpen={isOpenModal}
-            >
-                <ModalWork onClose={toggleOpenModal} work={currentWork} />
-            </Modal>
-
-            <Modal
                 handleClose={() => toggleEditCertificateOpenModal(false)}
                 isOpen={isOpenEditCertificateModal}
             >
                 <ModalCertificateManager
                     onClose={toggleEditCertificateOpenModal}
-                    work={currentWork}
+                    certificate={currentCertificate}
                 />
             </Modal>
 

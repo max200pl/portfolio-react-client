@@ -5,13 +5,18 @@ import ModalHireMe from "../../modals/ModalHireMe/ModalHireMe";
 import ModalSeeMyResume from "../../modals/ModalSeeMyResume/ModalSeeMyResume";
 import { Fade } from "react-awesome-reveal";
 import { LazyLoadComponent } from "react-lazy-load-image-component";
-import { useGetWorksQuery } from "../../assets/api/works.api";
+import {
+    useGetCategoriesWorksQuery,
+    useGetWorksQuery,
+} from "../../assets/api/works.api";
 import ModalWork from "../../modals/ModalWork/ModalWork";
 import ModalWorkManager from "../../modals/ModalWorkManager/ModalWorkManager";
 import SectionTitle from "../../assets/components/SectionTitle/SectionTitle";
 import ActionPanel from "../../assets/components/ActionPanel/ActionPanel";
 import { Work } from "./Work/Work";
 import Loader from "../../assets/components/Loader/Loader";
+import Filter from "../../assets/components/Filter/Filter";
+import { getUniqCategoriesWork } from "./Works.helpers";
 
 const Works = () => {
     const [isOpenHireMeModal, setIsOpenHireMeModal] = useState(false);
@@ -23,6 +28,11 @@ const Works = () => {
     const { status, data: works, isLoading } = useGetWorksQuery(filter);
     const [editSection, setEditSection] = useState(false);
 
+    const { status: statusCategories, data: categories } =
+        useGetCategoriesWorksQuery();
+
+    const uniqCategoriesWork = getUniqCategoriesWork(categories);
+
     return (
         <section className={s.works}>
             <div className="container">
@@ -30,10 +40,16 @@ const Works = () => {
                 {isLoading && <Loader />}
                 <ActionPanel
                     toggleEditWorkOpenModal={toggleEditWorkOpenModal}
-                    getCurrentFilter={(filter) => setFilter(filter)}
                     getStatusEditSection={(status) => setEditSection(status)}
                     setCurrentWork={(work) => setCurrentWork(work)}
-                />
+                >
+                    {statusCategories === "success" && (
+                        <Filter
+                            onFilterChange={setFilter}
+                            categories={uniqCategoriesWork}
+                        />
+                    )}
+                </ActionPanel>
 
                 {status === "success" && (
                     <div className={s.card}>

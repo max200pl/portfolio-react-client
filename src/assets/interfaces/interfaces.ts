@@ -16,12 +16,14 @@ export type ICertificate = {
     name: string;
     dateFinished?: Date;
     category: string;
-    client?: string;
     link?: string;
-    frontTech: InterfaceTechWithApply[];
-    backTech: InterfaceTechWithApply[];
     cardImage: Image;
-    images?: Image[];
+};
+
+export type CategoryCertificate = {
+    _id: string;
+    type_name: string;
+    description: string;
 };
 
 export type Image = { name: string; blurHash?: string };

@@ -77,26 +77,6 @@ export const getFolderName = (str) => {
     return str.slice(0, str.indexOf("/"));
 };
 
-export const getUrlWorkImage = (image) => {
-    const folderName = getFolderName(image);
-    const imageName = getImageName(image);
-
-    return defUrlWorkImage(folderName, imageName);
-};
-
-export const getUniqCategories = (categories) => {
-    return categories?.reduce((acc, { category }) => {
-        if (!acc.includes(category)) {
-            acc.push(category);
-        }
-        return acc;
-    }, []);
-};
-
-export const getCurrentWork = (works, currentWork) => {
-    return works.filter((work) => work.name === currentWork.name);
-};
-
 export const getYear = (date) => {
     return moment(date).format("yyyy");
 };

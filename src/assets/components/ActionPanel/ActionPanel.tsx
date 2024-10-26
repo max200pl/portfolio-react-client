@@ -2,16 +2,14 @@ import { Fade } from "react-awesome-reveal";
 import { ReactComponent as PlusImage } from "../../images/plus.svg";
 import editIcon from "../../images/intro/edit.svg";
 import s from "./ActionPanel.module.scss";
-import { useGetCategoriesQuery } from "../../api/works.api";
-import { getUniqCategories } from "../../helpers/helpers";
-import Filter from "../Filter/Filter";
-import { useEffect, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 
 interface ActionPanelProps {
     toggleEditWorkOpenModal: (isOpen: boolean) => void;
     setCurrentWork: (work: any | undefined) => void;
     getCurrentFilter: (filter: FilterState) => void;
     getStatusEditSection: (status: boolean) => void;
+    children: ReactNode;
 }
 
 interface FilterState {
@@ -21,35 +19,18 @@ interface FilterState {
 const ActionPanel: React.FC<ActionPanelProps> = ({
     toggleEditWorkOpenModal,
     setCurrentWork,
-    getCurrentFilter,
     getStatusEditSection,
+    children,
 }) => {
-    const [filter, setFilter] = useState<FilterState>({ category: "" });
     const [editSection, setEditSection] = useState<boolean>(false);
 
-    const { status: statusCategories, data: categories } =
-        useGetCategoriesQuery();
-
-    const uniqCategoriesWork = getUniqCategories(categories);
-
     useEffect(() => {
-        if (filter.category) {
-            setEditSection(false);
-        }
         getStatusEditSection(editSection);
-        getCurrentFilter(filter);
-    }, [editSection, filter, getCurrentFilter, getStatusEditSection]);
+    }, [editSection, getStatusEditSection]);
 
     return (
         <div className={s.action_panel}>
-            <div className={s.action_panel__filter}>
-                {statusCategories === "success" && (
-                    <Filter
-                        onFilterChange={setFilter}
-                        categories={uniqCategoriesWork}
-                    />
-                )}
-            </div>
+            <div className={s.action_panel__filter}>{children}</div>
 
             <div className={s.action_panel__edit_section}>
                 {editSection && (

@@ -1,57 +1,37 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import {
-    Button,
-    Checkbox,
-    FormControlLabel,
-    Stack,
-    TextField,
-} from "@mui/material";
+import { Button, Stack, TextField } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect, useMemo, useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import * as yup from "yup";
-import AutocompleteTagsCheckboxes, {
-    CheckboxesTagsOptions,
-} from "../../../assets/components/AutocompleteTagsCheckboxesMUI/AutocompleteTagsCheckboxesMUI";
 import SelectMUI from "../../../assets/components/SelectMUI/SelectMUI";
-import {
-    ICertificate,
-    InterfaceTechWithApply,
-} from "../../../assets/interfaces/interfaces";
-import {
-    getOptionsGroupAutocomplete,
-    prepareTech,
-} from "./ModalCertificateManagerForm.helpers";
+import { ICertificate } from "../../../assets/interfaces/interfaces";
 import DeleteIcon from "@mui/icons-material/Delete";
 import dayjs from "dayjs";
 import {
-    TypeActionForm,
     SaveCertificate,
+    TypeActionForm,
     useCreateCertificateMutation,
     useDeleteCertificateMutation,
-    useGetTechnologiesCertificatesQuery,
+    useGetCategoriesCertificatesQuery,
     useUpdateCertificatesMutation as useUpdateCertificateMutation,
 } from "../../../assets/api/certificates.api";
+import { defUrlCertificateImage } from "../../../assets/api/constants";
 import ImageFileUpload from "../../../assets/components/ImageFileUpload/ImageFileUpload";
 import { getFolderName, getImageName } from "../../../assets/helpers/helpers";
-
-import s from "./ModalCertificateManagerForm.module.scss";
 import { getDirtyFields } from "../../../assets/helpers/reactHookForm.helpers";
-import { defUrlCertificateImage } from "../../../assets/api/constants";
+import s from "./ModalCertificateManagerForm.module.scss";
 
-export type IFormInput = {
-    frontTech: CheckboxesTagsOptions | [];
-    backTech: CheckboxesTagsOptions | [];
+export type CertificateFormData = {
     _id?: string;
     name: string;
     dateFinished?: Date;
     category: string;
-    client?: string;
     link?: string;
     image: any;
 };
 
-export type KeysIFormInput = keyof IFormInput;
+export type CertificateFormInputKeys = keyof CertificateFormData;
 
 const schema = yup.object({
     name: yup
@@ -73,24 +53,6 @@ const schema = yup.object({
             }
             return false;
         }),
-    frontTech: yup
-        .array()
-        .required()
-        .of(
-            yup.object({
-                group: yup.string().required(),
-                value: yup.string().required(),
-            })
-        ),
-    backTech: yup
-        .array()
-        .required()
-        .of(
-            yup.object({
-                group: yup.string().required(),
-                value: yup.string().required(),
-            })
-        ),
 });
 
 type DirtyFields<T> = Partial<
@@ -108,16 +70,17 @@ const ModalCertificateManagerForm: FC<Props> = ({ onClose, certificate }) => {
     const [typeActionForm] = useState<TypeActionForm>(
         certificate === undefined ? "create" : "update"
     );
-    const [showFrontTech, setShowFrontTech] = useState(false);
-    const [showBackTech, setShowBackTech] = useState(false);
-
     const { mutate: createCertificate } = useCreateCertificateMutation();
     const { mutate: updateCertificate } = useUpdateCertificateMutation();
     const { mutate: deleteCertificate } = useDeleteCertificateMutation();
+    const { data: categories = [] } = useGetCategoriesCertificatesQuery();
 
     const [urlImage, setUrlImage] = useState<string | undefined>();
-    const { data: technologies, status: statusTechnologies } =
-        useGetTechnologiesCertificatesQuery();
+
+    const categoriesOptions = useMemo(
+        () => categories.map((category) => category.type_name),
+        [categories]
+    );
 
     useEffect(() => {
         if (
@@ -132,41 +95,24 @@ const ModalCertificateManagerForm: FC<Props> = ({ onClose, certificate }) => {
         }
     }, [typeActionForm, certificate]);
 
-    useEffect(() => {
-        if (statusTechnologies === "success") {
-            setShowFrontTech(certificate?.frontTech.length > 0);
-            setShowBackTech(certificate?.backTech.length > 0);
-        }
-    }, [
-        statusTechnologies,
-        certificate?.backTech.length,
-        certificate?.frontTech.length,
-    ]);
-
     const {
         control,
         handleSubmit,
         setValue,
         clearErrors,
         formState: { errors, dirtyFields },
-    } = useForm<IFormInput>({
+    } = useForm<CertificateFormData>({
         mode: "onBlur",
         resolver: yupResolver(schema),
         defaultValues: {
+            _id: certificate?._id ?? undefined,
             image: undefined,
             name: certificate?.name ?? undefined,
             link: certificate?.link ?? undefined,
             category: certificate?.category ?? undefined,
-            client: certificate?.client ?? undefined,
             dateFinished: certificate?.dateFinished
                 ? certificate.dateFinished
                 : undefined,
-            frontTech: certificate?.frontTech
-                ? getOptionsGroupAutocomplete(certificate.frontTech)
-                : [],
-            backTech: certificate?.backTech
-                ? getOptionsGroupAutocomplete(certificate.backTech)
-                : [],
         },
     });
 
@@ -181,53 +127,31 @@ const ModalCertificateManagerForm: FC<Props> = ({ onClose, certificate }) => {
         }
     };
 
-    const onSubmit: SubmitHandler<IFormInput> = async (data) => {
+    const onSubmit: SubmitHandler<CertificateFormData> = async (data) => {
         try {
             let result;
 
             if (typeActionForm === "create") {
                 result = await createCertificate({
                     ...data,
-                    frontTech: prepareTech(data.frontTech),
-                    backTech: prepareTech(data.backTech),
                 } as SaveCertificate);
             }
 
             if (typeActionForm === "update") {
-                const dataForm: IFormInput = data;
-                const dirtyFieldsForm: DirtyFields<IFormInput> = dirtyFields;
+                const dataForm: CertificateFormData = data;
+                const dirtyFieldsForm: DirtyFields<CertificateFormData> =
+                    dirtyFields;
 
-                const updatedFields: Partial<IFormInput> = getDirtyFields<
-                    Partial<IFormInput>
-                >(dataForm, dirtyFieldsForm);
-
-                const prepareBackTech =
-                    updatedFields.backTech !== undefined
-                        ? {
-                              backTech: prepareTech(
-                                  updatedFields.backTech as CheckboxesTagsOptions
-                              ),
-                          }
-                        : {};
-                const prepareFrontTech =
-                    updatedFields.frontTech !== undefined
-                        ? {
-                              frontTech: prepareTech(
-                                  updatedFields.frontTech as CheckboxesTagsOptions
-                              ),
-                          }
-                        : {};
+                const updatedFields: Partial<CertificateFormData> =
+                    getDirtyFields<Partial<CertificateFormData>>(
+                        dataForm,
+                        dirtyFieldsForm
+                    );
 
                 result = await updateCertificate({
                     _id: certificate._id,
                     name: updatedFields.name ?? certificate.name,
                     ...updatedFields,
-                    ...(prepareBackTech as {
-                        backTech: InterfaceTechWithApply[];
-                    }),
-                    ...(prepareFrontTech as {
-                        frontTech: InterfaceTechWithApply[];
-                    }),
                 } as Partial<SaveCertificate>);
             }
             console.log("Certificate created successfully", result);
@@ -239,7 +163,7 @@ const ModalCertificateManagerForm: FC<Props> = ({ onClose, certificate }) => {
     return (
         <form onSubmit={handleSubmit(onSubmit)} className={s.form}>
             <div className={s.form__header}>
-                <ImageFileUpload
+                <ImageFileUpload<CertificateFormData>
                     clearErrors={clearErrors}
                     errors={errors}
                     setValue={setValue}
@@ -278,17 +202,7 @@ const ModalCertificateManagerForm: FC<Props> = ({ onClose, certificate }) => {
                             value={field.value}
                             name={field.name}
                             size="small"
-                            options={[
-                                "Certificate of Completion", // – Сертификат о прохождении курса или обучения.
-                                "Diploma", // – Диплом, выданный образовательным учреждением, обычно после окончания учебной программы.
-                                "Certification", // – Сертификат, подтверждающий профессиональную квалификацию или успешное прохождение экзамена.
-                                "Award Certificate", // – Сертификат награды, выдаваемый за достижения или победы в конкурсах.
-                                "Professional License", // – Лицензия, подтверждающая право на профессиональную деятельность (например, в медицине или юриспруденции).
-                                "Certification of Participation", // – Сертификат участия в мероприятии или конференции.
-                                "Honorary Diploma", // – Сертификат за достижение определённых результатов или выполнение целей.
-                                "Training Certificate", // – Сертификат об окончании тренинга или курса.
-                                "Certificate of Achievement", // – Сертификат достижений, выдаваемый за успешное выполнение определённых задач или проектов.
-                            ]}
+                            options={categoriesOptions}
                             onChange={(e) => field.onChange(e.target.value)}
                             errors={errors.category}
                         />
@@ -327,66 +241,6 @@ const ModalCertificateManagerForm: FC<Props> = ({ onClose, certificate }) => {
                         />
                     )}
                 />
-
-                {(typeActionForm === "create" ||
-                    certificate?.frontTech.length === 0) && (
-                    <FormControlLabel
-                        control={
-                            <Checkbox
-                                onChange={() =>
-                                    setShowFrontTech(!showFrontTech)
-                                }
-                            />
-                        }
-                        label={
-                            certificate?.frontTech.length === 0
-                                ? "Do you want add frontend technologies?"
-                                : "Did you use frontend technologies?"
-                        }
-                    />
-                )}
-
-                {showFrontTech && statusTechnologies === "success" && (
-                    <AutocompleteTagsCheckboxes
-                        className={s["form_control"]}
-                        control={control}
-                        name={"frontTech"}
-                        options={getOptionsGroupAutocomplete(
-                            technologies?.frontend
-                        )}
-                        label="Frontend Technologies"
-                        placeholder="Add Technology"
-                    />
-                )}
-
-                {(typeActionForm === "create" ||
-                    certificate?.backTech.length === 0) && (
-                    <FormControlLabel
-                        control={
-                            <Checkbox
-                                onChange={() => setShowBackTech(!showBackTech)}
-                            />
-                        }
-                        label={
-                            certificate?.frontTech.length === 0
-                                ? "Do you want add backend technologies?"
-                                : "Did you use backend technologies?"
-                        }
-                    />
-                )}
-
-                {showBackTech && statusTechnologies === "success" && (
-                    <AutocompleteTagsCheckboxes
-                        className={s["form_control"]}
-                        control={control}
-                        name="backTech"
-                        options={getOptionsGroupAutocomplete(
-                            technologies?.backend
-                        )}
-                        label="Backend Technologies"
-                        placeholder="Add Technology"
-                    />
-                )}
             </div>
 
             <div className={s.form__footer}>

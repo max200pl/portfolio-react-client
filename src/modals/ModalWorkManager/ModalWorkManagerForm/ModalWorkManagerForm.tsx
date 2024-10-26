@@ -39,7 +39,7 @@ import s from "./ModalWorkManagerForm.module.scss";
 import { getDirtyFields } from "../../../assets/helpers/reactHookForm.helpers";
 import { defUrlWorkImage } from "../../../assets/api/constants";
 
-export type IFormInput = {
+export type WorkFormData = {
     frontTech: CheckboxesTagsOptions | [];
     backTech: CheckboxesTagsOptions | [];
     _id?: string;
@@ -51,7 +51,7 @@ export type IFormInput = {
     image: any;
 };
 
-export type KeysIFormInput = keyof IFormInput;
+export type KeysIFormInput = keyof WorkFormData;
 
 const schema = yup.object({
     name: yup
@@ -143,7 +143,7 @@ const ModalWorkManagerForm: FC<Props> = ({ onClose, work }) => {
         setValue,
         clearErrors,
         formState: { errors, dirtyFields },
-    } = useForm<IFormInput>({
+    } = useForm<WorkFormData>({
         mode: "onBlur",
         resolver: yupResolver(schema),
         defaultValues: {
@@ -173,7 +173,7 @@ const ModalWorkManagerForm: FC<Props> = ({ onClose, work }) => {
         }
     };
 
-    const onSubmit: SubmitHandler<IFormInput> = async (data) => {
+    const onSubmit: SubmitHandler<WorkFormData> = async (data) => {
         try {
             let result;
 
@@ -186,11 +186,11 @@ const ModalWorkManagerForm: FC<Props> = ({ onClose, work }) => {
             }
 
             if (typeActionForm === "update") {
-                const dataForm: IFormInput = data;
-                const dirtyFieldsForm: DirtyFields<IFormInput> = dirtyFields;
+                const dataForm: WorkFormData = data;
+                const dirtyFieldsForm: DirtyFields<WorkFormData> = dirtyFields;
 
-                const updatedFields: Partial<IFormInput> = getDirtyFields<
-                    Partial<IFormInput>
+                const updatedFields: Partial<WorkFormData> = getDirtyFields<
+                    Partial<WorkFormData>
                 >(dataForm, dirtyFieldsForm);
 
                 const prepareBackTech =
@@ -232,7 +232,7 @@ const ModalWorkManagerForm: FC<Props> = ({ onClose, work }) => {
     return (
         <form onSubmit={handleSubmit(onSubmit)} className={s.form}>
             <div className={s.form__header}>
-                <ImageFileUpload
+                <ImageFileUpload<WorkFormData>
                     clearErrors={clearErrors}
                     errors={errors}
                     setValue={setValue}

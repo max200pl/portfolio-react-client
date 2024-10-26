@@ -8,61 +8,82 @@ import ImgFileUpload from "../../images/upload_image.svg";
 import ImageChangeFileUpload from "../../images/change_upload.svg";
 
 import { ReactComponent as ImageDeleted } from "../../images/delete.svg";
-import { FieldErrors, UseFormClearErrors, UseFormSetValue } from "react-hook-form";
-import { IFormInput } from "../../../modals/ModalWorkManager/ModalWorkManagerForm/ModalWorkManagerForm";
+import {
+    FieldErrors,
+    FieldValues,
+    Path,
+    PathValue,
+    UseFormClearErrors,
+    UseFormSetValue,
+} from "react-hook-form";
 
-type Props = {
+type Props<T extends FieldValues> = {
     urlImage: string | undefined;
+    setValue: UseFormSetValue<T>;
+    errors: FieldErrors<T> | undefined;
+    clearErrors: UseFormClearErrors<T>;
+};
 
-    setValue: UseFormSetValue<IFormInput>;
-    errors: FieldErrors<IFormInput> | undefined;
-    clearErrors: UseFormClearErrors<IFormInput>
-}
-
-const ImageFileUpload: FC<Props> = ({
+const ImageFileUpload = <T extends FieldValues>({
     clearErrors,
     urlImage,
     setValue,
     errors,
-}) => {
+}: Props<T>) => {
     const [preview, setPreview] = useState<string | ArrayBuffer | null>(null);
 
     useEffect(() => {
         if (urlImage !== undefined) {
             setPreview(urlImage);
-            setValue('image', urlImage, { shouldDirty: false })
+            setValue("image" as Path<T>, urlImage as PathValue<T, Path<T>>, {
+                shouldDirty: false,
+            });
         }
-    }, [setValue, urlImage])
+    }, [setValue, urlImage]);
 
-    const onDrop = useCallback((acceptedFiles: Array<File>) => {
-        const file = new FileReader();
-        file.onload = () => {
-            setPreview(file.result);
-        };
-        file.readAsDataURL(acceptedFiles[0]);
+    const onDrop = useCallback(
+        (acceptedFiles: Array<File>) => {
+            const file = new FileReader();
+            file.onload = () => {
+                setPreview(file.result);
+            };
+            file.readAsDataURL(acceptedFiles[0]);
 
-        setValue('image', acceptedFiles[0], { shouldDirty: true });
-        clearErrors(['image']);
-    }, [clearErrors, setValue]);
-
-    const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
+            setValue(
+                "image" as Path<T>,
+                acceptedFiles[0] as PathValue<T, Path<T>>,
+                { shouldDirty: true }
+            );
+            clearErrors(["image"] as Path<T>[]);
+        },
+        [clearErrors, setValue]
+    );
 
     function handleOnChange(e: React.FormEvent<HTMLInputElement>) {
-        const target = e.target as HTMLInputElement & { files: FileList; }
+        const target = e.target as HTMLInputElement & { files: FileList };
         const file = new FileReader();
 
         file.onload = () => {
             setPreview(file.result);
         };
 
-        setValue('image', target.files[0], { shouldDirty: true });
-        clearErrors(['image']);
+        setValue("image" as Path<T>, target.files[0] as PathValue<T, Path<T>>, {
+            shouldDirty: true,
+        });
+        clearErrors(["image"] as Path<T>[]);
     }
 
+    const { getRootProps, getInputProps, isDragActive } = useDropzone({
+        onDrop,
+    });
     const helperText = errors?.image?.message as string | undefined;
 
     return (
-        <div error-state={String(!!errors?.image)} className={s.container} {...getRootProps()}>
+        <div
+            error-state={String(!!errors?.image)}
+            className={s.container}
+            {...getRootProps()}
+        >
             <input
                 {...getInputProps()}
                 onInput={handleOnChange}
@@ -86,14 +107,21 @@ const ImageFileUpload: FC<Props> = ({
                         onClick={(e) => {
                             e.stopPropagation();
                             setPreview(null);
-                            setValue('image', undefined)
+                            setValue(
+                                "image" as Path<T>,
+                                undefined as PathValue<T, Path<T>>
+                            );
                         }}
                     />
                 </>
             )}
 
             {!preview && (
-                <img className={s.image_upload} src={ImgFileUpload} alt="upload" />
+                <img
+                    className={s.image_upload}
+                    src={ImgFileUpload}
+                    alt="upload"
+                />
             )}
 
             {helperText && <p className={s.helper_text}>{helperText}</p>}

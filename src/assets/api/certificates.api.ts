@@ -8,8 +8,7 @@ import {
     useQueryClient,
 } from "@tanstack/react-query";
 import { fillFormData } from "../helpers/helpers";
-import { InterfaceTechnologies } from "../interfaces/interfaces";
-import { ICertificate } from "../interfaces/interfaces";
+import { CategoryCertificate, ICertificate } from "../interfaces/interfaces";
 import { baseQuery, BaseQueryOptions } from "./api.helper";
 import { CERTIFICATES_API_BASE_URL } from "./constants";
 
@@ -172,21 +171,8 @@ export function useGetCategoriesCertificatesQuery() {
     const baseQueryFn = baseQuery;
     const url = `${CERTIFICATES_API_BASE_URL}/categories`;
 
-    return useQuery<ICertificate[], Error>({
+    return useQuery<CategoryCertificate[], Error>({
         queryKey: [Tag.CATEGORIES],
-        queryFn: () =>
-            baseQueryFn({
-                url,
-            }),
-    });
-}
-
-export function useGetTechnologiesCertificatesQuery() {
-    const baseQueryFn = baseQuery;
-    const url = `${CERTIFICATES_API_BASE_URL}/technologies`;
-
-    return useQuery<InterfaceTechnologies, Error>({
-        queryKey: [Tag.TECHNOLOGIES],
         queryFn: () =>
             baseQueryFn({
                 url,
