@@ -8,7 +8,6 @@
 
     height: 100%;
     margin: 0 auto;
-    margin: 30px;
 
     @include xs-mb {
         margin: 0;
@@ -45,7 +44,6 @@
 
         @include lg {
             position: relative;
-            top: -100px;
             min-width: 580px;
             max-width: 580px;
         }
