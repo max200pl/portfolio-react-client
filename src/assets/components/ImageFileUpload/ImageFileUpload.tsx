@@ -81,7 +81,7 @@ const ImageFileUpload = <T extends FieldValues>({
     return (
         <div
             error-state={String(!!errors?.image)}
-            className={s.container}
+            className={`${s.container} ${!preview ? s.empty : ""}`}
             {...getRootProps()}
         >
             <input
