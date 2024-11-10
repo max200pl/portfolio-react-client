@@ -112,7 +112,7 @@ const ModalCertificateManagerForm: FC<Props> = ({ onClose, certificate }) => {
             image: undefined,
             name: certificate?.name ?? undefined,
             link: certificate?.link ?? undefined,
-            category: certificate?.category.type_name ?? undefined,
+            category: certificate?.category.type_name ?? "",
             dateFinished: certificate?.dateFinished
                 ? certificate.dateFinished
                 : undefined,
