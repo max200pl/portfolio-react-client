@@ -14,9 +14,9 @@ export const Filter = ({ onFilterChange, categories }: FilterProps) => {
             >
                 All
             </button>
-            {categories.map((category) => (
+            {categories.map((category, id) => (
                 <button
-                    key={category}
+                    key={id}
                     onClick={() => onFilterChange({ category })}
                     className={s.filter__button}
                 >

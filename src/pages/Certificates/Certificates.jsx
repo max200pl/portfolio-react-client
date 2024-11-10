@@ -30,13 +30,14 @@ const Certificates = () => {
         isLoading,
     } = useGetCertificatesQuery(filter);
 
-    const {
-        status: statusCategories,
-        data: categories = [],
-        isLoading: isLoadingCategories,
-    } = useGetCategoriesCertificatesQuery();
+    const { status: statusCategories, data: categories = [] } =
+        useGetCategoriesCertificatesQuery();
 
-    const nameCategories = getCertificateCategoryNames(categories);
+    const nameCategories = getCertificateCategoryNames(
+        categories,
+        certificates
+    );
+
     const [editSection, setEditSection] = useState(false);
 
     return (
@@ -70,20 +71,20 @@ const Certificates = () => {
                                 cascade
                                 className={s.card__col}
                             >
-                                {certificates?.map((work, id) => {
+                                {certificates?.map((certificate, id) => {
                                     return (
                                         <div
-                                            key={work.name}
+                                            key={certificate.name}
                                             className={s.card__col}
                                         >
                                             <LazyLoadComponent>
                                                 <Certificate
-                                                    {...work}
-                                                    key={work.name}
+                                                    {...certificate}
+                                                    key={certificate.name}
                                                     editSection={editSection}
-                                                    onClickEditWork={() => {
+                                                    onClickEditCertificate={() => {
                                                         setCurrentCertificate(
-                                                            work
+                                                            certificate
                                                         );
                                                         toggleEditCertificateOpenModal(
                                                             true

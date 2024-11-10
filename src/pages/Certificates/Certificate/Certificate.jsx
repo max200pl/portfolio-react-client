@@ -5,7 +5,7 @@ import {
     getYear,
 } from "../../../assets/helpers/helpers";
 import ImageLazyLoad from "../../../assets/components/ImageLazyLoad/ImageLazyLoad";
-import { defUrlWorkImage } from "../../../assets/api/constants";
+import { defUrlCertificateImage } from "../../../assets/api/constants";
 import editIcon from "../../../assets/images/intro/edit.svg";
 import { Fade } from "react-awesome-reveal";
 
@@ -14,12 +14,12 @@ export const Certificate = ({
     dateFinished,
     name,
     cardImage,
-    onClickEditWork,
+    onClickEditCertificate,
     editSection,
 }) => {
     const imageName = getImageName(cardImage.name);
     const folderName = getFolderName(cardImage.name);
-    const urlImage = defUrlWorkImage(folderName, imageName);
+    const urlImage = defUrlCertificateImage(folderName, imageName);
 
     return (
         <div className={s.certificate}>
@@ -33,7 +33,7 @@ export const Certificate = ({
                         className={s.certificate__edit_button}
                         onClick={(e) => {
                             e.stopPropagation();
-                            onClickEditWork();
+                            onClickEditCertificate();
                         }}
                     >
                         <img src={editIcon} alt="Close" />
@@ -43,7 +43,7 @@ export const Certificate = ({
 
             <div className={s.certificate__image}>
                 <ImageLazyLoad
-                    mixin="work"
+                    mixin="Certificate"
                     blurHash={cardImage.blurHash}
                     name={cardImage.name}
                     url={urlImage}
@@ -51,7 +51,7 @@ export const Certificate = ({
             </div>
 
             <div className={s.content}>
-                <div className={s.content__cat}>{category}</div>
+                <div className={s.content__cat}>{category.type_name}</div>
                 <div className={s.content__title}>
                     {name}
                     <time className={s.content__date}>

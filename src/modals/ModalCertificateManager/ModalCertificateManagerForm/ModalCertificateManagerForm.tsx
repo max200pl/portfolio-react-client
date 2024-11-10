@@ -29,7 +29,7 @@ export type CertificateFormData = {
     _id?: string;
     name: string;
     dateFinished?: Date;
-    category: CategoryCertificate["_id"];
+    category: CategoryCertificate["type_name"];
     link?: string;
     image: any;
 };
