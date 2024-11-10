@@ -2,7 +2,7 @@
 
 .container {
     width: 220px;
-    height: 220px;
+    height: max-content;
     border: 1px solid rgba($color: #509fe0, $alpha: 0.3);
     transition: all 0.2s ease;
     display: flex;
