@@ -5,7 +5,10 @@ import { FC, useEffect, useMemo, useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import * as yup from "yup";
 import SelectMUI from "../../../assets/components/SelectMUI/SelectMUI";
-import { ICertificate } from "../../../assets/interfaces/interfaces";
+import {
+    CategoryCertificate,
+    ICertificate,
+} from "../../../assets/interfaces/interfaces";
 import DeleteIcon from "@mui/icons-material/Delete";
 import dayjs from "dayjs";
 import {
@@ -26,7 +29,7 @@ export type CertificateFormData = {
     _id?: string;
     name: string;
     dateFinished?: Date;
-    category: string;
+    category: CategoryCertificate["_id"];
     link?: string;
     image: any;
 };
@@ -38,7 +41,7 @@ const schema = yup.object({
         .string()
         .matches(/[^\d]/, "Field cannot consist only of digits")
         .required("Please write Name Project"),
-    category: yup.string().required("Please write Name Project"),
+    category: yup.string().required("Please select a category"),
     dateFinished: yup.date(),
     link: yup.string(),
     image: yup
@@ -109,7 +112,7 @@ const ModalCertificateManagerForm: FC<Props> = ({ onClose, certificate }) => {
             image: undefined,
             name: certificate?.name ?? undefined,
             link: certificate?.link ?? undefined,
-            category: certificate?.category ?? undefined,
+            category: certificate?.category.type_name ?? undefined,
             dateFinished: certificate?.dateFinished
                 ? certificate.dateFinished
                 : undefined,
@@ -131,9 +134,14 @@ const ModalCertificateManagerForm: FC<Props> = ({ onClose, certificate }) => {
         try {
             let result;
 
+            const setupCategory = categories.find(
+                (category) => category.type_name === data.category
+            );
+
             if (typeActionForm === "create") {
                 result = await createCertificate({
                     ...data,
+                    category: setupCategory,
                 } as SaveCertificate);
             }
 

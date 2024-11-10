@@ -15,7 +15,7 @@ export type ICertificate = {
     _id?: string;
     name: string;
     dateFinished?: Date;
-    category: string;
+    category: CategoryCertificate;
     link?: string;
     cardImage: Image;
 };

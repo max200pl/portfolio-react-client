@@ -14,25 +14,29 @@ import {
 } from "../../assets/api/certificates.api";
 import Loader from "../../assets/components/Loader/Loader";
 import ModalCertificateManager from "../../modals/ModalCertificateManager/ModalCertificateManager";
+import Filter from "../../assets/components/Filter/Filter";
+import { getCertificateCategoryNames } from "./Certificats.hepers";
 
 const Certificates = () => {
     const [isOpenHireMeModal, setIsOpenHireMeModal] = useState(false);
     const [isOpenResumeModal, setIsOpenSeeMyResumeModal] = useState(false);
     const [isOpenEditCertificateModal, toggleEditCertificateOpenModal] =
         useState(false);
-    const [currentCertificate, setCurrentWork] = useState({});
+    const [currentCertificate, setCurrentCertificate] = useState({});
     const [filter, setFilter] = useState("All");
     const {
         status,
         data: certificates,
         isLoading,
     } = useGetCertificatesQuery(filter);
+
     const {
-        statusCategories,
-        data: categories,
-        isLoadingCategories,
+        status: statusCategories,
+        data: categories = [],
+        isLoading: isLoadingCategories,
     } = useGetCategoriesCertificatesQuery();
 
+    const nameCategories = getCertificateCategoryNames(categories);
     const [editSection, setEditSection] = useState(false);
 
     return (
@@ -43,11 +47,19 @@ const Certificates = () => {
                 {isLoading && <Loader />}
 
                 <ActionPanel
-                    toggleEditWorkOpenModal={toggleEditCertificateOpenModal}
-                    getCurrentFilter={(filter) => setFilter(filter)}
                     getStatusEditSection={(status) => setEditSection(status)}
-                    setCurrentWork={(work) => setCurrentWork(work)}
-                />
+                    onClickPluseButton={() => {
+                        setCurrentCertificate(undefined);
+                        toggleEditCertificateOpenModal(true);
+                    }}
+                >
+                    {statusCategories === "success" && (
+                        <Filter
+                            onFilterChange={setFilter}
+                            categories={nameCategories}
+                        />
+                    )}
+                </ActionPanel>
 
                 {status === "success" && (
                     <div className={s.card}>
@@ -70,7 +82,9 @@ const Certificates = () => {
                                                     key={work.name}
                                                     editSection={editSection}
                                                     onClickEditWork={() => {
-                                                        setCurrentWork(work);
+                                                        setCurrentCertificate(
+                                                            work
+                                                        );
                                                         toggleEditCertificateOpenModal(
                                                             true
                                                         );

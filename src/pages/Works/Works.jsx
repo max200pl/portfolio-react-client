@@ -39,9 +39,11 @@ const Works = () => {
                 <SectionTitle text="My Works" />
                 {isLoading && <Loader />}
                 <ActionPanel
-                    toggleEditWorkOpenModal={toggleEditWorkOpenModal}
                     getStatusEditSection={(status) => setEditSection(status)}
-                    setCurrentWork={(work) => setCurrentWork(work)}
+                    onClickPluseButton={() => {
+                        setCurrentWork(undefined);
+                        toggleEditWorkOpenModal(true);
+                    }}
                 >
                     {statusCategories === "success" && (
                         <Filter
