@@ -7,7 +7,7 @@ import { FC, useEffect, useState } from "react";
 import { IWork } from "../../assets/interfaces/interfaces";
 import { Button, Stack } from "@mui/material";
 import editImg from "../../assets/images/modal/edit.svg";
-import { updateTechnology } from "./ModalWork.helpres";
+import { updateTechnology } from "./ModalWork.helpers";
 import { useUpdateWorkMutation } from "../../assets/api/works.api";
 
 interface ModalWorkProps {
@@ -16,6 +16,8 @@ interface ModalWorkProps {
 }
 
 const ModalWork: FC<ModalWorkProps> = ({ onClose, work }) => {
+    console.log(`===== ModalWork =====`);
+    console.log(`Work:`, work);
     const [editSkills, setEditSkills] = useState(false);
     const [currentWork, setCurrentWork] = useState(work);
     const [skillsUpdated, setSkillsUpdated] = useState(false);
