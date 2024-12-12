@@ -5,8 +5,8 @@ export type IWork = {
     category: string;
     client?: string;
     link?: string;
-    frontTech: InterfaceTechWithApply[];
-    backTech: InterfaceTechWithApply[];
+    frontTech: InterfaceTechWithApply;
+    backTech: InterfaceTechWithApply;
     cardImage: Image;
     images?: Image[];
 };

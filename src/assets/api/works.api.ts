@@ -21,14 +21,14 @@ enum Tag {
     TECHNOLOGIES = "technologies",
 }
 
-export const useGetWorksQuery = (filter: { category: string }) => {
+export const useGetWorksQuery = (filter: string) => {
     const baseQueryFn = baseQuery;
 
     const url = `${WORKS_API_BASE_URL}`;
-    const params = { ...filter };
+    const params = !filter ? {} : { category: filter };
 
     return useQuery<IWork[], Error>({
-        queryKey: [Tag.WORKS, Tag.CATEGORIES, filter.category],
+        queryKey: [Tag.WORKS, Tag.CATEGORIES, filter],
         queryFn: () =>
             baseQueryFn({
                 url,
@@ -53,7 +53,7 @@ const deleteWork = async ({
     try {
         const url = `${WORKS_API_BASE_URL}/${typeActionForm}`;
 
-        console.log("workId", workId);
+        console.log("Deleting work with ID:", workId);
 
         const result = await baseQuery({
             url,
@@ -109,6 +109,11 @@ const saveWork = async ({
                 throw new Error("Invalid image data");
             }
         }
+
+        console.log(
+            "Saving work with data:",
+            Object.fromEntries(formData.entries())
+        );
 
         const result = await baseQuery({
             url,

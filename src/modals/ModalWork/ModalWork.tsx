@@ -4,11 +4,15 @@ import { getYear } from "../../assets/helpers/helpers";
 import { Fade } from "react-awesome-reveal";
 import ButtonModalClose from "../../assets/components/ButtonModalClose/ButtonModalClose";
 import { FC, useEffect, useState } from "react";
-import { IWork } from "../../assets/interfaces/interfaces";
+import {
+    InterfaceTechWithApply,
+    IWork,
+} from "../../assets/interfaces/interfaces";
 import { Button, Stack } from "@mui/material";
 import editImg from "../../assets/images/modal/edit.svg";
 import { updateTechnology } from "./ModalWork.helpers";
 import { useUpdateWorkMutation } from "../../assets/api/works.api";
+import { handleTechUpdate } from "../../pages/Works/Works.helpers";
 
 interface ModalWorkProps {
     onClose: () => {};
@@ -31,6 +35,16 @@ const ModalWork: FC<ModalWorkProps> = ({ onClose, work }) => {
     const updateWorkHandler = () => {
         updateWork(currentWork);
     };
+
+    useEffect(() => {
+        setCurrentWork({
+            ...work,
+            frontTech: handleTechUpdate(
+                work.frontTech
+            ) as InterfaceTechWithApply,
+            backTech: handleTechUpdate(work.backTech) as InterfaceTechWithApply,
+        });
+    }, [work]);
 
     useEffect(() => {
         const isFirefox = typeof (window as any).InstallTrigger !== "undefined";
@@ -89,28 +103,30 @@ const ModalWork: FC<ModalWorkProps> = ({ onClose, work }) => {
                             alt="Close"
                         />
                     </button>
+                    {work.frontTech && Object.keys(work.frontTech).length ? (
+                        <ModalWorkSkills
+                            title={"Frontend"}
+                            mixin="works"
+                            editSkills={editSkills}
+                            technology={currentWork.frontTech}
+                            onChange={(apply, nameTeh) => {
+                                setSkillsUpdated(true);
+                                setCurrentWork((prevWork) => {
+                                    return {
+                                        ...prevWork,
+                                        frontTech: updateTechnology(
+                                            prevWork,
+                                            apply,
+                                            nameTeh,
+                                            "frontTech"
+                                        ),
+                                    };
+                                });
+                            }}
+                        />
+                    ) : null}
 
-                    <ModalWorkSkills
-                        title={"Frontend"}
-                        mixin="works"
-                        editSkills={editSkills}
-                        technology={currentWork.frontTech}
-                        onChange={(apply, nameTeh) => {
-                            setSkillsUpdated(true);
-                            setCurrentWork((prevWork) => {
-                                return {
-                                    ...prevWork,
-                                    frontTech: updateTechnology(
-                                        prevWork,
-                                        apply,
-                                        nameTeh
-                                    ),
-                                };
-                            });
-                        }}
-                    />
-
-                    {work.backTech.length ? (
+                    {work.backTech && Object.keys(work.backTech).length ? (
                         <ModalWorkSkills
                             title={"Backend"}
                             mixin="works"
@@ -124,7 +140,8 @@ const ModalWork: FC<ModalWorkProps> = ({ onClose, work }) => {
                                         backTech: updateTechnology(
                                             prevWork,
                                             apply,
-                                            nameTeh
+                                            nameTeh,
+                                            "backTech"
                                         ),
                                     };
                                 });

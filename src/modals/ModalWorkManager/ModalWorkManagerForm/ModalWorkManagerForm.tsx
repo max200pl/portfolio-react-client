@@ -17,6 +17,7 @@ import SelectMUI from "../../../assets/components/SelectMUI/SelectMUI";
 import {
     IWork,
     InterfaceTechWithApply,
+    Technology,
 } from "../../../assets/interfaces/interfaces";
 import {
     getOptionsGroupAutocomplete,
@@ -38,6 +39,7 @@ import { getFolderName, getImageName } from "../../../assets/helpers/helpers";
 import s from "./ModalWorkManagerForm.module.scss";
 import { getDirtyFields } from "../../../assets/helpers/reactHookForm.helpers";
 import { defUrlWorkImage } from "../../../assets/api/constants";
+import { handleTechUpdate } from "../../../pages/Works/Works.helpers";
 
 export type WorkFormData = {
     frontTech: CheckboxesTagsOptions | [];
@@ -132,10 +134,10 @@ const ModalWorkManagerForm: FC<Props> = ({ onClose, work }) => {
 
     useEffect(() => {
         if (statusTechnologies === "success") {
-            setShowFrontTech(work?.frontTech.length > 0);
-            setShowBackTech(work?.backTech.length > 0);
+            setShowFrontTech(Object.keys(work?.frontTech || {}).length > 0);
+            setShowBackTech(Object.keys(work?.backTech || {}).length > 0);
         }
-    }, [statusTechnologies, work?.backTech.length, work?.frontTech.length]);
+    }, [statusTechnologies, work?.backTech, work?.frontTech]);
 
     const {
         control,
@@ -154,10 +156,18 @@ const ModalWorkManagerForm: FC<Props> = ({ onClose, work }) => {
             client: work?.client ?? undefined,
             dateFinished: work?.dateFinished ? work.dateFinished : undefined,
             frontTech: work?.frontTech
-                ? getOptionsGroupAutocomplete(work.frontTech)
+                ? getOptionsGroupAutocomplete(
+                      handleTechUpdate(
+                          work.frontTech
+                      ) as InterfaceTechWithApply[]
+                  )
                 : [],
             backTech: work?.backTech
-                ? getOptionsGroupAutocomplete(work.backTech)
+                ? getOptionsGroupAutocomplete(
+                      handleTechUpdate(
+                          work.backTech
+                      ) as InterfaceTechWithApply[]
+                  )
                 : [],
         },
     });
@@ -180,9 +190,13 @@ const ModalWorkManagerForm: FC<Props> = ({ onClose, work }) => {
             if (typeActionForm === "create") {
                 result = await createWork({
                     ...data,
-                    frontTech: prepareTech(data.frontTech),
-                    backTech: prepareTech(data.backTech),
-                } as SaveWork);
+                    frontTech: prepareTech(data.frontTech) as unknown as {
+                        [key: string]: Technology[];
+                    },
+                    backTech: prepareTech(data.backTech) as unknown as {
+                        [key: string]: Technology[];
+                    },
+                } as unknown as SaveWork);
             }
 
             if (typeActionForm === "update") {
@@ -198,7 +212,7 @@ const ModalWorkManagerForm: FC<Props> = ({ onClose, work }) => {
                         ? {
                               backTech: prepareTech(
                                   updatedFields.backTech as CheckboxesTagsOptions
-                              ),
+                              ) as unknown as { [key: string]: Technology[] },
                           }
                         : {};
                 const prepareFrontTech =
@@ -206,7 +220,7 @@ const ModalWorkManagerForm: FC<Props> = ({ onClose, work }) => {
                         ? {
                               frontTech: prepareTech(
                                   updatedFields.frontTech as CheckboxesTagsOptions
-                              ),
+                              ) as unknown as { [key: string]: Technology[] },
                           }
                         : {};
 
@@ -214,12 +228,8 @@ const ModalWorkManagerForm: FC<Props> = ({ onClose, work }) => {
                     _id: work._id,
                     name: updatedFields.name ?? work.name,
                     ...updatedFields,
-                    ...(prepareBackTech as {
-                        backTech: InterfaceTechWithApply[];
-                    }),
-                    ...(prepareFrontTech as {
-                        frontTech: InterfaceTechWithApply[];
-                    }),
+                    ...prepareBackTech,
+                    ...prepareFrontTech,
                 } as Partial<SaveWork>);
             }
 
@@ -330,7 +340,7 @@ const ModalWorkManagerForm: FC<Props> = ({ onClose, work }) => {
                 />
 
                 {(typeActionForm === "create" ||
-                    work?.frontTech.length === 0) && (
+                    Object.keys(work?.frontTech || {}).length === 0) && (
                     <FormControlLabel
                         control={
                             <Checkbox
@@ -340,7 +350,7 @@ const ModalWorkManagerForm: FC<Props> = ({ onClose, work }) => {
                             />
                         }
                         label={
-                            work?.frontTech.length === 0
+                            Object.keys(work?.frontTech || {}).length === 0
                                 ? "Do you want add frontend technologies?"
                                 : "Did you use frontend technologies?"
                         }
@@ -361,7 +371,7 @@ const ModalWorkManagerForm: FC<Props> = ({ onClose, work }) => {
                 )}
 
                 {(typeActionForm === "create" ||
-                    work?.backTech.length === 0) && (
+                    Object.keys(work?.backTech || {}).length === 0) && (
                     <FormControlLabel
                         control={
                             <Checkbox
@@ -369,7 +379,7 @@ const ModalWorkManagerForm: FC<Props> = ({ onClose, work }) => {
                             />
                         }
                         label={
-                            work?.frontTech.length === 0
+                            Object.keys(work?.backTech || {}).length === 0
                                 ? "Do you want add backend technologies?"
                                 : "Did you use backend technologies?"
                         }

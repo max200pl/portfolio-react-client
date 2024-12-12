@@ -20,3 +20,10 @@ export const getUniqCategoriesWork = (categories) => {
 export const getCurrentWork = (works, currentWork) => {
     return works.filter((work) => work.name === currentWork.name);
 };
+
+export const handleTechUpdate = (tech) => {
+    return Object.entries(tech).reduce((acc, [key, value]) => {
+        acc[key] = value;
+        return acc;
+    }, {});
+};

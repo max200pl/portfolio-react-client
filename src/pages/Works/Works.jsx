@@ -16,7 +16,7 @@ import ActionPanel from "../../assets/components/ActionPanel/ActionPanel";
 import { Work } from "./Work/Work";
 import Loader from "../../assets/components/Loader/Loader";
 import Filter from "../../assets/components/Filter/Filter";
-import { getUniqCategoriesWork } from "./Works.helpers";
+import { getUniqCategoriesWork, handleTechUpdate } from "./Works.helpers";
 
 const Works = () => {
     const [isOpenHireMeModal, setIsOpenHireMeModal] = useState(false);
@@ -71,6 +71,12 @@ const Works = () => {
                                             <LazyLoadComponent>
                                                 <Work
                                                     {...work}
+                                                    frontTech={handleTechUpdate(
+                                                        work.frontTech
+                                                    )}
+                                                    backTech={handleTechUpdate(
+                                                        work.backTech
+                                                    )}
                                                     key={work.name}
                                                     editSection={editSection}
                                                     onClickEditWork={() => {

@@ -3,11 +3,15 @@ import s from "./ModalWorkSkills.module.scss";
 import ProgressBar from "../../../assets/components/ProgressBar/ProgressBar";
 import { parseCamelCase } from "../../../assets/helpers/helpers";
 import { FC, useState } from "react";
-import { IWork, Technology } from "../../../assets/interfaces/interfaces";
+import {
+    IWork,
+    Technology,
+    InterfaceTechWithApply,
+} from "../../../assets/interfaces/interfaces";
 import { Slider } from "@mui/material";
 
 interface SkillsProps {
-    technology: IWork["frontTech"] | IWork["backTech"];
+    technology: InterfaceTechWithApply;
     mixin?: string;
     title: string;
     editSkills: boolean;
@@ -36,15 +40,15 @@ const Skills: FC<SkillsProps> = ({
     return (
         <div className={`${mixin} ${s.skills}`}>
             <div className={s.skills__header}>{title}</div>
-            {technology.map((group, i) => {
+            {Object.entries(technology).map(([group, skills], i) => {
                 return (
                     <div key={i} className={s.skills__group}>
                         <h3 className={s.skills__group_title}>
-                            {parseCamelCase(Object.keys(group)[0])}
+                            {parseCamelCase(group)}
                         </h3>
-                        {Object.values(group)[0].map((skill, j) => {
+                        {skills.map((skill, j: number) => {
                             return (
-                                <>
+                                <div key={j}>
                                     {editSkills ? (
                                         <div className={s.skills__group_edit}>
                                             <div
@@ -83,7 +87,7 @@ const Skills: FC<SkillsProps> = ({
                                             precentFill={skill.apply}
                                         />
                                     )}
-                                </>
+                                </div>
                             );
                         })}
                     </div>
