@@ -25,7 +25,7 @@ export const useGetWorksQuery = (filter: string) => {
     const baseQueryFn = baseQuery;
 
     const url = `${WORKS_API_BASE_URL}`;
-    const params = !filter ? {} : { category: filter };
+    const params = filter === "All" ? {} : { category: filter };
 
     return useQuery<IWork[], Error>({
         queryKey: [Tag.WORKS, Tag.CATEGORIES, filter],
