@@ -73,6 +73,7 @@
   "devDependencies": {
     "@tanstack/eslint-plugin-query": "^5.12.1",
     "@types/react-datepicker": "^4.19.3",
+    "@types/react-lazy-load-image-component": "^1.6.4",
     "cross-env": "^7.0.3",
     "jest": "^27.5.1",
     "react-transition-group": "^4.4.5",
