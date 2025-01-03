@@ -1,9 +1,9 @@
 .loader {
-    &[loading="hidden"] {
+    &[data-loading="hidden"] {
         display: none;
     }
 
-    &[loading="failed"] {
+    &[data-loading="failed"] {
         display: none;
     }
 
