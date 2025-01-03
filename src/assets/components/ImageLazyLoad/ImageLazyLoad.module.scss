@@ -4,7 +4,7 @@
     width: 100%;
     height: 100%;
 
-    &[mixin="work"] {
+    &[data-mixin="work"] {
         & > .img__lazy_load {
             object-fit: fill;
             min-height: 330px;

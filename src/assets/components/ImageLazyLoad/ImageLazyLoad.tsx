@@ -4,12 +4,19 @@ import s from "./ImageLazyLoad.module.scss";
 import { useState } from "react";
 import Loader from "../Loader/Loader";
 
+interface ImageLazyLoadProps {
+    url?: string;
+    name?: string;
+    mixin?: string;
+    blurHash?: string | undefined;
+}
+
 export default function ImageLazyLoad({
     url = "",
     name = "",
     mixin = "",
     blurHash = undefined,
-}) {
+}: ImageLazyLoadProps) {
     const [isLoaded, setLoaded] = useState(false);
 
     const handleLoad = () => {
@@ -17,7 +24,7 @@ export default function ImageLazyLoad({
     };
 
     return (
-        <div className={s.img} mixin={mixin}>
+        <div className={s.img} data-mixin={mixin}>
             <LazyLoadImage
                 className={s.img__lazy_load}
                 key={name}
