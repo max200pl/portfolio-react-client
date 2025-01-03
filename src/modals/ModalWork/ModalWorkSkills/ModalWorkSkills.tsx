@@ -4,22 +4,22 @@ import ProgressBar from "../../../assets/components/ProgressBar/ProgressBar";
 import { parseCamelCase } from "../../../assets/helpers/helpers";
 import { FC, useState } from "react";
 import {
-    IWork,
     Technology,
     InterfaceTechWithApply,
 } from "../../../assets/interfaces/interfaces";
 import { Slider } from "@mui/material";
+import { IWork } from "../../../assets/interfaces/NewInterfaces";
 
 interface SkillsProps {
-    technology: InterfaceTechWithApply;
+    technology: IWork["frontTech"] | IWork["backTech"];
     mixin?: string;
     title: string;
     editSkills: boolean;
-    onChange: (apply: Technology["apply"], nameTeh: Technology["name"]) => void;
+    onChange: (apply: Technology["apply"], name: Technology["name"]) => void;
 }
 
 const Skills: FC<SkillsProps> = ({
-    technology,
+    technology = {},
     mixin,
     title,
     editSkills,

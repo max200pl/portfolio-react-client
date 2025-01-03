@@ -1,27 +1,37 @@
-import {
-    IWork,
-    InterfaceTechWithApply,
-    Technology,
-} from "../../assets/interfaces/interfaces";
+import { IWork, ITech } from "../../assets/interfaces/NewInterfaces";
 
-export const updateTechnology = (
-    work: IWork,
-    apply: number,
-    nameTeh: string,
-    techType: "frontTech" | "backTech"
-): InterfaceTechWithApply => {
-    const updatedTech: InterfaceTechWithApply = {};
+export const modifyTechnologyUsage = ({
+    apply,
+    nameTeh,
+    techType,
+    prevWork,
+}: {
+    prevWork: IWork;
+    apply: number;
+    nameTeh: string;
+    techType: "frontTech" | "backTech";
+}): IWork => {
+    const newTechnology = {
+        ...prevWork[techType],
+    };
 
-    Object.entries(work[techType]).forEach(([group, skills]) => {
-        updatedTech[group] = skills.map((skill: Technology) => {
-            return skill.name === nameTeh
-                ? {
-                      name: skill.name,
-                      apply: apply,
-                  }
-                : skill;
+    Object.keys(newTechnology).forEach((category) => {
+        newTechnology[category] = newTechnology[category].map((tech) => {
+            if (tech.name === nameTeh) {
+                console.log(
+                    `Updating ${nameTeh} in ${category} to apply: ${apply}`
+                );
+                return {
+                    ...tech,
+                    apply,
+                };
+            }
+            return tech;
         });
     });
 
-    return updatedTech;
+    return {
+        ...prevWork,
+        [techType]: newTechnology,
+    };
 };

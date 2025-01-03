@@ -3,25 +3,25 @@ import ModalWorkSkills from "./ModalWorkSkills/ModalWorkSkills";
 import { getYear } from "../../assets/helpers/helpers";
 import { Fade } from "react-awesome-reveal";
 import ButtonModalClose from "../../assets/components/ButtonModalClose/ButtonModalClose";
-import { FC, useEffect, useState } from "react";
+import { Dispatch, FC, useEffect, useState } from "react";
 import { InterfaceTechWithApply } from "../../assets/interfaces/interfaces";
 import { Button, Stack } from "@mui/material";
 import editImg from "../../assets/images/modal/edit.svg";
-import { updateTechnology } from "./ModalWork.helpers";
+import { modifyTechnologyUsage } from "./ModalWork.helpers";
 import { useUpdateWorkMutation } from "../../assets/api/works.api";
 import { handleTechUpdate } from "../../pages/Works/Works.helpers";
 import { IWork } from "../../assets/interfaces/NewInterfaces";
+import { SetStateAction } from "../../assets/interfaces/interfaces.helpers";
 
 interface ModalWorkProps {
-    onClose: () => {};
-    work: IWork;
+    onClose: Dispatch<SetStateAction<boolean>>;
+    work: IWork | undefined;
 }
 
 const ModalWork: FC<ModalWorkProps> = ({ onClose, work }) => {
     console.log(`===== ModalWork =====`);
-    console.log(`Work:`, work);
     const [editSkills, setEditSkills] = useState(false);
-    const [currentWork, setCurrentWork] = useState(work);
+    const [currentWork, setCurrentWork] = useState<IWork>(work as IWork);
     const [skillsUpdated, setSkillsUpdated] = useState(false);
 
     const { mutate: updateWork } = useUpdateWorkMutation();
@@ -31,18 +31,12 @@ const ModalWork: FC<ModalWorkProps> = ({ onClose, work }) => {
     };
 
     const updateWorkHandler = () => {
+        if (!currentWork) return;
+        console.log(`===== ModalWork =====`);
+        console.log(`currentWork:`, currentWork.frontTech);
+
         updateWork(currentWork);
     };
-
-    useEffect(() => {
-        // setCurrentWork({
-        //     ...work,
-        //     frontTech: handleTechUpdate(
-        //         work.frontTech
-        //     ) as InterfaceTechWithApply,
-        //     backTech: handleTechUpdate(work.backTech) as InterfaceTechWithApply,
-        // });
-    }, [work]);
 
     useEffect(() => {
         const isFirefox = typeof (window as any).InstallTrigger !== "undefined";
@@ -71,17 +65,17 @@ const ModalWork: FC<ModalWorkProps> = ({ onClose, work }) => {
                     direction="left"
                     cascade
                 >
-                    {work.name}
+                    {work?.name}
                 </Fade>
 
                 <div className={s.modal__subtitle}>
-                    {work.category.label}
+                    {work?.category.label}
                     <span className={s.modal__subtitle_divider}>|</span>
-                    {getYear(work.dateFinished)}
+                    {getYear(work?.dateFinished)}
                 </div>
 
                 <a
-                    href={work.link}
+                    href={work?.link}
                     target="_blank"
                     rel="noopener noreferrer"
                     className={s.modal__link}
@@ -101,53 +95,45 @@ const ModalWork: FC<ModalWorkProps> = ({ onClose, work }) => {
                             alt="Close"
                         />
                     </button>
-                    {work.frontTech && Object.keys(work.frontTech).length ? (
-                        <div></div>
-                    ) : // <ModalWorkSkills
-                    //     title={"Frontend"}
-                    //     mixin="works"
-                    //     editSkills={editSkills}
-                    //     technology={currentWork.frontTech}
-                    //     onChange={(apply, nameTeh) => {
-                    //         setSkillsUpdated(true);
-                    //         setCurrentWork((prevWork) => {
-                    //             return {
-                    //                 ...prevWork,
-                    //                 frontTech: updateTechnology(
-                    //                     prevWork,
-                    //                     apply,
-                    //                     nameTeh,
-                    //                     "frontTech"
-                    //                 ),
-                    //             };
-                    //         });
-                    //     }}
-                    // />
-                    null}
+                    {work?.frontTech && Object.keys(work.frontTech).length ? (
+                        <ModalWorkSkills
+                            title={"Frontend"}
+                            mixin="works"
+                            editSkills={editSkills}
+                            technology={currentWork?.frontTech}
+                            onChange={(apply, nameTeh) => {
+                                setSkillsUpdated(true);
+                                setCurrentWork((prevWork) => {
+                                    return modifyTechnologyUsage({
+                                        apply,
+                                        nameTeh,
+                                        prevWork,
+                                        techType: "frontTech",
+                                    });
+                                });
+                            }}
+                        />
+                    ) : null}
 
-                    {work.backTech && Object.keys(work.backTech).length ? (
-                        <div></div>
-                    ) : // <ModalWorkSkills
-                    //     title={"Backend"}
-                    //     mixin="works"
-                    //     editSkills={editSkills}
-                    //     technology={currentWork.backTech}
-                    //     onChange={(apply, nameTeh) => {
-                    //         setSkillsUpdated(true);
-                    //         setCurrentWork((prevWork) => {
-                    //             return {
-                    //                 ...prevWork,
-                    //                 backTech: updateTechnology(
-                    //                     prevWork,
-                    //                     apply,
-                    //                     nameTeh,
-                    //                     "backTech"
-                    //                 ),
-                    //             };
-                    //         });
-                    //     }}
-                    // />
-                    null}
+                    {work?.backTech && Object.keys(work.backTech).length ? (
+                        <ModalWorkSkills
+                            title={"Backend"}
+                            mixin="works"
+                            editSkills={editSkills}
+                            technology={currentWork.backTech}
+                            onChange={(apply, nameTeh) => {
+                                setSkillsUpdated(true);
+                                setCurrentWork((prevWork) => {
+                                    return modifyTechnologyUsage({
+                                        apply,
+                                        nameTeh,
+                                        prevWork,
+                                        techType: "backTech",
+                                    });
+                                });
+                            }}
+                        />
+                    ) : null}
                 </div>
 
                 <div className={s.modal__footer}>
@@ -162,7 +148,10 @@ const ModalWork: FC<ModalWorkProps> = ({ onClose, work }) => {
                                 Save
                             </Button>
                         )}
-                        <Button variant="outlined" onClick={() => onClose()}>
+                        <Button
+                            variant="outlined"
+                            onClick={() => onClose(false)}
+                        >
                             Close
                         </Button>
                     </Stack>

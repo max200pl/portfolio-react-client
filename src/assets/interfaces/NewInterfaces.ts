@@ -1,18 +1,10 @@
-interface WorkUniqueId {
-    $oid: string;
-}
-
-interface SlideUniqueId {
-    $oid: string;
-}
-
-interface CategoryUniqueId {
-    $oid: string;
-}
-
 interface Tech {
     name: string;
     apply: number;
+}
+
+export interface ITech {
+    [key: string]: Tech[];
 }
 
 interface Image {
@@ -23,24 +15,20 @@ interface Image {
 }
 
 export interface Category {
-    _id: CategoryUniqueId;
+    _id: string;
     label: string;
     description?: string;
 }
 
 export interface IWork {
-    _id: WorkUniqueId;
+    _id: string;
     name: string;
     dateFinished: Date;
     category: Category;
     client?: string;
     link?: string;
-    frontTech?: {
-        [key: string]: Tech[];
-    };
-    backTech?: {
-        [key: string]: Tech[];
-    };
+    frontTech?: ITech;
+    backTech?: ITech;
     cardImage?: Image;
-    slides?: SlideUniqueId[];
+    slides?: string[];
 }

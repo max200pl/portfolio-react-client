@@ -24,7 +24,7 @@ const Works = () => {
     const [isOpenResumeModal, setIsOpenSeeMyResumeModal] = useState(false);
     const [isOpenModal, toggleOpenModal] = useState(false);
     const [isOpenEditWorkModal, toggleEditWorkOpenModal] = useState(false);
-    const [currentWork, setCurrentWork] = useState<IWork | undefined>();
+    const [currentWork, setCurrentWork] = useState<IWork>();
     const [filter, setFilter] = useState<Category["_id"] | undefined>();
     const { status, data: works, isLoading } = useGetWorksQuery(filter);
     const [editSection, setEditSection] = useState(false);
@@ -110,7 +110,6 @@ const Works = () => {
                 </div>
             </div>
 
-            {/*
             <Modal
                 handleClose={() => toggleOpenModal(false)}
                 isOpen={isOpenModal}
@@ -118,7 +117,7 @@ const Works = () => {
                 <ModalWork onClose={toggleOpenModal} work={currentWork} />
             </Modal>
 
-            <Modal
+            {/* <Modal
                 handleClose={() => toggleEditWorkOpenModal(false)}
                 isOpen={isOpenEditWorkModal}
             >
@@ -126,8 +125,7 @@ const Works = () => {
                     onClose={toggleEditWorkOpenModal}
                     work={currentWork}
                 />
-            </Modal>
-            */}
+            </Modal> */}
 
             <Modal
                 handleClose={() => {
