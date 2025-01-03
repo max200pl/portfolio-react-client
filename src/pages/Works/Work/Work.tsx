@@ -1,33 +1,29 @@
 import s from "./Work.module.scss";
-import {
-    getFolderName,
-    getImageName,
-    getYear,
-} from "../../../assets/helpers/helpers";
+import { getYear } from "../../../assets/helpers/helpers";
 import ImageLazyLoad from "../../../assets/components/ImageLazyLoad/ImageLazyLoad";
-import { defUrlWorkImage } from "../../../assets/api/constants";
 import editIcon from "../../../assets/images/intro/edit.svg";
 import { Fade } from "react-awesome-reveal";
+import { IWork } from "../../../assets/interfaces/NewInterfaces";
+
+interface WorkProps {
+    work: IWork;
+    onCardClick: () => void;
+    onClickEditWork: () => void;
+    editSection: boolean;
+}
 
 export const Work = ({
-    category,
-    dateFinished,
-    name,
-    cardImage,
+    work: { name, dateFinished, category, cardImage },
     onCardClick,
     onClickEditWork,
     editSection,
-}) => {
-    const imageName = getImageName(cardImage.name);
-    const folderName = getFolderName(cardImage.name);
-    const urlImage = defUrlWorkImage(folderName, imageName);
-
+}: WorkProps) => {
     return (
         <div className={s.work} onClick={() => onCardClick()}>
             {editSection && (
                 <Fade
                     className={s.work__container_edit_button}
-                    triggerOnce="true"
+                    triggerOnce={true}
                     direction="right"
                 >
                     <button
@@ -43,16 +39,17 @@ export const Work = ({
             )}
 
             <div className={s.work__image}>
-                <ImageLazyLoad
-                    mixin="work"
-                    blurHash={cardImage.blurHash}
-                    name={cardImage.name}
-                    url={urlImage}
-                />
+                {cardImage?.url && cardImage?.blurHash && (
+                    <ImageLazyLoad
+                        mixin="work"
+                        blurHash={cardImage.blurHash}
+                        url={cardImage?.url}
+                    />
+                )}
             </div>
 
             <div className={s.content}>
-                <div className={s.content__cat}>{category}</div>
+                <div className={s.content__cat}>{category.label}</div>
                 <div className={s.content__title}>
                     {name}
                     <time className={s.content__date}>
