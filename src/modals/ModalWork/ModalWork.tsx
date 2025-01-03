@@ -4,15 +4,13 @@ import { getYear } from "../../assets/helpers/helpers";
 import { Fade } from "react-awesome-reveal";
 import ButtonModalClose from "../../assets/components/ButtonModalClose/ButtonModalClose";
 import { FC, useEffect, useState } from "react";
-import {
-    InterfaceTechWithApply,
-    IWork,
-} from "../../assets/interfaces/interfaces";
+import { InterfaceTechWithApply } from "../../assets/interfaces/interfaces";
 import { Button, Stack } from "@mui/material";
 import editImg from "../../assets/images/modal/edit.svg";
 import { updateTechnology } from "./ModalWork.helpers";
 import { useUpdateWorkMutation } from "../../assets/api/works.api";
 import { handleTechUpdate } from "../../pages/Works/Works.helpers";
+import { IWork } from "../../assets/interfaces/NewInterfaces";
 
 interface ModalWorkProps {
     onClose: () => {};
@@ -37,13 +35,13 @@ const ModalWork: FC<ModalWorkProps> = ({ onClose, work }) => {
     };
 
     useEffect(() => {
-        setCurrentWork({
-            ...work,
-            frontTech: handleTechUpdate(
-                work.frontTech
-            ) as InterfaceTechWithApply,
-            backTech: handleTechUpdate(work.backTech) as InterfaceTechWithApply,
-        });
+        // setCurrentWork({
+        //     ...work,
+        //     frontTech: handleTechUpdate(
+        //         work.frontTech
+        //     ) as InterfaceTechWithApply,
+        //     backTech: handleTechUpdate(work.backTech) as InterfaceTechWithApply,
+        // });
     }, [work]);
 
     useEffect(() => {
@@ -77,7 +75,7 @@ const ModalWork: FC<ModalWorkProps> = ({ onClose, work }) => {
                 </Fade>
 
                 <div className={s.modal__subtitle}>
-                    {work.category}
+                    {work.category.label}
                     <span className={s.modal__subtitle_divider}>|</span>
                     {getYear(work.dateFinished)}
                 </div>
@@ -104,50 +102,52 @@ const ModalWork: FC<ModalWorkProps> = ({ onClose, work }) => {
                         />
                     </button>
                     {work.frontTech && Object.keys(work.frontTech).length ? (
-                        <ModalWorkSkills
-                            title={"Frontend"}
-                            mixin="works"
-                            editSkills={editSkills}
-                            technology={currentWork.frontTech}
-                            onChange={(apply, nameTeh) => {
-                                setSkillsUpdated(true);
-                                setCurrentWork((prevWork) => {
-                                    return {
-                                        ...prevWork,
-                                        frontTech: updateTechnology(
-                                            prevWork,
-                                            apply,
-                                            nameTeh,
-                                            "frontTech"
-                                        ),
-                                    };
-                                });
-                            }}
-                        />
-                    ) : null}
+                        <div></div>
+                    ) : // <ModalWorkSkills
+                    //     title={"Frontend"}
+                    //     mixin="works"
+                    //     editSkills={editSkills}
+                    //     technology={currentWork.frontTech}
+                    //     onChange={(apply, nameTeh) => {
+                    //         setSkillsUpdated(true);
+                    //         setCurrentWork((prevWork) => {
+                    //             return {
+                    //                 ...prevWork,
+                    //                 frontTech: updateTechnology(
+                    //                     prevWork,
+                    //                     apply,
+                    //                     nameTeh,
+                    //                     "frontTech"
+                    //                 ),
+                    //             };
+                    //         });
+                    //     }}
+                    // />
+                    null}
 
                     {work.backTech && Object.keys(work.backTech).length ? (
-                        <ModalWorkSkills
-                            title={"Backend"}
-                            mixin="works"
-                            editSkills={editSkills}
-                            technology={currentWork.backTech}
-                            onChange={(apply, nameTeh) => {
-                                setSkillsUpdated(true);
-                                setCurrentWork((prevWork) => {
-                                    return {
-                                        ...prevWork,
-                                        backTech: updateTechnology(
-                                            prevWork,
-                                            apply,
-                                            nameTeh,
-                                            "backTech"
-                                        ),
-                                    };
-                                });
-                            }}
-                        />
-                    ) : null}
+                        <div></div>
+                    ) : // <ModalWorkSkills
+                    //     title={"Backend"}
+                    //     mixin="works"
+                    //     editSkills={editSkills}
+                    //     technology={currentWork.backTech}
+                    //     onChange={(apply, nameTeh) => {
+                    //         setSkillsUpdated(true);
+                    //         setCurrentWork((prevWork) => {
+                    //             return {
+                    //                 ...prevWork,
+                    //                 backTech: updateTechnology(
+                    //                     prevWork,
+                    //                     apply,
+                    //                     nameTeh,
+                    //                     "backTech"
+                    //                 ),
+                    //             };
+                    //         });
+                    //     }}
+                    // />
+                    null}
                 </div>
 
                 <div className={s.modal__footer}>

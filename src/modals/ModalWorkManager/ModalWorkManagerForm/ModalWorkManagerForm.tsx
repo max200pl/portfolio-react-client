@@ -15,7 +15,6 @@ import AutocompleteTagsCheckboxes, {
 } from "../../../assets/components/AutocompleteTagsCheckboxesMUI/AutocompleteTagsCheckboxesMUI";
 import SelectMUI from "../../../assets/components/SelectMUI/SelectMUI";
 import {
-    IWork,
     InterfaceTechWithApply,
     Technology,
 } from "../../../assets/interfaces/interfaces";
@@ -40,6 +39,7 @@ import s from "./ModalWorkManagerForm.module.scss";
 import { getDirtyFields } from "../../../assets/helpers/reactHookForm.helpers";
 import { defUrlWorkImage } from "../../../assets/api/constants";
 import { handleTechUpdate } from "../../../pages/Works/Works.helpers";
+import { Category, IWork } from "../../../assets/interfaces/NewInterfaces";
 
 export type WorkFormData = {
     frontTech: CheckboxesTagsOptions | [];
@@ -47,7 +47,7 @@ export type WorkFormData = {
     _id?: string;
     name: string;
     dateFinished?: Date;
-    category: string;
+    category: Category["label"];
     client?: string;
     link?: string;
     image: any;
@@ -124,11 +124,10 @@ const ModalWorkManagerForm: FC<Props> = ({ onClose, work }) => {
 
     useEffect(() => {
         if (typeActionForm === "update" && work?.cardImage !== undefined) {
-            const nameCardImage = work.cardImage.name;
-            const name = getImageName(nameCardImage);
-            const project = getFolderName(nameCardImage);
-
-            setUrlImage(defUrlWorkImage(project, name));
+            // const nameCardImage = work.cardImage.name;
+            // const name = getImageName(nameCardImage);
+            // const project = getFolderName(nameCardImage);
+            // setUrlImage(defUrlWorkImage(project, name));
         }
     }, [typeActionForm, work]);
 
@@ -152,7 +151,7 @@ const ModalWorkManagerForm: FC<Props> = ({ onClose, work }) => {
             image: undefined,
             name: work?.name ?? undefined,
             link: work?.link ?? undefined,
-            category: work?.category ?? undefined,
+            category: work?.category.label ?? undefined,
             client: work?.client ?? undefined,
             dateFinished: work?.dateFinished ? work.dateFinished : undefined,
             frontTech: work?.frontTech

@@ -9,9 +9,9 @@ import {
 } from "@tanstack/react-query";
 import { fillFormData } from "../helpers/helpers";
 import { InterfaceTechnologies } from "../interfaces/interfaces";
-import { IWork } from "../interfaces/interfaces";
 import { baseQuery, BaseQueryOptions } from "./api.helper";
 import { WORKS_API_BASE_URL } from "./constants";
+import { Category, IWork } from "../interfaces/NewInterfaces";
 
 export type TypeActionForm = "update" | "create" | "delete";
 
@@ -21,11 +21,11 @@ enum Tag {
     TECHNOLOGIES = "technologies",
 }
 
-export const useGetWorksQuery = (filter: string) => {
+export const useGetWorksQuery = (filter: Category["_id"] | undefined) => {
     const baseQueryFn = baseQuery;
 
     const url = `${WORKS_API_BASE_URL}`;
-    const params = filter === "All" ? {} : { category: filter };
+    const params = filter ? { category: filter } : {};
 
     return useQuery<IWork[], Error>({
         queryKey: [Tag.WORKS, Tag.CATEGORIES, filter],
@@ -167,7 +167,7 @@ export function useGetCategoriesWorksQuery() {
     const baseQueryFn = baseQuery;
     const url = `${WORKS_API_BASE_URL}/categories`;
 
-    return useQuery<IWork[], Error>({
+    return useQuery<Category[], Error>({
         queryKey: [Tag.CATEGORIES],
         queryFn: () =>
             baseQueryFn({

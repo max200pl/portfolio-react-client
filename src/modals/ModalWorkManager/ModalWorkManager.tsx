@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { Fade } from "react-awesome-reveal";
-import { IWork } from "../../assets/interfaces/interfaces";
+import { IWork } from "../../assets/interfaces/NewInterfaces";
 import s from "./ModalWorkManager.module.scss";
 import ModalWorkManagerForm from "./ModalWorkManagerForm/ModalWorkManagerForm";
 import ButtonModalClose from "../../assets/components/ButtonModalClose/ButtonModalClose";
