@@ -8,10 +8,9 @@ import {
     useQueryClient,
 } from "@tanstack/react-query";
 import { fillFormData } from "../helpers/helpers";
-import { InterfaceTechnologies } from "../interfaces/interfaces";
 import { baseQuery, BaseQueryOptions } from "./api.helper";
 import { WORKS_API_BASE_URL } from "./constants";
-import { Category, IWork } from "../interfaces/NewInterfaces";
+import { Category, ITechnologyStack, IWork } from "../interfaces/NewInterfaces";
 
 export type TypeActionForm = "update" | "create" | "delete";
 
@@ -180,7 +179,7 @@ export function useGetTechnologiesQuery() {
     const baseQueryFn = baseQuery;
     const url = `${WORKS_API_BASE_URL}/technologies`;
 
-    return useQuery<InterfaceTechnologies, Error>({
+    return useQuery<ITechnologyStack, Error>({
         queryKey: [Tag.TECHNOLOGIES],
         queryFn: () =>
             baseQueryFn({
