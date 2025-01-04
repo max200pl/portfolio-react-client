@@ -117,15 +117,15 @@ const Works = () => {
                 <ModalWork onClose={toggleOpenModal} work={currentWork} />
             </Modal>
 
-            {/* <Modal
+            <Modal
                 handleClose={() => toggleEditWorkOpenModal(false)}
                 isOpen={isOpenEditWorkModal}
             >
                 <ModalWorkManager
                     onClose={toggleEditWorkOpenModal}
-                    work={currentWork}
+                    work={currentWork as IWork}
                 />
-            </Modal> */}
+            </Modal>
 
             <Modal
                 handleClose={() => {
