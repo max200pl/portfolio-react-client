@@ -1,11 +1,8 @@
-
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
-import { FieldError } from 'react-hook-form';
-
-
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
+import { FieldError } from "react-hook-form";
 
 const SelectMUI = ({
     className,
@@ -16,11 +13,11 @@ const SelectMUI = ({
     value,
     onChange,
     size,
-    errors
+    errors,
 }: {
-    errors: FieldError | undefined,
-    className: string | undefined
-    size: "small" | "medium" | undefined
+    errors: FieldError | undefined;
+    className: string | undefined;
+    size: "small" | "medium" | undefined;
     margin: "dense" | "none" | undefined;
     name: string;
     label: string;
@@ -28,9 +25,13 @@ const SelectMUI = ({
     value: string;
     onChange: (event: SelectChangeEvent) => void;
 }) => {
-
     return (
-        <FormControl fullWidth size={size} className={className} error={!!errors}>
+        <FormControl
+            fullWidth
+            size={size}
+            className={className}
+            error={!!errors}
+        >
             <InputLabel id={name}>{label}</InputLabel>
             <Select
                 margin={margin}
@@ -47,7 +48,7 @@ const SelectMUI = ({
                 ))}
             </Select>
         </FormControl>
-    )
-}
+    );
+};
 
-export default SelectMUI
+export default SelectMUI;
