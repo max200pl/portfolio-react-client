@@ -32,3 +32,31 @@ export interface IWork {
     cardImage?: Image;
     slides?: string[];
 }
+
+type TechnologyCategory =
+    | "languages"
+    | "frameworks"
+    | "databases"
+    | "authentication"
+    | "orm"
+    | "testing"
+    | "deployment"
+    | "libraries"
+    | "bundlers"
+    | "packageManagers"
+    | "buildTools"
+    | "stateManagement"
+    | "routing"
+    | "httpClients"
+    | "cssPreprocessors"
+    | "versionControl"
+    | "codeEditors"
+    | "designTools";
+
+export type Technologies = {
+    [key in TechnologyCategory]: string[];
+};
+export interface ITechnologyStack {
+    frontend: Technologies[];
+    backend: Technologies[];
+}
