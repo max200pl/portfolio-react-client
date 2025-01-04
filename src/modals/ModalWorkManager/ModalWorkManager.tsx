@@ -1,12 +1,13 @@
-import { FC } from "react";
+import { Dispatch, FC } from "react";
 import { Fade } from "react-awesome-reveal";
 import { IWork } from "../../assets/interfaces/NewInterfaces";
 import s from "./ModalWorkManager.module.scss";
 import ModalWorkManagerForm from "./ModalWorkManagerForm/ModalWorkManagerForm";
 import ButtonModalClose from "../../assets/components/ButtonModalClose/ButtonModalClose";
+import { SetStateAction } from "../../assets/interfaces/interfaces.helpers";
 
 interface IModalWorkManager {
-    onClose: () => {};
+    onClose: Dispatch<SetStateAction<boolean>>;
     work: IWork;
 }
 
@@ -23,7 +24,7 @@ const ModalWorkManager: FC<IModalWorkManager> = ({ onClose, work }) => {
                         cascade
                         className={s.modal__title}
                     >
-                        {work ? "Update Work" : "Create Work"}
+                        {work ? `Update Work - ${work.name}` : "Create Work"}
                     </Fade>
                 </div>
                 <ModalWorkManagerForm onClose={onClose} work={work} />
