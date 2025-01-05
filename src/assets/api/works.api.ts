@@ -57,7 +57,7 @@ const deleteWork = async ({
         const result = await baseQuery({
             url,
             method,
-            params: { id: workId },
+            params: { _id: workId },
         });
 
         return result as IWork["_id"];
