@@ -33,7 +33,7 @@ export interface IWork {
     slides?: string[];
 }
 
-type TechnologyCategory =
+export type TechnologyCategory =
     | "languages"
     | "frameworks"
     | "databases"
@@ -55,7 +55,10 @@ type TechnologyCategory =
 
 export type Technologies = {
     [key in TechnologyCategory]: string[];
+} & {
+    [key: string]: string[];
 };
+
 export interface ITechnologyStack {
     frontend: Technologies[];
     backend: Technologies[];

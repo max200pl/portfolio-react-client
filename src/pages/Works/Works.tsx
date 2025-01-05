@@ -14,7 +14,7 @@ import SectionTitle from "../../assets/components/SectionTitle/SectionTitle";
 import ActionPanel from "../../assets/components/ActionPanel/ActionPanel";
 import Loader from "../../assets/components/Loader/Loader";
 import Filter from "../../assets/components/Filter/Filter";
-import { extractUniqueCategories, handleTechUpdate } from "./Works.helpers";
+import { extractUniqueCategories } from "./Works.helpers";
 import { Category, IWork } from "../../assets/interfaces/NewInterfaces";
 import { Work } from "./Work/Work";
 import { LazyLoadComponent } from "react-lazy-load-image-component";
