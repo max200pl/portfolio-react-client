@@ -7,7 +7,7 @@ import {
     TextField,
 } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { Dispatch, FC, useEffect, useState } from "react";
+import { FC, useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import * as yup from "yup";
 import AutocompleteTagsCheckboxes, {
@@ -35,7 +35,6 @@ import ImageFileUpload from "../../../assets/components/ImageFileUpload/ImageFil
 import s from "./ModalWorkManagerForm.module.scss";
 import { getDirtyFields } from "../../../assets/helpers/reactHookForm.helpers";
 import { Category, IWork } from "../../../assets/interfaces/NewInterfaces";
-import { SetStateAction } from "../../../assets/interfaces/interfaces.helpers";
 
 export type WorkFormData = {
     frontTech?: CheckboxesTagsOptions;
@@ -93,7 +92,7 @@ type DirtyFields<T> = Partial<
 >;
 
 interface Props {
-    onClose: Dispatch<SetStateAction<boolean>>;
+    onClose: () => void;
     work: IWork;
 }
 
@@ -106,11 +105,11 @@ const ModalWorkManagerForm: FC<Props> = ({ onClose, work }) => {
     console.log("work", work);
 
     const [showFrontTech, setShowFrontTech] = useState(() =>
-        Boolean(work?.frontTech && Object.keys(work.frontTech).length)
+        Boolean(work?.frontTech && Object.keys(work?.frontTech).length)
     );
 
     const [showBackTech, setShowBackTech] = useState(() =>
-        Boolean(work?.backTech && Object.keys(work.backTech).length)
+        Boolean(work?.backTech && Object.keys(work?.backTech).length)
     );
 
     const [urlImage] = useState<string | undefined>(work?.cardImage?.url);
@@ -140,8 +139,8 @@ const ModalWorkManagerForm: FC<Props> = ({ onClose, work }) => {
             category: work?.category.label,
             client: work?.client,
             dateFinished: work?.dateFinished,
-            frontTech: getOptionsGroupAutocomplete(work.frontTech),
-            backTech: getOptionsGroupAutocomplete(work.backTech),
+            frontTech: getOptionsGroupAutocomplete(work?.frontTech),
+            backTech: getOptionsGroupAutocomplete(work?.backTech),
         },
     });
 
@@ -150,7 +149,7 @@ const ModalWorkManagerForm: FC<Props> = ({ onClose, work }) => {
         try {
             const result = deleteWork(work._id);
             console.log("Work was deleted successfully", result);
-            onClose(true);
+            onClose();
         } catch (error) {
             console.error("Error deleting work:", error);
         }
@@ -159,54 +158,50 @@ const ModalWorkManagerForm: FC<Props> = ({ onClose, work }) => {
     const onSubmit: SubmitHandler<WorkFormData> = async (data) => {
         try {
             let result;
+            const dataForm: WorkFormData = data;
+            const dirtyFieldsForm: DirtyFields<WorkFormData> = dirtyFields;
+            const updatedFields: Partial<WorkFormData> = getDirtyFields<
+                Partial<WorkFormData>
+            >(dataForm, dirtyFieldsForm);
 
-            // if (typeActionForm === "create") {
-            //     result = await createWork({
-            //         ...data,
-            //         frontTech: prepareTech(data.frontTech) as unknown as {
-            //             [key: string]: Technology[];
-            //         },
-            //         backTech: prepareTech(data.backTech) as unknown as {
-            //             [key: string]: Technology[];
-            //         },
-            //     } as unknown as SaveWork);
-            // }
+            console.log("dataForm", dataForm);
+            console.log("dirtyFieldsForm", dirtyFieldsForm);
+
+            if (updatedFields.category !== undefined) {
+                updatedFields.category = categories?.find(
+                    (category) => category.label === updatedFields.category
+                )?._id;
+            }
+
+            if (updatedFields.image === undefined) {
+                delete updatedFields.image;
+            }
+
+            const prepareFrontTech =
+                updatedFields.frontTech !== undefined
+                    ? {
+                          frontTech: prepareTech(updatedFields.frontTech),
+                      }
+                    : {};
+            const prepareBackTech =
+                updatedFields.backTech !== undefined
+                    ? {
+                          backTech: prepareTech(updatedFields.backTech),
+                      }
+                    : {};
+            // console.log("updatedFields", updatedFields);
+
+            // console.log("prepareFrontTech", prepareFrontTech);
+            // console.log("prepareBackTech", prepareBackTech);
+            if (typeActionForm === "create") {
+                result = await createWork({
+                    ...updatedFields,
+                    ...prepareBackTech,
+                    ...prepareFrontTech,
+                } as SaveWork);
+            }
 
             if (typeActionForm === "update") {
-                const dataForm: WorkFormData = data;
-                const dirtyFieldsForm: DirtyFields<WorkFormData> = dirtyFields;
-
-                console.log("dataForm", dataForm);
-                console.log("dirtyFieldsForm", dirtyFieldsForm);
-
-                const updatedFields: Partial<WorkFormData> = getDirtyFields<
-                    Partial<WorkFormData>
-                >(dataForm, dirtyFieldsForm);
-
-                if (updatedFields.category !== undefined) {
-                    updatedFields.category = categories?.find(
-                        (category) => category.label === updatedFields.category
-                    )?._id;
-                }
-
-                // console.log("updatedFields", updatedFields);
-
-                const prepareFrontTech =
-                    updatedFields.frontTech !== undefined
-                        ? {
-                              frontTech: prepareTech(updatedFields.frontTech),
-                          }
-                        : {};
-                const prepareBackTech =
-                    updatedFields.backTech !== undefined
-                        ? {
-                              backTech: prepareTech(updatedFields.backTech),
-                          }
-                        : {};
-
-                // console.log("prepareFrontTech", prepareFrontTech);
-                // console.log("prepareBackTech", prepareBackTech);
-
                 result = await updateWork({
                     _id: work._id,
                     name: updatedFields.name ?? work.name,
@@ -217,7 +212,7 @@ const ModalWorkManagerForm: FC<Props> = ({ onClose, work }) => {
             }
 
             console.log("Work created successfully", result);
-            onClose(true);
+            onClose();
         } catch (error) {
             console.error("Error creating work:", error);
         }
@@ -407,10 +402,7 @@ const ModalWorkManagerForm: FC<Props> = ({ onClose, work }) => {
                     </div>
 
                     <Stack direction="row" spacing={2}>
-                        <Button
-                            variant="outlined"
-                            onClick={() => onClose(true)}
-                        >
+                        <Button variant="outlined" onClick={() => onClose()}>
                             Close
                         </Button>
                         <Button

@@ -52,9 +52,11 @@ export const Work = ({
                 <div className={s.content__cat}>{category.label}</div>
                 <div className={s.content__title}>
                     {name}
-                    <time className={s.content__date}>
-                        {getYear(dateFinished)}
-                    </time>
+                    {dateFinished && (
+                        <time className={s.content__date}>
+                            {getYear(dateFinished)}
+                        </time>
+                    )}
                 </div>
             </div>
         </div>
