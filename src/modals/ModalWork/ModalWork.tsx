@@ -4,12 +4,10 @@ import { getYear } from "../../assets/helpers/helpers";
 import { Fade } from "react-awesome-reveal";
 import ButtonModalClose from "../../assets/components/ButtonModalClose/ButtonModalClose";
 import { Dispatch, FC, useEffect, useState } from "react";
-import { InterfaceTechWithApply } from "../../assets/interfaces/interfaces";
 import { Button, Stack } from "@mui/material";
 import editImg from "../../assets/images/modal/edit.svg";
 import { modifyTechnologyUsage } from "./ModalWork.helpers";
 import { useUpdateWorkMutation } from "../../assets/api/works.api";
-import { handleTechUpdate } from "../../pages/Works/Works.helpers";
 import { IWork } from "../../assets/interfaces/NewInterfaces";
 import { SetStateAction } from "../../assets/interfaces/interfaces.helpers";
 
