@@ -33,12 +33,3 @@ export const getCurrentWork = (works: any[], currentWork: { name: any }) => {
         (work: { name: any }) => work.name === currentWork.name
     );
 };
-
-export const handleTechUpdate = (
-    tech: { [s: string]: unknown } | ArrayLike<unknown>
-) => {
-    return Object.entries(tech).reduce((acc, [key, value]) => {
-        // acc[key] = value;
-        return acc;
-    }, {});
-};
