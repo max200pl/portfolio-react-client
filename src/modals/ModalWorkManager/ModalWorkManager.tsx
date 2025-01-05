@@ -23,7 +23,7 @@ const ModalWorkManager: FC<IModalWorkManager> = ({ onClose, work }) => {
                         cascade
                         className={s.modal__title}
                     >
-                        {work ? `Update Work - ${work.name}` : "Create Work"}
+                        {work ? `Update Work` : "Create Work"}
                     </Fade>
                 </div>
                 <ModalWorkManagerForm onClose={onClose} work={work} />
