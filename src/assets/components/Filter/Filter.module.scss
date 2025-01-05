@@ -7,6 +7,11 @@
     flex-wrap: wrap;
 
     &__button {
+        &[data-active="true"] {
+            text-decoration: underline;
+            opacity: 100%;
+        }
+
         font-size: 1.3rem;
         margin: 0 1.2rem;
         text-decoration: none;

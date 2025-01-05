@@ -32,8 +32,6 @@ const Works = () => {
     const { status: statusCategories, data: categories } =
         useGetCategoriesWorksQuery();
 
-    const uniqueCategories = extractUniqueCategories(categories, works);
-
     return (
         <section className={s.works}>
             <div className="container">
@@ -48,8 +46,9 @@ const Works = () => {
                 >
                     {statusCategories === "success" && (
                         <Filter
+                            currentFilter={filter}
                             onFilterChange={setFilter}
-                            categories={uniqueCategories}
+                            categories={categories}
                         />
                     )}
                 </ActionPanel>

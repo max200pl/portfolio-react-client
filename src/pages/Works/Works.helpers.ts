@@ -12,7 +12,7 @@ export const getUrlWorkImage = (image: any) => {
 export const extractUniqueCategories = (
     categories: Category[] | undefined,
     works: IWork[] | undefined
-) => {
+): Category[] | undefined => {
     const uniqueCategories = categories?.filter((category) =>
         works?.some((work) => work.category._id === category._id)
     );
