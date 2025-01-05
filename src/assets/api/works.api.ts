@@ -36,8 +36,9 @@ export const useGetWorksQuery = (filter: Category["_id"] | undefined) => {
     });
 };
 
-export interface SaveWork extends Omit<IWork, "cardImage"> {
+export interface SaveWork extends Omit<IWork, "cardImage" | "category"> {
     image: File | undefined;
+    category: Category["_id"];
 }
 
 const deleteWork = async ({
