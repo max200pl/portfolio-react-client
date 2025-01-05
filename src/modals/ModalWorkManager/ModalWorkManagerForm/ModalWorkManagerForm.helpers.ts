@@ -1,44 +1,57 @@
 import { CheckboxesTagsOptions } from "../../../assets/components/AutocompleteTagsCheckboxesMUI/AutocompleteTagsCheckboxesMUI";
+import { Technology } from "../../../assets/interfaces/interfaces";
 import {
-    ITechnology,
-    InterfaceTechWithApply,
-    Technology,
-    TechnologyName,
-} from "../../../assets/interfaces/interfaces";
+    ITech,
+    Technologies,
+    TechnologyCategory,
+} from "../../../assets/interfaces/NewInterfaces";
 
-function processValues(
-    group: string,
-    values: undefined | TechnologyName[] | Technology[]
-): CheckboxesTagsOptions {
-    if (!values) {
-        return [];
-    }
-
-    return values.map((value) => ({
-        group,
-        value:
-            typeof value === "object" && value !== null && !Array.isArray(value)
-                ? value.name
-                : String(value),
+const processValues = (
+    group: TechnologyCategory,
+    values: any
+): CheckboxesTagsOptions => {
+    return values.map((value: any) => ({
+        group: group,
+        value: value.name,
     }));
-}
+};
 
-export const getOptionsGroupAutocomplete = <
-    T extends ITechnology[] | InterfaceTechWithApply[]
->(
+export const getOptionsGroupAutocomplete = <T extends ITech | undefined>(
     technologies: T
 ): CheckboxesTagsOptions => {
-    const optionsPrep: CheckboxesTagsOptions = [];
+    const options: CheckboxesTagsOptions = [];
 
-    technologies.forEach((groupData) => {
-        optionsPrep.push(
-            ...Object.entries(groupData).flatMap(([group, values]) =>
-                processValues(group, values)
-            )
+    if (!technologies) {
+        return options;
+    }
+
+    Object.keys(technologies).forEach((group) => {
+        options.push(
+            ...processValues(group as TechnologyCategory, technologies[group])
         );
     });
 
-    return optionsPrep;
+    console.log(`getOptionsGroupAutocomplete`, options);
+
+    return options;
+};
+
+export const prepareTechForOptionsAutocomplete = (
+    technologies: Technologies[]
+): CheckboxesTagsOptions => {
+    const options: CheckboxesTagsOptions = [];
+
+    technologies.forEach((techGroup) => {
+        (Object.keys(techGroup) as TechnologyCategory[]).forEach((group) => {
+            techGroup[group].forEach((tech) => {
+                options.push({ group, value: tech });
+            });
+        });
+    });
+
+    console.log(`prepareTechForOptionsAutocomplete`, options);
+
+    return options;
 };
 
 export const prepareDataForRequest = (data: any, image: File | undefined) => {
@@ -50,9 +63,7 @@ export const prepareDataForRequest = (data: any, image: File | undefined) => {
     };
 };
 
-export const prepareTech = (
-    tech: CheckboxesTagsOptions
-): { [key: string]: Technology[] } => {
+export const prepareTech = (tech: CheckboxesTagsOptions): ITech => {
     const apply = 100;
 
     return tech.reduce((acc, currentTech) => {
@@ -62,5 +73,5 @@ export const prepareTech = (
         }
         acc[groupName].push({ apply, name: currentTech.value });
         return acc;
-    }, {} as { [key: string]: Technology[] });
+    }, {} as ITech);
 };

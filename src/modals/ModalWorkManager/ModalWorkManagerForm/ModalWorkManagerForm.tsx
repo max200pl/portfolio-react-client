@@ -7,7 +7,7 @@ import {
     TextField,
 } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { FC, useEffect, useState } from "react";
+import { Dispatch, FC, useEffect, useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import * as yup from "yup";
 import AutocompleteTagsCheckboxes, {
@@ -15,39 +15,35 @@ import AutocompleteTagsCheckboxes, {
 } from "../../../assets/components/AutocompleteTagsCheckboxesMUI/AutocompleteTagsCheckboxesMUI";
 import SelectMUI from "../../../assets/components/SelectMUI/SelectMUI";
 import {
-    InterfaceTechWithApply,
-    Technology,
-} from "../../../assets/interfaces/interfaces";
-import {
     getOptionsGroupAutocomplete,
     prepareTech,
+    prepareTechForOptionsAutocomplete,
 } from "./ModalWorkManagerForm.helpers";
 import DeleteIcon from "@mui/icons-material/Delete";
 import dayjs from "dayjs";
 import {
     TypeActionForm,
-    SaveWork,
     useCreateWorkMutation,
     useGetTechnologiesQuery,
     useUpdateWorkMutation,
     useDeleteWorkMutation,
+    useGetCategoriesWorksQuery,
+    SaveWork,
 } from "../../../assets/api/works.api";
 import ImageFileUpload from "../../../assets/components/ImageFileUpload/ImageFileUpload";
-import { getFolderName, getImageName } from "../../../assets/helpers/helpers";
 
 import s from "./ModalWorkManagerForm.module.scss";
 import { getDirtyFields } from "../../../assets/helpers/reactHookForm.helpers";
-import { defUrlWorkImage } from "../../../assets/api/constants";
-import { handleTechUpdate } from "../../../pages/Works/Works.helpers";
 import { Category, IWork } from "../../../assets/interfaces/NewInterfaces";
+import { SetStateAction } from "../../../assets/interfaces/interfaces.helpers";
 
 export type WorkFormData = {
-    frontTech: CheckboxesTagsOptions | [];
-    backTech: CheckboxesTagsOptions | [];
+    frontTech?: CheckboxesTagsOptions;
+    backTech?: CheckboxesTagsOptions;
     _id?: string;
     name: string;
     dateFinished?: Date;
-    category: Category["label"];
+    category: Category["_id"];
     client?: string;
     link?: string;
     image: any;
@@ -76,24 +72,18 @@ const schema = yup.object({
             }
             return false;
         }),
-    frontTech: yup
-        .array()
-        .required()
-        .of(
-            yup.object({
-                group: yup.string().required(),
-                value: yup.string().required(),
-            })
-        ),
-    backTech: yup
-        .array()
-        .required()
-        .of(
-            yup.object({
-                group: yup.string().required(),
-                value: yup.string().required(),
-            })
-        ),
+    frontTech: yup.array().of(
+        yup.object({
+            group: yup.string().required(),
+            value: yup.string().required(),
+        })
+    ),
+    backTech: yup.array().of(
+        yup.object({
+            group: yup.string().required(),
+            value: yup.string().required(),
+        })
+    ),
 });
 
 type DirtyFields<T> = Partial<
@@ -103,7 +93,7 @@ type DirtyFields<T> = Partial<
 >;
 
 interface Props {
-    onClose: () => {};
+    onClose: Dispatch<SetStateAction<boolean>>;
     work: IWork;
 }
 
@@ -111,32 +101,28 @@ const ModalWorkManagerForm: FC<Props> = ({ onClose, work }) => {
     const [typeActionForm] = useState<TypeActionForm>(
         work === undefined ? "create" : "update"
     );
-    const [showFrontTech, setShowFrontTech] = useState(false);
-    const [showBackTech, setShowBackTech] = useState(false);
+
+    console.log("===== ModalWorkManagerForm =====");
+    console.log("work", work);
+
+    const [showFrontTech, setShowFrontTech] = useState(() =>
+        Boolean(work?.frontTech && Object.keys(work.frontTech).length)
+    );
+
+    const [showBackTech, setShowBackTech] = useState(() =>
+        Boolean(work?.backTech && Object.keys(work.backTech).length)
+    );
+
+    const [urlImage] = useState<string | undefined>(work?.cardImage?.url);
 
     const { mutate: createWork } = useCreateWorkMutation();
     const { mutate: updateWork } = useUpdateWorkMutation();
     const { mutate: deleteWork } = useDeleteWorkMutation();
 
-    const [urlImage, setUrlImage] = useState<string | undefined>();
     const { data: technologies, status: statusTechnologies } =
         useGetTechnologiesQuery();
 
-    useEffect(() => {
-        if (typeActionForm === "update" && work?.cardImage !== undefined) {
-            // const nameCardImage = work.cardImage.name;
-            // const name = getImageName(nameCardImage);
-            // const project = getFolderName(nameCardImage);
-            // setUrlImage(defUrlWorkImage(project, name));
-        }
-    }, [typeActionForm, work]);
-
-    useEffect(() => {
-        if (statusTechnologies === "success") {
-            setShowFrontTech(Object.keys(work?.frontTech || {}).length > 0);
-            setShowBackTech(Object.keys(work?.backTech || {}).length > 0);
-        }
-    }, [statusTechnologies, work?.backTech, work?.frontTech]);
+    const { data: categories } = useGetCategoriesWorksQuery();
 
     const {
         control,
@@ -149,25 +135,13 @@ const ModalWorkManagerForm: FC<Props> = ({ onClose, work }) => {
         resolver: yupResolver(schema),
         defaultValues: {
             image: undefined,
-            name: work?.name ?? undefined,
-            link: work?.link ?? undefined,
-            category: work?.category.label ?? undefined,
-            client: work?.client ?? undefined,
-            dateFinished: work?.dateFinished ? work.dateFinished : undefined,
-            frontTech: work?.frontTech
-                ? getOptionsGroupAutocomplete(
-                      handleTechUpdate(
-                          work.frontTech
-                      ) as InterfaceTechWithApply[]
-                  )
-                : [],
-            backTech: work?.backTech
-                ? getOptionsGroupAutocomplete(
-                      handleTechUpdate(
-                          work.backTech
-                      ) as InterfaceTechWithApply[]
-                  )
-                : [],
+            name: work?.name,
+            link: work?.link,
+            category: work?.category.label,
+            client: work?.client,
+            dateFinished: work?.dateFinished,
+            frontTech: getOptionsGroupAutocomplete(work.frontTech),
+            backTech: getOptionsGroupAutocomplete(work.backTech),
         },
     });
 
@@ -176,7 +150,7 @@ const ModalWorkManagerForm: FC<Props> = ({ onClose, work }) => {
         try {
             const result = deleteWork(work._id);
             console.log("Work was deleted successfully", result);
-            onClose();
+            onClose(true);
         } catch (error) {
             console.error("Error deleting work:", error);
         }
@@ -186,42 +160,52 @@ const ModalWorkManagerForm: FC<Props> = ({ onClose, work }) => {
         try {
             let result;
 
-            if (typeActionForm === "create") {
-                result = await createWork({
-                    ...data,
-                    frontTech: prepareTech(data.frontTech) as unknown as {
-                        [key: string]: Technology[];
-                    },
-                    backTech: prepareTech(data.backTech) as unknown as {
-                        [key: string]: Technology[];
-                    },
-                } as unknown as SaveWork);
-            }
+            // if (typeActionForm === "create") {
+            //     result = await createWork({
+            //         ...data,
+            //         frontTech: prepareTech(data.frontTech) as unknown as {
+            //             [key: string]: Technology[];
+            //         },
+            //         backTech: prepareTech(data.backTech) as unknown as {
+            //             [key: string]: Technology[];
+            //         },
+            //     } as unknown as SaveWork);
+            // }
 
             if (typeActionForm === "update") {
                 const dataForm: WorkFormData = data;
                 const dirtyFieldsForm: DirtyFields<WorkFormData> = dirtyFields;
 
+                console.log("dataForm", dataForm);
+                console.log("dirtyFieldsForm", dirtyFieldsForm);
+
                 const updatedFields: Partial<WorkFormData> = getDirtyFields<
                     Partial<WorkFormData>
                 >(dataForm, dirtyFieldsForm);
 
-                const prepareBackTech =
-                    updatedFields.backTech !== undefined
-                        ? {
-                              backTech: prepareTech(
-                                  updatedFields.backTech as CheckboxesTagsOptions
-                              ) as unknown as { [key: string]: Technology[] },
-                          }
-                        : {};
+                if (updatedFields.category !== undefined) {
+                    updatedFields.category = categories?.find(
+                        (category) => category.label === updatedFields.category
+                    )?._id;
+                }
+
+                // console.log("updatedFields", updatedFields);
+
                 const prepareFrontTech =
                     updatedFields.frontTech !== undefined
                         ? {
-                              frontTech: prepareTech(
-                                  updatedFields.frontTech as CheckboxesTagsOptions
-                              ) as unknown as { [key: string]: Technology[] },
+                              frontTech: prepareTech(updatedFields.frontTech),
                           }
                         : {};
+                const prepareBackTech =
+                    updatedFields.backTech !== undefined
+                        ? {
+                              backTech: prepareTech(updatedFields.backTech),
+                          }
+                        : {};
+
+                // console.log("prepareFrontTech", prepareFrontTech);
+                // console.log("prepareBackTech", prepareBackTech);
 
                 result = await updateWork({
                     _id: work._id,
@@ -233,6 +217,7 @@ const ModalWorkManagerForm: FC<Props> = ({ onClose, work }) => {
             }
 
             console.log("Work created successfully", result);
+            onClose(true);
         } catch (error) {
             console.error("Error creating work:", error);
         }
@@ -298,7 +283,10 @@ const ModalWorkManagerForm: FC<Props> = ({ onClose, work }) => {
                             value={field.value}
                             name={field.name}
                             size="small"
-                            options={["Landing", "Website"]}
+                            options={
+                                categories?.map((category) => category.label) ||
+                                []
+                            }
                             onChange={(e) => field.onChange(e.target.value)}
                             errors={errors.category}
                         />
@@ -361,7 +349,7 @@ const ModalWorkManagerForm: FC<Props> = ({ onClose, work }) => {
                         className={s["form_control"]}
                         control={control}
                         name={"frontTech"}
-                        options={getOptionsGroupAutocomplete(
+                        options={prepareTechForOptionsAutocomplete(
                             technologies?.frontend
                         )}
                         label="Frontend Technologies"
@@ -390,7 +378,7 @@ const ModalWorkManagerForm: FC<Props> = ({ onClose, work }) => {
                         className={s["form_control"]}
                         control={control}
                         name="backTech"
-                        options={getOptionsGroupAutocomplete(
+                        options={prepareTechForOptionsAutocomplete(
                             technologies?.backend
                         )}
                         label="Backend Technologies"
@@ -419,7 +407,10 @@ const ModalWorkManagerForm: FC<Props> = ({ onClose, work }) => {
                     </div>
 
                     <Stack direction="row" spacing={2}>
-                        <Button variant="outlined" onClick={() => onClose()}>
+                        <Button
+                            variant="outlined"
+                            onClick={() => onClose(true)}
+                        >
                             Close
                         </Button>
                         <Button
