@@ -17,6 +17,11 @@
 
 .card {
     min-width: 422px;
+
+    @include xs-mb {
+        min-width: 100%;
+    }
+
     &__container {
         display: flex;
         flex-wrap: wrap;

@@ -17,8 +17,8 @@
         @include xs-mb {
             position: relative;
             top: 0;
-            flex-direction: column;
-            align-items: flex-end;
+            flex-direction: row;
+            justify-content: flex-end;
         }
 
         &__button {
