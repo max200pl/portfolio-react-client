@@ -3,16 +3,15 @@ import ModalWorkSkills from "./ModalWorkSkills/ModalWorkSkills";
 import { getYear } from "../../assets/helpers/helpers";
 import { Fade } from "react-awesome-reveal";
 import ButtonModalClose from "../../assets/components/ButtonModalClose/ButtonModalClose";
-import { Dispatch, FC, useEffect, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { Button, Stack } from "@mui/material";
 import editImg from "../../assets/images/modal/edit.svg";
 import { modifyTechnologyUsage } from "./ModalWork.helpers";
 import { useUpdateWorkMutation } from "../../assets/api/works.api";
 import { IWork } from "../../assets/interfaces/NewInterfaces";
-import { SetStateAction } from "../../assets/interfaces/interfaces.helpers";
 
 interface ModalWorkProps {
-    onClose: Dispatch<SetStateAction<boolean>>;
+    onClose: () => void;
     work: IWork | undefined;
 }
 
@@ -33,7 +32,11 @@ const ModalWork: FC<ModalWorkProps> = ({ onClose, work }) => {
         console.log(`===== ModalWork =====`);
         console.log(`currentWork:`, currentWork.frontTech);
 
-        updateWork(currentWork);
+        updateWork({
+            _id: currentWork._id,
+            frontTech: currentWork.frontTech,
+            backTech: currentWork.backTech,
+        });
     };
 
     useEffect(() => {
@@ -146,10 +149,7 @@ const ModalWork: FC<ModalWorkProps> = ({ onClose, work }) => {
                                 Save
                             </Button>
                         )}
-                        <Button
-                            variant="outlined"
-                            onClick={() => onClose(false)}
-                        >
+                        <Button variant="outlined" onClick={() => onClose()}>
                             Close
                         </Button>
                     </Stack>
