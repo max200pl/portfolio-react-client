@@ -63,3 +63,24 @@ export interface ITechnologyStack {
     frontend: Technologies[];
     backend: Technologies[];
 }
+
+/**  ==========  Certificates ==========  */
+
+export interface ICertificate {
+    _id: string;
+    name: string;
+    dateFinished?: Date;
+    category: Category;
+    link?: string;
+    cardImage?: Image;
+}
+
+export interface SaveCertificate extends Omit<ICertificate, "_id"> {
+    image: File | undefined;
+}
+
+export interface CertificateCategory {
+    _id: string;
+    label: string;
+    description?: string;
+}
