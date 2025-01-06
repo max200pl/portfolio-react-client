@@ -14,7 +14,6 @@ import SectionTitle from "../../assets/components/SectionTitle/SectionTitle";
 import ActionPanel from "../../assets/components/ActionPanel/ActionPanel";
 import Loader from "../../assets/components/Loader/Loader";
 import Filter from "../../assets/components/Filter/Filter";
-import { extractUniqueCategories } from "./Works.helpers";
 import { Category, IWork } from "../../assets/interfaces/NewInterfaces";
 import { Work } from "./Work/Work";
 import { LazyLoadComponent } from "react-lazy-load-image-component";
@@ -23,7 +22,7 @@ const Works = () => {
     const [isOpenHireMeModal, setIsOpenHireMeModal] = useState(false);
     const [isOpenResumeModal, setIsOpenSeeMyResumeModal] = useState(false);
     const [isOpenModal, toggleOpenModal] = useState(false);
-    const [isOpenEditWorkModal, toggleEditWorkOpenModal] = useState(false);
+    const [isOpenEditModal, toggleEditOpenModal] = useState(false);
     const [currentWork, setCurrentWork] = useState<IWork>();
     const [filter, setFilter] = useState<Category["_id"] | undefined>();
     const { status, data: works, isLoading } = useGetWorksQuery(filter);
@@ -41,7 +40,7 @@ const Works = () => {
                     getStatusEditSection={(status) => setEditSection(status)}
                     onClickPluseButton={() => {
                         setCurrentWork(undefined);
-                        toggleEditWorkOpenModal(true);
+                        toggleEditOpenModal(true);
                     }}
                 >
                     {statusCategories === "success" && (
@@ -75,7 +74,7 @@ const Works = () => {
                                                     editSection={editSection}
                                                     onClickEditWork={() => {
                                                         setCurrentWork(work);
-                                                        toggleEditWorkOpenModal(
+                                                        toggleEditOpenModal(
                                                             true
                                                         );
                                                     }}
@@ -120,11 +119,11 @@ const Works = () => {
             </Modal>
 
             <Modal
-                handleClose={() => toggleEditWorkOpenModal(false)}
-                isOpen={isOpenEditWorkModal}
+                handleClose={() => toggleEditOpenModal(false)}
+                isOpen={isOpenEditModal}
             >
                 <ModalWorkManager
-                    onClose={() => toggleEditWorkOpenModal(false)}
+                    onClose={() => toggleEditOpenModal(false)}
                     work={currentWork as IWork}
                 />
             </Modal>

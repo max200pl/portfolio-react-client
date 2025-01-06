@@ -1,22 +1,12 @@
 import { defUrlWorkImage } from "../../assets/api/constants";
 import { getFolderName, getImageName } from "../../assets/helpers/helpers";
-import { Category, IWork } from "../../assets/interfaces/NewInterfaces";
+import { Category } from "../../assets/interfaces/NewInterfaces";
 
 export const getUrlWorkImage = (image: any) => {
     const folderName = getFolderName(image);
     const imageName = getImageName(image);
 
     return defUrlWorkImage(folderName, imageName);
-};
-
-export const extractUniqueCategories = (
-    categories: Category[] | undefined,
-    works: IWork[] | undefined
-): Category[] | undefined => {
-    const uniqueCategories = categories?.filter((category) =>
-        works?.some((work) => work.category._id === category._id)
-    );
-    return uniqueCategories;
 };
 
 export const extractUniqueCategoryLabels = (
