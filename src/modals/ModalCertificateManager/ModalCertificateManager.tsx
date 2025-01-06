@@ -1,12 +1,12 @@
 import { FC } from "react";
 import { Fade } from "react-awesome-reveal";
-import { ICertificate } from "../../assets/interfaces/interfaces";
 import s from "./ModalCertificateManager.module.scss";
 import ModalCertificateManagerForm from "./ModalCertificateManagerForm/ModalCertificateManagerForm";
 import ButtonModalClose from "../../assets/components/ButtonModalClose/ButtonModalClose";
+import { ICertificate } from "../../assets/interfaces/NewInterfaces";
 
 interface IModalCertificateManager {
-    onClose: () => {};
+    onClose: () => void;
     certificate: ICertificate;
 }
 

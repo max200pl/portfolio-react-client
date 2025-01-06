@@ -15,7 +15,6 @@ import {
 import Loader from "../../assets/components/Loader/Loader";
 import ModalCertificateManager from "../../modals/ModalCertificateManager/ModalCertificateManager";
 import Filter from "../../assets/components/Filter/Filter";
-import { getCertificateCategoryNames } from "./Certificates.helpers";
 import { Category, ICertificate } from "../../assets/interfaces/NewInterfaces";
 
 const Certificates = () => {
@@ -124,12 +123,12 @@ const Certificates = () => {
                     certificate={currentCertificate as ICertificate}
                 />
             </Modal>
-            {/*
+
             <Modal
                 handleClose={() => {
                     setIsOpenHireMeModal(false);
                 }}
-                isOpen={() => isOpenHireMeModal(false)}
+                isOpen={isOpenHireMeModal}
             >
                 <ModalHireMe onClose={() => setIsOpenHireMeModal(false)} />
             </Modal>
@@ -142,7 +141,7 @@ const Certificates = () => {
                     handleClose={() => setIsOpenSeeMyResumeModal(false)}
                     isOpen={isOpenResumeModal}
                 />
-            </Modal> */}
+            </Modal>
         </section>
     );
 };
