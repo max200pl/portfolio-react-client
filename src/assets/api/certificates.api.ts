@@ -42,8 +42,10 @@ export const useGetCertificatesQuery = (
     });
 };
 
-export interface SaveCertificate extends Omit<ICertificate, "cardImage"> {
+export interface SaveCertificate
+    extends Omit<ICertificate, "cardImage" | "category"> {
     image: File | undefined;
+    category: CertificateCategory["_id"];
 }
 
 const deleteCertificate = async ({
