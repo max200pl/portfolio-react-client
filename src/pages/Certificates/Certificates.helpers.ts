@@ -1,10 +1,10 @@
 import {
-    CategoryCertificate,
+    CertificateCategory,
     ICertificate,
-} from "../../assets/interfaces/interfaces";
+} from "../../assets/interfaces/NewInterfaces";
 
 export const getCertificateCategoryNames = (
-    categories: CategoryCertificate[],
+    categories: CertificateCategory[],
     certificates: ICertificate[]
 ): string[] => {
     if (!categories || !certificates) {
@@ -15,8 +15,8 @@ export const getCertificateCategoryNames = (
             (certificate) => certificate.category._id === category._id
         );
         // 3. If category has certificates, push category name to the accumulator
-        if (isCategory && category.type_name) {
-            acc.push(category.type_name);
+        if (isCategory && category.label) {
+            acc.push(category.label);
         }
         return acc;
     }, []);
