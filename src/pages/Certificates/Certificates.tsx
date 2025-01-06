@@ -15,15 +15,18 @@ import {
 import Loader from "../../assets/components/Loader/Loader";
 import ModalCertificateManager from "../../modals/ModalCertificateManager/ModalCertificateManager";
 import Filter from "../../assets/components/Filter/Filter";
-import { getCertificateCategoryNames } from "./Certificats.hepers";
+import { getCertificateCategoryNames } from "./Certificates.helpers";
+import { Category, ICertificate } from "../../assets/interfaces/NewInterfaces";
 
 const Certificates = () => {
     const [isOpenHireMeModal, setIsOpenHireMeModal] = useState(false);
     const [isOpenResumeModal, setIsOpenSeeMyResumeModal] = useState(false);
-    const [isOpenEditCertificateModal, toggleEditCertificateOpenModal] =
-        useState(false);
-    const [currentCertificate, setCurrentCertificate] = useState({});
-    const [filter, setFilter] = useState("All");
+    const [isOpenEditModal, toggleEditOpenModal] = useState(false);
+    const [currentCertificate, setCurrentCertificate] =
+        useState<ICertificate>();
+
+    const [filter, setFilter] = useState<Category["_id"] | undefined>();
+
     const {
         status,
         data: certificates,
@@ -32,11 +35,6 @@ const Certificates = () => {
 
     const { status: statusCategories, data: categories = [] } =
         useGetCategoriesCertificatesQuery();
-
-    const nameCategories = getCertificateCategoryNames(
-        categories,
-        certificates
-    );
 
     const [editSection, setEditSection] = useState(false);
 
@@ -51,18 +49,19 @@ const Certificates = () => {
                     getStatusEditSection={(status) => setEditSection(status)}
                     onClickPluseButton={() => {
                         setCurrentCertificate(undefined);
-                        toggleEditCertificateOpenModal(true);
+                        toggleEditOpenModal(true);
                     }}
                 >
                     {statusCategories === "success" && (
                         <Filter
+                            currentFilter={filter}
                             onFilterChange={setFilter}
-                            categories={nameCategories}
+                            categories={categories}
                         />
                     )}
                 </ActionPanel>
 
-                {status === "success" && (
+                {status === "success" && certificates.length && (
                     <div className={s.card}>
                         <div className={s.card__container}>
                             <Fade
@@ -79,14 +78,14 @@ const Certificates = () => {
                                         >
                                             <LazyLoadComponent>
                                                 <Certificate
-                                                    {...certificate}
-                                                    key={certificate.name}
+                                                    certificate={certificate}
+                                                    key={certificate._id}
                                                     editSection={editSection}
                                                     onClickEditCertificate={() => {
                                                         setCurrentCertificate(
                                                             certificate
                                                         );
-                                                        toggleEditCertificateOpenModal(
+                                                        toggleEditOpenModal(
                                                             true
                                                         );
                                                     }}
@@ -117,20 +116,20 @@ const Certificates = () => {
             </div>
 
             <Modal
-                handleClose={() => toggleEditCertificateOpenModal(false)}
-                isOpen={isOpenEditCertificateModal}
+                handleClose={() => toggleEditOpenModal(false)}
+                isOpen={isOpenEditModal}
             >
                 <ModalCertificateManager
-                    onClose={toggleEditCertificateOpenModal}
-                    certificate={currentCertificate}
+                    onClose={() => toggleEditOpenModal(false)}
+                    certificate={currentCertificate as ICertificate}
                 />
             </Modal>
-
+            {/*
             <Modal
                 handleClose={() => {
                     setIsOpenHireMeModal(false);
                 }}
-                isOpen={isOpenHireMeModal}
+                isOpen={() => isOpenHireMeModal(false)}
             >
                 <ModalHireMe onClose={() => setIsOpenHireMeModal(false)} />
             </Modal>
@@ -143,7 +142,7 @@ const Certificates = () => {
                     handleClose={() => setIsOpenSeeMyResumeModal(false)}
                     isOpen={isOpenResumeModal}
                 />
-            </Modal>
+            </Modal> */}
         </section>
     );
 };
