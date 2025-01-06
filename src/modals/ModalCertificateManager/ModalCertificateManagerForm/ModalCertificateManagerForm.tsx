@@ -1,14 +1,11 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Button, Stack, TextField } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { FC, useEffect, useMemo, useState } from "react";
+import { FC, useMemo, useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import * as yup from "yup";
 import SelectMUI from "../../../assets/components/SelectMUI/SelectMUI";
-import {
-    CategoryCertificate,
-    ICertificate,
-} from "../../../assets/interfaces/interfaces";
+
 import DeleteIcon from "@mui/icons-material/Delete";
 import dayjs from "dayjs";
 import {
@@ -19,17 +16,19 @@ import {
     useGetCategoriesCertificatesQuery,
     useUpdateCertificatesMutation as useUpdateCertificateMutation,
 } from "../../../assets/api/certificates.api";
-import { defUrlCertificateImage } from "../../../assets/api/constants";
 import ImageFileUpload from "../../../assets/components/ImageFileUpload/ImageFileUpload";
-import { getFolderName, getImageName } from "../../../assets/helpers/helpers";
 import { getDirtyFields } from "../../../assets/helpers/reactHookForm.helpers";
 import s from "./ModalCertificateManagerForm.module.scss";
+import {
+    Category,
+    ICertificate,
+} from "../../../assets/interfaces/NewInterfaces";
 
 export type CertificateFormData = {
     _id?: string;
     name: string;
     dateFinished?: Date;
-    category: CategoryCertificate["type_name"];
+    category: Category["_id"];
     link?: string;
     image: any;
 };
@@ -65,7 +64,7 @@ type DirtyFields<T> = Partial<
 >;
 
 interface Props {
-    onClose: () => {};
+    onClose: () => void;
     certificate: ICertificate;
 }
 
@@ -78,25 +77,14 @@ const ModalCertificateManagerForm: FC<Props> = ({ onClose, certificate }) => {
     const { mutate: deleteCertificate } = useDeleteCertificateMutation();
     const { data: categories = [] } = useGetCategoriesCertificatesQuery();
 
-    const [urlImage, setUrlImage] = useState<string | undefined>();
-
-    const categoriesOptions = useMemo(
-        () => categories.map((category) => category.type_name),
-        [categories]
+    const [urlImage] = useState<string | undefined>(
+        certificate?.cardImage?.url
     );
 
-    useEffect(() => {
-        if (
-            typeActionForm === "update" &&
-            certificate?.cardImage !== undefined
-        ) {
-            const nameCardImage = certificate.cardImage.name;
-            const name = getImageName(nameCardImage);
-            const project = getFolderName(nameCardImage);
-
-            setUrlImage(defUrlCertificateImage(project, name));
-        }
-    }, [typeActionForm, certificate]);
+    const categoriesOptions = useMemo(
+        () => categories.map((category) => category.label),
+        [categories]
+    );
 
     const {
         control,
@@ -108,14 +96,12 @@ const ModalCertificateManagerForm: FC<Props> = ({ onClose, certificate }) => {
         mode: "onBlur",
         resolver: yupResolver(schema),
         defaultValues: {
-            _id: certificate?._id ?? undefined,
+            _id: certificate?._id,
             image: undefined,
-            name: certificate?.name ?? undefined,
-            link: certificate?.link ?? undefined,
-            category: certificate?.category.type_name ?? "",
-            dateFinished: certificate?.dateFinished
-                ? certificate.dateFinished
-                : undefined,
+            name: certificate?.name,
+            link: certificate?.link,
+            category: certificate?.category?.label,
+            dateFinished: certificate?.dateFinished,
         },
     });
 
@@ -133,29 +119,33 @@ const ModalCertificateManagerForm: FC<Props> = ({ onClose, certificate }) => {
     const onSubmit: SubmitHandler<CertificateFormData> = async (data) => {
         try {
             let result;
+            const dataForm: CertificateFormData = data;
+            const dirtyFieldsForm: DirtyFields<CertificateFormData> =
+                dirtyFields;
+            const updatedFields: Partial<CertificateFormData> = getDirtyFields<
+                Partial<CertificateFormData>
+            >(dataForm, dirtyFieldsForm);
 
-            const setupCategory = categories.find(
-                (category) => category.type_name === data.category
-            );
+            console.log("dataForm", dataForm);
+            console.log("dirtyFieldsForm", dirtyFieldsForm);
+
+            if (updatedFields.category !== undefined) {
+                updatedFields.category = categories?.find(
+                    (category) => category.label === updatedFields.category
+                )?._id;
+            }
+
+            if (updatedFields.image === undefined) {
+                delete updatedFields.image;
+            }
 
             if (typeActionForm === "create") {
                 result = await createCertificate({
-                    ...data,
-                    category: setupCategory,
+                    ...updatedFields,
                 } as SaveCertificate);
             }
 
             if (typeActionForm === "update") {
-                const dataForm: CertificateFormData = data;
-                const dirtyFieldsForm: DirtyFields<CertificateFormData> =
-                    dirtyFields;
-
-                const updatedFields: Partial<CertificateFormData> =
-                    getDirtyFields<Partial<CertificateFormData>>(
-                        dataForm,
-                        dirtyFieldsForm
-                    );
-
                 result = await updateCertificate({
                     _id: certificate._id,
                     name: updatedFields.name ?? certificate.name,
@@ -220,7 +210,6 @@ const ModalCertificateManagerForm: FC<Props> = ({ onClose, certificate }) => {
                 <Controller
                     name="link"
                     control={control}
-                    rules={{ required: true }}
                     render={({ field }) => (
                         <TextField
                             className={s["form_control"]}

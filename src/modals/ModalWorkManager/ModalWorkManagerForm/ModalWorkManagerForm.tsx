@@ -7,7 +7,7 @@ import {
     TextField,
 } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { FC, useState } from "react";
+import { FC, useMemo, useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import * as yup from "yup";
 import AutocompleteTagsCheckboxes, {
@@ -121,7 +121,12 @@ const ModalWorkManagerForm: FC<Props> = ({ onClose, work }) => {
     const { data: technologies, status: statusTechnologies } =
         useGetTechnologiesQuery();
 
-    const { data: categories } = useGetCategoriesWorksQuery();
+    const { data: categories = [] } = useGetCategoriesWorksQuery();
+
+    const categoriesOptions = useMemo(
+        () => categories.map((category) => category.label),
+        [categories]
+    );
 
     const {
         control,
@@ -133,6 +138,7 @@ const ModalWorkManagerForm: FC<Props> = ({ onClose, work }) => {
         mode: "onBlur",
         resolver: yupResolver(schema),
         defaultValues: {
+            _id: work?._id,
             image: undefined,
             name: work?.name,
             link: work?.link,
@@ -278,10 +284,7 @@ const ModalWorkManagerForm: FC<Props> = ({ onClose, work }) => {
                             value={field.value}
                             name={field.name}
                             size="small"
-                            options={
-                                categories?.map((category) => category.label) ||
-                                []
-                            }
+                            options={categoriesOptions}
                             onChange={(e) => field.onChange(e.target.value)}
                             errors={errors.category}
                         />
@@ -291,7 +294,6 @@ const ModalWorkManagerForm: FC<Props> = ({ onClose, work }) => {
                 <Controller
                     name="link"
                     control={control}
-                    rules={{ required: true }}
                     render={({ field }) => (
                         <TextField
                             className={s["form_control"]}
