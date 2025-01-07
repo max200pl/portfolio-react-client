@@ -60,7 +60,7 @@ const Certificates = () => {
                     )}
                 </ActionPanel>
 
-                {status === "success" && certificates.length && (
+                {status === "success" && certificates.length ? (
                     <div className={s.card}>
                         <div className={s.card__container}>
                             <Fade
@@ -96,7 +96,7 @@ const Certificates = () => {
                             </Fade>
                         </div>
                     </div>
-                )}
+                ) : null}
 
                 <div className={s.certificates__footer}>
                     <button

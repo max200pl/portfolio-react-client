@@ -63,7 +63,7 @@ const deleteCertificate = async ({
         const result = await baseQuery({
             url,
             method,
-            params: { id: certificateId },
+            params: { _id: certificateId },
         });
 
         return result as ICertificate["_id"];

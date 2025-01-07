@@ -30,7 +30,7 @@ export type CertificateFormData = {
     dateFinished?: Date;
     category: Category["_id"];
     link?: string;
-    image: any;
+    image?: any;
 };
 
 export type CertificateFormInputKeys = keyof CertificateFormData;
@@ -43,18 +43,17 @@ const schema = yup.object({
     category: yup.string().required("Please select a category"),
     dateFinished: yup.date(),
     link: yup.string(),
-    image: yup
-        .mixed()
-        .required("Please upload an image")
-        .test("fileType", "Please upload a valid image", (value) => {
-            if (!value) return false;
-            if (value instanceof File) {
-                return value.type.startsWith("image/");
-            } else if (typeof value === "string" && value.startsWith("http")) {
-                return true;
-            }
-            return false;
-        }),
+    image: yup.mixed(),
+    // .required("Please upload an image")
+    // .test("fileType", "Please upload a valid image", (value) => {
+    //     if (!value) return false;
+    //     if (value instanceof File) {
+    //         return value.type.startsWith("image/");
+    //     } else if (typeof value === "string" && value.startsWith("http")) {
+    //         return true;
+    //     }
+    //     return false;
+    // }),
 });
 
 type DirtyFields<T> = Partial<
@@ -153,6 +152,7 @@ const ModalCertificateManagerForm: FC<Props> = ({ onClose, certificate }) => {
                 } as Partial<SaveCertificate>);
             }
             console.log("Certificate created successfully", result);
+            onClose();
         } catch (error) {
             console.error("Error creating certificate:", error);
         }
