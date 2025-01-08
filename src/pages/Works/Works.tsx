@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import s from "./Works.module.scss";
 import Modal from "../../assets/components/Modal/Modal";
 import ModalHireMe from "../../modals/ModalHireMe/ModalHireMe";
@@ -17,6 +17,7 @@ import Filter from "../../assets/components/Filter/Filter";
 import { Category, IWork } from "../../assets/interfaces/NewInterfaces";
 import { Work } from "./Work/Work";
 import { LazyLoadComponent } from "react-lazy-load-image-component";
+import { getUniqCategoriesWork } from "./Works.helpers";
 
 const Works = () => {
     const [isOpenHireMeModal, setIsOpenHireMeModal] = useState(false);
@@ -28,8 +29,16 @@ const Works = () => {
     const { status, data: works, isLoading } = useGetWorksQuery(filter);
     const [editSection, setEditSection] = useState(false);
 
-    const { status: statusCategories, data: categories } =
-        useGetCategoriesWorksQuery();
+    const [categoriesInitialized, setCategoriesInitialized] = useState(false);
+    const [uniqueCategories, setUniqueCategories] = useState<Category[]>([]);
+
+    useEffect(() => {
+        if (status === "success" && works && !categoriesInitialized) {
+            const categories = getUniqCategoriesWork(works);
+            setUniqueCategories(categories);
+            setCategoriesInitialized(true);
+        }
+    }, [status, works, categoriesInitialized]);
 
     return (
         <section className={s.works}>
@@ -43,11 +52,11 @@ const Works = () => {
                         toggleEditOpenModal(true);
                     }}
                 >
-                    {statusCategories === "success" && (
+                    {categoriesInitialized && (
                         <Filter
                             currentFilter={filter}
                             onFilterChange={setFilter}
-                            categories={categories}
+                            categories={uniqueCategories}
                         />
                     )}
                 </ActionPanel>

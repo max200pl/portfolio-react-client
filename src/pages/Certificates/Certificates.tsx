@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import s from "./Certificates.module.scss";
 import Modal from "../../assets/components/Modal/Modal";
 import ModalHireMe from "../../modals/ModalHireMe/ModalHireMe";
@@ -16,6 +16,7 @@ import Loader from "../../assets/components/Loader/Loader";
 import ModalCertificateManager from "../../modals/ModalCertificateManager/ModalCertificateManager";
 import Filter from "../../assets/components/Filter/Filter";
 import { Category, ICertificate } from "../../assets/interfaces/NewInterfaces";
+import { getUniqCategoriesCertificates } from "./Certificates.helpers";
 
 const Certificates = () => {
     const [isOpenHireMeModal, setIsOpenHireMeModal] = useState(false);
@@ -37,6 +38,21 @@ const Certificates = () => {
 
     const [editSection, setEditSection] = useState(false);
 
+    const [categoriesInitialized, setCategoriesInitialized] = useState(false);
+    const [uniqueCategories, setUniqueCategories] = useState<Category[]>([]);
+
+    useEffect(() => {
+        if (
+            statusCategories === "success" &&
+            certificates &&
+            !categoriesInitialized
+        ) {
+            const categories = getUniqCategoriesCertificates(certificates);
+            setUniqueCategories(categories);
+            setCategoriesInitialized(true);
+        }
+    }, [categories, categoriesInitialized, certificates, statusCategories]);
+
     return (
         <section className={s.certificates}>
             <div className="container">
@@ -51,11 +67,11 @@ const Certificates = () => {
                         toggleEditOpenModal(true);
                     }}
                 >
-                    {statusCategories === "success" && (
+                    {categoriesInitialized && (
                         <Filter
                             currentFilter={filter}
                             onFilterChange={setFilter}
-                            categories={categories}
+                            categories={uniqueCategories}
                         />
                     )}
                 </ActionPanel>

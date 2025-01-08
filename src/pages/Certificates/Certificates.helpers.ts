@@ -1,4 +1,5 @@
 import {
+    Category,
     CertificateCategory,
     ICertificate,
 } from "../../assets/interfaces/NewInterfaces";
@@ -20,4 +21,27 @@ export const getCertificateCategoryNames = (
         }
         return acc;
     }, []);
+};
+
+export const getUniqCategoriesCertificates = (
+    certificates: ICertificate[]
+): Category[] => {
+    const uniqCategories = new Set<string>();
+    const categoriesMap = new Map<string, Category>();
+
+    certificates.forEach((certificate) => {
+        if (certificate.category) {
+            const categoryId = certificate.category._id;
+            if (!uniqCategories.has(categoryId)) {
+                uniqCategories.add(categoryId);
+                categoriesMap.set(categoryId, certificate.category);
+            }
+        }
+    });
+
+    const categories = Array.from(categoriesMap.values());
+
+    console.log("categories", categories);
+
+    return categories;
 };
