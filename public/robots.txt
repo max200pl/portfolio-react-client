@@ -1,3 +1,20 @@
-# https://www.robotstxt.org/robotstxt.html
+# Specifies to all search bots that indexing is allowed
 User-agent: *
-Disallow:
+Allow: /
+
+# Exclude unnecessary files and folders
+Disallow: /private/
+Disallow: /tmp/
+Disallow: /node_modules/
+Disallow: /config/
+Disallow: /build/
+Disallow: /src/
+
+# Block service files
+Disallow: /manifest.json
+Disallow: /site.webmanifest
+Disallow: /favicon.ico
+Disallow: /robots.txt
+
+# Sitemap location
+# Sitemap: https://yourdomain.com/sitemap.xml
