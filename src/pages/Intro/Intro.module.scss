@@ -47,6 +47,8 @@
     font-weight: 200;
     color: $color-white;
     margin-bottom: 5px;
+
+    animation: fadeIn 1s ease-in-out;
 }
 
 .title {
@@ -54,6 +56,7 @@
     font-weight: 700;
     margin-bottom: 5px;
     margin-top: 10px;
+    animation: fadeIn 1.5s ease-in-out;
 
     @include xs-mb {
         font-size: 1.8rem;
@@ -63,7 +66,7 @@
 .text {
     font-size: 1.2rem;
     margin-bottom: 25px;
-    opacity: 0.7;
+    animation: fadeIn 2s ease-in-out;
 }
 
 .social {
@@ -78,4 +81,15 @@
 .next_button__icon {
     height: 80px;
     max-width: 80px;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }

@@ -14,9 +14,16 @@ const Intro = () => {
             <div className="container">
                 <div className={s.inner}>
                     <div className={s.content}>
-                        <h2 className={s.subtitle}>I'm Maksym</h2>
+                        <h2 className={s.subtitle}>Hello, I'm Maksym</h2>
                         <h1 className={s.title}>Full Stack Web Developer</h1>
-                        <div className={s.text}></div>
+                        <div className={s.text}>
+                            <p>
+                                Welcome to my portfolio!
+                                <br />I specialize in building high-quality web
+                                applications using the latest technologies.
+                            </p>
+                            <p>Let's create something amazing together!</p>
+                        </div>
                         <div className={s.social}>
                             <SocialLinks />
                         </div>
