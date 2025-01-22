@@ -18,6 +18,7 @@ import { Category, IWork } from "../../assets/interfaces/NewInterfaces";
 import { Work } from "./Work/Work";
 import { LazyLoadComponent } from "react-lazy-load-image-component";
 import { getUniqCategoriesWork } from "./Works.helpers";
+import { Box, Grid, Skeleton } from "@mui/material";
 
 const Works = () => {
     const [isOpenHireMeModal, setIsOpenHireMeModal] = useState(false);
@@ -44,7 +45,7 @@ const Works = () => {
         <section className={s.works}>
             <div className="container">
                 <SectionTitle text="My Works" />
-                {isLoading && <Loader />}
+
                 <ActionPanel
                     getStatusEditSection={(status) => setEditSection(status)}
                     onClickPluseButton={() => {
@@ -61,6 +62,42 @@ const Works = () => {
                     )}
                 </ActionPanel>
 
+                {!works && (
+                    <>
+                        <Loader />
+                        <Grid container wrap="wrap" boxSizing={"border-box"}>
+                            {new Array(6).fill(0).map((_, index) => (
+                                <Box
+                                    key={index}
+                                    flexBasis={[
+                                        "100%",
+                                        "50%",
+                                        "33.333%",
+                                        "33.333%",
+                                    ]}
+                                    sx={{
+                                        // margin: "15px",
+                                        my: 0,
+                                    }}
+                                >
+                                    <Box
+                                        display={"flex"}
+                                        flexDirection={"column"}
+                                        justifyContent={"space-between"}
+                                        flexBasis={["100%"]}
+                                        sx={{
+                                            margin: "15px",
+                                            my: 0,
+                                        }}
+                                    >
+                                        <Skeleton height="250px" width="100%" />
+                                        <Skeleton width="60%" />
+                                    </Box>
+                                </Box>
+                            ))}
+                        </Grid>
+                    </>
+                )}
                 {status === "success" && (
                     <div className={s.card}>
                         <div className={s.card__container}>
