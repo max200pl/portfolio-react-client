@@ -3,6 +3,8 @@
 .action_panel {
     position: relative;
 
+    min-height: 61px;
+
     &__filter {
         flex-grow: 1;
     }
