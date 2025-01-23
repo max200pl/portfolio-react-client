@@ -3,6 +3,12 @@
 .works {
     overflow: hidden;
 
+    margin-bottom: 40px;
+
+    @include xs-mb {
+        margin-bottom: 20px;
+    }
+
     &__footer {
         display: flex;
         justify-content: center;
@@ -15,22 +21,21 @@
     }
 }
 
-.card {
+.works_container {
+    display: flex;
+    flex-wrap: wrap;
     min-width: 422px;
+
+    margin: -15px;
+    margin-bottom: 25px;
 
     @include xs-mb {
         min-width: 100%;
+        margin: 0;
     }
 
-    &__container {
-        display: flex;
-        flex-wrap: wrap;
-        margin: -15px;
-        margin-bottom: 25px;
-
-        @include xs-mb {
-            margin: 0;
-        }
+    @include lg {
+        min-height: 600px;
     }
 
     &__col {
