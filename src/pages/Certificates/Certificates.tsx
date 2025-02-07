@@ -74,8 +74,8 @@ const Certificates = () => {
                                     key={index}
                                     flexBasis={[
                                         "100%",
-                                        "100%",
-                                        "33.333%",
+                                        "50%",
+                                        "50%",
                                         "33.333%",
                                     ]}
                                     sx={{
@@ -86,23 +86,17 @@ const Certificates = () => {
                                         display={"flex"}
                                         flexDirection={"column"}
                                         justifyContent={"space-between"}
-                                        width={[
-                                            "100%",
-                                            "370px",
-                                            "33.333%",
-                                            "33.333%",
-                                        ]}
                                         sx={{
-                                            margin: [
-                                                "15px auto",
-                                                "15px auto",
-                                                "15px",
-                                                "15px",
-                                            ],
-                                            my: 0,
+                                            margin: "15px",
                                         }}
                                     >
-                                        <Skeleton height="330px" width="100%" />
+                                        <Skeleton
+                                            width="100%"
+                                            sx={{
+                                                height: "330px",
+                                                transform: "scale(1)",
+                                            }}
+                                        />
                                         <Skeleton height="60px" width="60%" />
                                     </Box>
                                 </Box>
