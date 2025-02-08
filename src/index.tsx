@@ -14,6 +14,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import UserContextProvider from "./context/user-context";
+import './firebaseConfig';
 
 const root = ReactDOM.createRoot(
     document.getElementById("root") as HTMLElement

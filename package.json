@@ -24,6 +24,7 @@
     "@types/react-dom": "^18.2.17",
     "axios": "^1.6.2",
     "dayjs": "^1.11.10",
+    "firebase": "^11.3.0",
     "formik": "^2.4.5",
     "js-cookie": "^3.0.5",
     "js-html2pdf": "^1.1.4",
