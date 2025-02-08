@@ -58,7 +58,7 @@ const Works = () => {
                     )}
                 </ActionPanel>
 
-                {true && (
+                {!works && (
                     <>
                         <Grid
                             sx={{

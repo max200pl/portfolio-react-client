@@ -12,7 +12,6 @@ import {
     Link,
     OutlinedInput,
     Stack,
-    Switch,
     TextField,
 } from "@mui/material";
 import React, { useContext } from "react";
@@ -65,18 +64,21 @@ const AuthForm = <T extends SubmitSignUpFormValues | SubmitSignInFormValues>({
             userCtx.authUser(response.user);
             navigate("/");
         } catch (error) {
-            const { response } = error as { response: { data: { message: string } } };
-            setError(response.data as SetStateAction<{ message: "string"; } | undefined>);
+            const { response } = error as {
+                response: { data: { message: string } };
+            };
+            setError(
+                response.data as SetStateAction<
+                    { message: "string" } | undefined
+                >
+            );
             console.log(error);
         }
     };
 
-
     return (
         <form onSubmit={handleSubmit(onSubmit)} className={s.form}>
-            {
-                showError && <ErrorMessage message={showError.message} />
-            }
+            {showError && <ErrorMessage message={showError.message} />}
             {type === "sign-up" && (
                 <Stack
                     direction="row"
@@ -162,10 +164,16 @@ const AuthForm = <T extends SubmitSignUpFormValues | SubmitSignInFormValues>({
                                 <InputAdornment position="end">
                                     <IconButton
                                         aria-label="toggle password visibility"
-                                        onClick={() => setShowPassword((show) => !show)}
+                                        onClick={() =>
+                                            setShowPassword((show) => !show)
+                                        }
                                         edge="end"
                                     >
-                                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                                        {showPassword ? (
+                                            <VisibilityOff />
+                                        ) : (
+                                            <Visibility />
+                                        )}
                                     </IconButton>
                                 </InputAdornment>
                             }
@@ -185,19 +193,14 @@ const AuthForm = <T extends SubmitSignUpFormValues | SubmitSignInFormValues>({
                     direction="row"
                     spacing={2}
                     alignItems="center"
-                    justifyContent="space-between"
+                    justifyContent=" end"
                 >
-                    <Controller
-                        name="remember"
-                        control={control}
-                        render={({ field }) => {
-                            return (
-                                <Switch {...field} checked={field.value} color="primary" />
-                            );
-                        }}
-                    />
-
-                    <Link href="#" underline="hover" color="inherit">
+                    <Link
+                        href="#"
+                        underline="hover"
+                        color="inherit"
+                        sx={{ width: "max-content" }}
+                    >
                         Forgot password?
                     </Link>
                 </Stack>
