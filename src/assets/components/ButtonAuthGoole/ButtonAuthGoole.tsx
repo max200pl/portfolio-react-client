@@ -6,7 +6,6 @@ import { UserContext } from "../../../context/user-context";
 import { getAuthGoole, TypeActionAuth } from "../../api/auth.api";
 import s from "./ButtonAuthGoole.module.scss";
 import { ErrorMessage } from "../../../forms/AuthForm/ErrorMessage";
-import { SetStateAction } from "../../interfaces/interfaces.helpers";
 
 const ButtonAuthGoole = ({ typeAction }: { typeAction: TypeActionAuth }) => {
     const navigate = useNavigate();

@@ -1,6 +1,6 @@
 // https://spacejelly.dev/posts/uploading-files-in-react-from-a-form-with-drag-and-drop/
 
-import { FC, useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import s from "./ImageFileUpload.module.scss";
 import ImageLazyLoad from "../ImageLazyLoad/ImageLazyLoad";
 import { useDropzone } from "react-dropzone";

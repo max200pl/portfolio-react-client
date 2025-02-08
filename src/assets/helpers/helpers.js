@@ -1,6 +1,5 @@
 import moment from "moment";
 import { useEffect } from "react";
-import { defUrlWorkImage } from "../api/constants";
 
 export function addBodyClass(className) {
     return () =>

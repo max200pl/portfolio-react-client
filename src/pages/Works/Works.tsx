@@ -23,7 +23,7 @@ const Works = () => {
     const [isOpenEditModal, toggleEditOpenModal] = useState(false);
     const [currentWork, setCurrentWork] = useState<IWork>();
     const [filter, setFilter] = useState<Category["_id"] | undefined>();
-    const { status, data: works, isLoading } = useGetWorksQuery(filter);
+    const { status, data: works } = useGetWorksQuery(filter);
     const [editSection, setEditSection] = useState(false);
 
     const [categoriesInitialized, setCategoriesInitialized] = useState(false);

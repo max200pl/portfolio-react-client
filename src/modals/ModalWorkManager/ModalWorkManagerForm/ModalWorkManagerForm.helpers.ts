@@ -1,5 +1,4 @@
 import { CheckboxesTagsOptions } from "../../../assets/components/AutocompleteTagsCheckboxesMUI/AutocompleteTagsCheckboxesMUI";
-import { Technology } from "../../../assets/interfaces/interfaces";
 import {
     ITech,
     Technologies,

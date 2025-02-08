@@ -3,10 +3,7 @@ import s from "./ModalWorkSkills.module.scss";
 import ProgressBar from "../../../assets/components/ProgressBar/ProgressBar";
 import { parseCamelCase } from "../../../assets/helpers/helpers";
 import { FC, useState } from "react";
-import {
-    Technology,
-    InterfaceTechWithApply,
-} from "../../../assets/interfaces/interfaces";
+import { Technology } from "../../../assets/interfaces/interfaces";
 import { Slider } from "@mui/material";
 import { IWork } from "../../../assets/interfaces/NewInterfaces";
 

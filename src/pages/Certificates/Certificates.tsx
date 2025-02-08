@@ -12,7 +12,6 @@ import {
     useGetCategoriesCertificatesQuery,
     useGetCertificatesQuery,
 } from "../../assets/api/certificates.api";
-import Loader from "../../assets/components/Loader/Loader";
 import ModalCertificateManager from "../../modals/ModalCertificateManager/ModalCertificateManager";
 import Filter from "../../assets/components/Filter/Filter";
 import { Category, ICertificate } from "../../assets/interfaces/NewInterfaces";
@@ -28,11 +27,7 @@ const Certificates = () => {
 
     const [filter, setFilter] = useState<Category["_id"] | undefined>();
 
-    const {
-        status,
-        data: certificates,
-        isLoading,
-    } = useGetCertificatesQuery(filter);
+    const { status, data: certificates } = useGetCertificatesQuery(filter);
 
     const { status: statusCategories, data: categories = [] } =
         useGetCategoriesCertificatesQuery();

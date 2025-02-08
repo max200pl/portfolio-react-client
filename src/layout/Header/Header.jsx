@@ -5,14 +5,12 @@ import home from "../../assets/images/header/home.svg";
 import PortfolioImg from "../../assets/images/header/portfolio.svg";
 import AboutImg from "../../assets/images/header/about.svg";
 import ContactImg from "../../assets/images/header/contact.svg";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../../context/user-context";
 import Modal from "../../assets/components/Modal/Modal";
 import ModalHireMe from "../../modals/ModalHireMe/ModalHireMe";
 import { ButtonBurger } from "../../assets/components/ButtonBurger/ButtonBurger";
 import HeaderAuthInfo from "./HeaderAuthInfo";
-import { CSSTransition } from "react-transition-group";
-import { Fade } from "react-awesome-reveal";
 
 const dataNavLink = (isAuth, logOutUserHandler) => [
     {

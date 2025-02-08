@@ -1,4 +1,3 @@
-import { FC } from "react";
 import s from "./SocialLinks.module.scss";
 
 import socialLink1 from "./../../images/intro/1.png";

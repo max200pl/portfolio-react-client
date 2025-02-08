@@ -1,4 +1,4 @@
-import { IWork, ITech } from "../../assets/interfaces/NewInterfaces";
+import { IWork } from "../../assets/interfaces/NewInterfaces";
 
 export const modifyTechnologyUsage = ({
     apply,
