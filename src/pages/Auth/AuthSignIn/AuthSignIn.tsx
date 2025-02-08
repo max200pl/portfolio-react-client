@@ -1,10 +1,6 @@
 // https://www.figma.com/file/zDlwMyy0LFHCO4CiXLcK7k/Login-Page-Perfect-UI-(Freebie)-(Community)?type=design&node-id=401%3A4165&mode=dev
 
-import {
-    Chip,
-    Divider,
-    Link
-} from "@mui/material";
+import { Button, Chip, Divider } from "@mui/material";
 import React from "react";
 import ButtonAuthGitHub from "../../../assets/components/ButtonAuthGitHub/ButtonAuthGitHub";
 import ButtonAuthGoole from "../../../assets/components/ButtonAuthGoole/ButtonAuthGoole";
@@ -12,11 +8,9 @@ import AuthForm from "../../../forms/AuthForm/AuthForm";
 import AuthModal from "../AuthModal";
 import s from "./AuthSignIn.module.scss";
 import { useNavigate } from "react-router-dom";
-import { TypeActionAuth } from '../../../assets/api/auth.api';
+import { TypeActionAuth } from "../../../assets/api/auth.api";
 import * as yup from "yup";
 import { emailRegExp } from "../../../assets/helpers/regular-expressions";
-
-
 
 export type SubmitSignInFormValues = {
     email: string;
@@ -34,38 +28,46 @@ const schema = yup.object().shape({
                 return emailRegExp.test(value ?? ""); // || phonePattern.test(value ?? "");
             }
         )
-        .required("Email is required").defined(),
+        .required("Email is required")
+        .defined(),
     password: yup
         .string()
         .trim()
         .required("Enter password")
-        .min(6, "Password must be at least 6 characters long.").defined(),
+        .min(6, "Password must be at least 6 characters long.")
+        .defined(),
     remember: yup.boolean().defined(),
 });
 
-
 const AuthSignIn: React.FC = () => {
     const navigate = useNavigate();
-    const { signUp_link } = s;
     const typeAction = "login" as TypeActionAuth;
 
     return (
         <AuthModal typeAction={typeAction}>
-            <div className={signUp_link}>
-                <span>Don't have an account? </span>
-                <Link href="" onClick={() => navigate("/auth/sign-up")} underline="hover">
-                    Sign Up
-                </Link>
-            </div>
-
             <ButtonAuthGoole typeAction="login" />
             <ButtonAuthGitHub typeAction="login" />
 
             <Divider className={s["form_control"]}>
-                <Chip label="OR" size="small" />
+                <Chip label="Or with email and password" size="small" />
             </Divider>
 
             <AuthForm type={typeAction} schema={schema} />
+
+            <Divider className={s["form_control"]} sx={{ mt: "6px" }}>
+                <Chip label="Don't have an account?" size="small" />
+            </Divider>
+
+            <Button
+                className={`${s["form_control"]} ${s["form_control__submit"]}`}
+                variant="contained"
+                color="success"
+                type="submit"
+                aria-description="Create your Account"
+                onClick={() => navigate("/auth/sign-up")}
+            >
+                Create your Account
+            </Button>
         </AuthModal>
     );
 };
