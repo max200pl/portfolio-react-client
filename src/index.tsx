@@ -14,7 +14,8 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import UserContextProvider from "./context/user-context";
-import './firebaseConfig';
+import "./firebaseConfig";
+import AuthContextProvider from "./context/auth-context";
 
 const root = ReactDOM.createRoot(
     document.getElementById("root") as HTMLElement
@@ -29,19 +30,21 @@ const darkTheme = createTheme({
 const queryClient = new QueryClient();
 
 root.render(
-    <UserContextProvider>
-        <GoogleOAuthProvider clientId="41245498308-44oaelsqg4sgj011hevmr3953nqsmjrn.apps.googleusercontent.com">
-            <ThemeProvider theme={darkTheme}>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <QueryClientProvider client={queryClient}>
-                        <App />
-                        <ReactQueryDevtools initialIsOpen={false} />
-                    </QueryClientProvider>
-                </LocalizationProvider>
-                <CssBaseline />
-            </ThemeProvider>
-        </GoogleOAuthProvider>
-    </UserContextProvider>
+    <AuthContextProvider>
+        <UserContextProvider>
+            <GoogleOAuthProvider clientId="41245498308-44oaelsqg4sgj011hevmr3953nqsmjrn.apps.googleusercontent.com">
+                <ThemeProvider theme={darkTheme}>
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <QueryClientProvider client={queryClient}>
+                            <App />
+                            <ReactQueryDevtools initialIsOpen={false} />
+                        </QueryClientProvider>
+                    </LocalizationProvider>
+                    <CssBaseline />
+                </ThemeProvider>
+            </GoogleOAuthProvider>
+        </UserContextProvider>
+    </AuthContextProvider>
 );
 
 // If you want to start measuring performance in your app, pass a function
