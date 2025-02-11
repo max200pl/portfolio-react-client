@@ -34,8 +34,6 @@ export const getUniqCategoriesWork = (works: IWork[]): Category[] => {
 
     const categories = Array.from(categoriesMap.values());
 
-    console.log("categories", categories);
-
     return categories;
 };
 

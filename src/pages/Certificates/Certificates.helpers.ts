@@ -41,7 +41,5 @@ export const getUniqCategoriesCertificates = (
 
     const categories = Array.from(categoriesMap.values());
 
-    console.log("categories", categories);
-
     return categories;
 };
