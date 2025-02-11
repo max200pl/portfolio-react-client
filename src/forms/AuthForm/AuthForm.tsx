@@ -18,7 +18,7 @@ import React, { useContext } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { TypeActionAuth, getAuthForm } from "../../assets/api/auth.api";
-import { UserContext } from "../../context/user-context";
+import { UserSessionContext } from "../../context/user-context";
 import s from "./AuthForm.module.scss";
 import { SubmitSignInFormValues } from "../../pages/Auth/AuthSignIn/AuthSignIn";
 import { AnyObject, Maybe, ObjectSchema } from "yup";
@@ -38,7 +38,7 @@ const AuthForm = <T extends SubmitSignUpFormValues | SubmitSignInFormValues>({
     defaultValues,
 }: AuthFormProps<T>) => {
     const navigate = useNavigate();
-    const userCtx = useContext(UserContext);
+    const userCtx = useContext(UserSessionContext);
     const [showPassword, setShowPassword] = React.useState(false);
     const [showError, setError] = React.useState<{ message: "string" }>();
 
@@ -61,7 +61,7 @@ const AuthForm = <T extends SubmitSignUpFormValues | SubmitSignInFormValues>({
 
             console.log("response", response);
             setError(undefined);
-            userCtx.authUser(response.user);
+            // userCtx.setUserAuthentication(response.user);
             navigate("/");
         } catch (error) {
             const { response } = error as {

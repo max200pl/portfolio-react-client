@@ -1,7 +1,12 @@
 import { initializeApp } from "firebase/app";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
-import Cookies from "js-cookie";
-import { createContext, useEffect, useState } from "react";
+import {
+    getAuth,
+    GoogleAuthProvider,
+    onAuthStateChanged,
+    signInWithPopup,
+} from "firebase/auth";
+import { createContext, useContext, useEffect } from "react";
+import { UserSessionContext } from "./user-context";
 
 // Your web app's Firebase configuration using environment variables
 const firebaseConfig = {
@@ -19,15 +24,11 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
 type AuthContextType = {
-    isAuth: boolean;
-    token?: string;
-    logOut: () => void;
+    signInWithGoogle: () => void;
 };
 
 export const AuthContext = createContext<AuthContextType>({
-    isAuth: false,
-    token: undefined,
-    logOut: () => {},
+    signInWithGoogle: () => {},
 });
 
 interface Props {
@@ -35,20 +36,11 @@ interface Props {
 }
 
 const AuthContextProvider = ({ children }: Props) => {
-    const [token, setToken] = useState<string | undefined>(
-        Cookies.get("token")
-    );
+    const userSessionCtx = useContext(UserSessionContext);
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, async (user) => {
-            if (user) {
-                const token = await user.getIdToken();
-                setToken(token);
-                Cookies.set("token", token);
-            } else {
-                setToken(undefined);
-                Cookies.remove("token");
-            }
+            console.log(`User State Changed: ${user?.email}`);
         });
 
         return () => {
@@ -56,20 +48,27 @@ const AuthContextProvider = ({ children }: Props) => {
         };
     }, []);
 
-    const logOutHandler = async () => {
+    const signInWithGoogle = async () => {
+        console.log("Sign in with Google");
+
+        const provider = new GoogleAuthProvider();
+
         try {
-            await auth.signOut(); // Ensure this resolves before state updates
-            Cookies.remove("token");
-            setToken(undefined);
+            const result = await signInWithPopup(auth, provider);
+            console.info(`Signed in with Google: ${result.user?.email}`);
+
+            const token = await result.user?.getIdToken();
+
+            // GO to backend and create a session
+
+            console.info(`Token: ${token}`);
         } catch (error) {
-            console.error("Logout failed", error);
+            console.error("Error signing in with Google:", error);
         }
     };
 
-    const contextValue: AuthContextType = {
-        isAuth: !!token,
-        token: token,
-        logOut: logOutHandler,
+    const contextValue = {
+        signInWithGoogle,
     };
 
     return (

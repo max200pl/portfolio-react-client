@@ -12,8 +12,7 @@ import "@fontsource/roboto/700.css";
 import { CssBaseline, ThemeProvider, createTheme } from "@mui/material";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers";
-import { GoogleOAuthProvider } from "@react-oauth/google";
-import UserContextProvider from "./context/user-context";
+import UserSessionContextProvider from "./context/user-context";
 import "./firebaseConfig";
 import AuthContextProvider from "./context/auth-context";
 
@@ -30,21 +29,19 @@ const darkTheme = createTheme({
 const queryClient = new QueryClient();
 
 root.render(
-    <AuthContextProvider>
-        <UserContextProvider>
-            <GoogleOAuthProvider clientId="41245498308-44oaelsqg4sgj011hevmr3953nqsmjrn.apps.googleusercontent.com">
-                <ThemeProvider theme={darkTheme}>
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <QueryClientProvider client={queryClient}>
-                            <App />
-                            <ReactQueryDevtools initialIsOpen={false} />
-                        </QueryClientProvider>
-                    </LocalizationProvider>
-                    <CssBaseline />
-                </ThemeProvider>
-            </GoogleOAuthProvider>
-        </UserContextProvider>
-    </AuthContextProvider>
+    <UserSessionContextProvider>
+        <AuthContextProvider>
+            <ThemeProvider theme={darkTheme}>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <QueryClientProvider client={queryClient}>
+                        <App />
+                        <ReactQueryDevtools initialIsOpen={false} />
+                    </QueryClientProvider>
+                </LocalizationProvider>
+                <CssBaseline />
+            </ThemeProvider>
+        </AuthContextProvider>
+    </UserSessionContextProvider>
 );
 
 // If you want to start measuring performance in your app, pass a function
