@@ -12,47 +12,50 @@ interface User {
     role?: "guest" | "admin" | "user";
 }
 
-type UserContextType = {
+type UserSessionContextType = {
     isAuth: boolean;
     user?: User;
-    authUser: (user: User) => void;
-    logOutUser: () => void;
+    setUserSession: (user: User) => void;
+    clearUserSession: () => void;
 };
 
-export const UserContext = createContext<UserContextType>({
+export const UserSessionContext = createContext<UserSessionContextType>({
     isAuth: false,
     user: undefined,
-    authUser: (user) => {},
-    logOutUser: () => {},
+    setUserSession: (user) => {},
+    clearUserSession: () => {},
 });
 
 interface Props {
     children: React.ReactNode;
 }
 
-const UserContextProvider: FC<Props> = ({ children }) => {
+const UserSessionContextProvider: FC<Props> = ({ children }) => {
     const [user, setUser] = useState<User>();
     const userCookies = Cookies.get("user");
 
-    const authUserHandler = (user: User) => {
+    const setUserSession = (user: User) => {
         Cookies.set("user", JSON.stringify(user));
         setUser(user);
     };
 
-    const logOutUserHandler = async () => {
-        console.info("Attempting to log out user");
-        const response = await logOutUser();
-        console.info("Response from server:", response);
+    const clearUserSession = async () => {
+        try {
+            await logOutUser();
+        } catch (error) {
+            console.error("Error logging out user:", error);
+        }
 
         setUser(undefined);
-        console.info("User state set to undefined");
 
         Cookies.remove("user");
         Cookies.remove("session");
         Cookies.remove("session.sig");
         console.info("Cookies removed");
 
-        console.info("User logged out");
+        console.info(`
+                User ${user?.email} signed out
+            `);
     };
 
     if (userCookies !== undefined && user === undefined) {
@@ -60,18 +63,18 @@ const UserContextProvider: FC<Props> = ({ children }) => {
         setUser(user);
     }
 
-    const contextValue: UserContextType = {
+    const contextValue: UserSessionContextType = {
         isAuth: !!user,
         user: user,
-        authUser: authUserHandler,
-        logOutUser: logOutUserHandler,
+        setUserSession: setUserSession,
+        clearUserSession: clearUserSession,
     };
 
     return (
-        <UserContext.Provider value={contextValue}>
+        <UserSessionContext.Provider value={contextValue}>
             {children}
-        </UserContext.Provider>
+        </UserSessionContext.Provider>
     );
 };
 
-export default UserContextProvider;
+export default UserSessionContextProvider;
