@@ -15,15 +15,13 @@ interface User {
 type UserSessionContextType = {
     isAuth: boolean;
     user?: User;
-    setUserSession: (user: User) => void;
-    clearUserSession: () => void;
+    clearSession: () => void;
 };
 
 export const UserSessionContext = createContext<UserSessionContextType>({
     isAuth: false,
     user: undefined,
-    setUserSession: (user) => {},
-    clearUserSession: () => {},
+    clearSession: () => {},
 });
 
 interface Props {
@@ -34,12 +32,7 @@ const UserSessionContextProvider: FC<Props> = ({ children }) => {
     const [user, setUser] = useState<User>();
     const userCookies = Cookies.get("user");
 
-    const setUserSession = (user: User) => {
-        Cookies.set("user", JSON.stringify(user));
-        setUser(user);
-    };
-
-    const clearUserSession = async () => {
+    const clearSession = async () => {
         try {
             await logOutUser();
         } catch (error) {
@@ -66,8 +59,7 @@ const UserSessionContextProvider: FC<Props> = ({ children }) => {
     const contextValue: UserSessionContextType = {
         isAuth: !!user,
         user: user,
-        setUserSession: setUserSession,
-        clearUserSession: clearUserSession,
+        clearSession: clearSession,
     };
 
     return (
