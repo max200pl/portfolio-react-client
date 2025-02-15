@@ -113,7 +113,7 @@ const Header = (props) => {
                     unmountOnExit
                 > */}
                 <nav className={s.nav} id="nav">
-                    {dataNavLink(isAuth, userCtx.clearUserSession).map(
+                    {dataNavLink(isAuth, userCtx.clearSession).map(
                         (data, id) => {
                             return (
                                 <div key={id}>
@@ -130,7 +130,7 @@ const Header = (props) => {
                                             rel={data.rel}
                                             onClick={() => {
                                                 data.name === "LogOut" &&
-                                                    userCtx.clearUserSession();
+                                                    userCtx.clearSession();
                                             }}
                                         >
                                             <img
