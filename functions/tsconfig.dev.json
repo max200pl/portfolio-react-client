@@ -1,0 +1,9 @@
+{
+    "extends": "./tsconfig.json",
+    "compilerOptions": {
+      "sourceMap": true,
+      "noImplicitAny": false,
+      "outDir": "./lib"
+    },
+    "include": ["src", "index.ts"]
+  }

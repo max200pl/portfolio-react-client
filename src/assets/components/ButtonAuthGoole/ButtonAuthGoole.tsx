@@ -1,17 +1,13 @@
 import { useContext, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { GoogleLoginButton } from "react-social-login-buttons";
-import { UserSessionContext } from "../../../context/user-context";
 import { TypeActionAuth } from "../../api/auth.api";
 import s from "./ButtonAuthGoole.module.scss";
 import { ErrorMessage } from "../../../forms/AuthForm/ErrorMessage";
 import { AuthContext } from "../../../context/auth-context";
 
 const ButtonAuthGoole = ({ typeAction }: { typeAction: TypeActionAuth }) => {
-    const navigate = useNavigate();
-    const userCtx = useContext(UserSessionContext);
     const authCtx = useContext(AuthContext);
-    const [showError, setError] = useState<{ message: "string" }>();
+    const [showError] = useState<{ message: "string" }>();
 
     const googleLoginHandler = () => {
         console.log("Google login handler");
