@@ -14,17 +14,16 @@ import {
     Stack,
     TextField,
 } from "@mui/material";
-import React, { useContext } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { TypeActionAuth, getAuthForm } from "../../assets/api/auth.api";
-import { UserSessionContext } from "../../context/user-context";
 import s from "./AuthForm.module.scss";
 import { SubmitSignInFormValues } from "../../pages/Auth/AuthSignIn/AuthSignIn";
 import { AnyObject, Maybe, ObjectSchema } from "yup";
 import { SubmitSignUpFormValues } from "../../pages/Auth/AuthSignUp/AuthSignUp";
 import { SetStateAction } from "../../assets/interfaces/interfaces.helpers";
 import { ErrorMessage } from "./ErrorMessage";
+import { useState } from "react";
 
 interface AuthFormProps<T extends Maybe<AnyObject>> {
     type: TypeActionAuth;
@@ -40,8 +39,8 @@ const AuthForm = <T extends SubmitSignUpFormValues | SubmitSignInFormValues>({
     const navigate = useNavigate();
     // Remove unused variable
     // const userCtx = useContext(UserContext);
-    const [showPassword, setShowPassword] = React.useState(false);
-    const [showError, setError] = React.useState<{ message: "string" }>();
+    const [showPassword, setShowPassword] = useState(false);
+    const [showError, setError] = useState<{ message: "string" }>();
 
     const {
         control,

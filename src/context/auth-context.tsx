@@ -5,7 +5,7 @@ import {
     onAuthStateChanged,
     signInWithPopup,
 } from "firebase/auth";
-import { createContext } from "react";
+import { createContext, useEffect } from "react";
 
 // Your web app's Firebase configuration using environment variables
 const firebaseConfig = {

@@ -7,7 +7,7 @@ import { AuthContext } from "../../../context/auth-context";
 
 const ButtonAuthGoole = ({ typeAction }: { typeAction: TypeActionAuth }) => {
     const authCtx = useContext(AuthContext);
-    const [showError, setError] = useState<{ message: "string" }>();
+    const [showError] = useState<{ message: "string" }>();
 
     const googleLoginHandler = () => {
         console.log("Google login handler");
