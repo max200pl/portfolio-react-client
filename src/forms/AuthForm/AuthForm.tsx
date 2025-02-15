@@ -38,7 +38,8 @@ const AuthForm = <T extends SubmitSignUpFormValues | SubmitSignInFormValues>({
     defaultValues,
 }: AuthFormProps<T>) => {
     const navigate = useNavigate();
-    const userCtx = useContext(UserSessionContext);
+    // Remove unused variable
+    // const userCtx = useContext(UserContext);
     const [showPassword, setShowPassword] = React.useState(false);
     const [showError, setError] = React.useState<{ message: "string" }>();
 

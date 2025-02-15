@@ -5,8 +5,7 @@ import {
     onAuthStateChanged,
     signInWithPopup,
 } from "firebase/auth";
-import { createContext, useContext, useEffect } from "react";
-import { UserSessionContext } from "./user-context";
+import { createContext } from "react";
 
 // Your web app's Firebase configuration using environment variables
 const firebaseConfig = {
@@ -36,7 +35,8 @@ interface Props {
 }
 
 const AuthContextProvider = ({ children }: Props) => {
-    const userSessionCtx = useContext(UserSessionContext);
+    // Remove unused variable
+    // const userSessionCtx = useContext(UserSessionContext);
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, async (user) => {
