@@ -1,10 +1,10 @@
 # My portfolio UI PART
 
-## Description ![info icon](https://img.icons8.com/ios-filled/16/000000/info.png)
+## Description ![info icon](https://img.icons8.com/ios-filled/20/ааа/info.png)
 
 Welcome to my portfolio! This project showcases my work and skills using modern web technologies.
 
-## Flowchart ![flowchart icon](https://img.icons8.com/ios-filled/16/000000/flow-chart.png)
+## Flowchart ![flowchart icon](https://img.icons8.com/ios-filled/20/ааа/flow-chart.png)
 
 ``` mermaid
 flowchart TD
@@ -50,17 +50,16 @@ flowchart TD
     linkStyle 3 stroke:#8E24AA,stroke-width:2px,stroke-dasharray:5 5,fill:none
     linkStyle 5 stroke:#42A5F5,stroke-width:2px,stroke-dasharray:5 5,fill:none
 
-    Storage{ animation: slow }
     Backend{ animation: fast }
     Authentication{ animation: slow }
     Frontend{ animation: slow }
     Backend{ animation: slow }
 ```
 
-## Links ![link icon](https://img.icons8.com/ios-filled/16/000000/link.png)
+## Links ![link icon](https://img.icons8.com/ios-filled/20/ааа/link.png)
 
-1. ![link icon](https://img.icons8.com/ios-filled/16/000000/link.png) [15 Top ReactJS Carousel Component Libraries](https://www.bacancytechnology.com/blog/react-carousel)
-2. ![link icon](https://img.icons8.com/ios-filled/16/000000/link.png) [Swiper use example](https://www.youtube.com/watch?v=KL_yIf5uiJo&ab_channel=TravelsCode)
-3. ![link icon](https://img.icons8.com/ios-filled/16/000000/link.png) [Swiper DEMOS](https://swiperjs.com/demos#responsive-breakpoints)
-4. ![link icon](https://img.icons8.com/ios-filled/16/000000/link.png) [Using SVG Component](https://www.copycat.dev/blog/react-svg/)
-5. ![link icon](https://img.icons8.com/ios-filled/16/000000/link.png) [Form upload file](https://www.filestack.com/fileschool/react/react-file-upload/)
+1. ![link icon](https://img.icons8.com/ios-filled/20/ааа/link.png) [15 Top ReactJS Carousel Component Libraries](https://www.bacancytechnology.com/blog/react-carousel)
+2. ![link icon](https://img.icons8.com/ios-filled/20/ааа/link.png) [Swiper use example](https://www.youtube.com/watch?v=KL_yIf5uiJo&ab_channel=TravelsCode)
+3. ![link icon](https://img.icons8.com/ios-filled/20/ааа/link.png) [Swiper DEMOS](https://swiperjs.com/demos#responsive-breakpoints)
+4. ![link icon](https://img.icons8.com/ios-filled/20/ааа/link.png) [Using SVG Component](https://www.copycat.dev/blog/react-svg/)
+5. ![link icon](https://img.icons8.com/ios-filled/20/ааа/link.png) [Form upload file](https://www.filestack.com/fileschool/react/react-file-upload/)
