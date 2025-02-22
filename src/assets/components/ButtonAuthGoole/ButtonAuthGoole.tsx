@@ -14,35 +14,6 @@ const ButtonAuthGoole = ({ typeAction }: { typeAction: TypeActionAuth }) => {
 
         authCtx.signInWithGoogle();
     };
-    // const googleLoginHandler = useGoogleLogin({
-    //     onSuccess: async (codeResponse) => {
-    //         try {
-    //             console.log("codeResponse", codeResponse);
-
-    //             const authGooleResponse = await getAuthGoole(
-    //                 typeAction,
-    //                 codeResponse
-    //             );
-
-    //             console.log("authGooleResponse", authGooleResponse);
-    //             if (authGooleResponse.user === undefined) {
-    //                 throw new Error("User not found");
-    //             }
-    //             // userCtx.setUserAuthentication(authGooleResponse.user);
-    //             navigate("/");
-    //         } catch (error: any) {
-    //             if (error.response && error.response.data) {
-    //                 setError({
-    //                     message: error.response.data.message,
-    //                 });
-    //             } else {
-    //                 setError({ message: error.message });
-    //             }
-    //             console.error("Error during Google authentication:", error);
-    //         }
-    //     },
-    //     onError: (error) => console.log("Login with Goole Failed:", error),
-    // });
 
     return (
         <>
