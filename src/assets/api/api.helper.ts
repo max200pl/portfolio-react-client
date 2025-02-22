@@ -10,8 +10,16 @@ export interface BaseQueryOptions {
     credentials?: "include" | "omit" | "same-origin";
 }
 
-export const baseQuery = (options: BaseQueryOptions) => {
-    const { url, params, contentType, headers_param, body, method, credentials } = options;
+export const baseQuery = <T>(options: BaseQueryOptions): Promise<T> => {
+    const {
+        url,
+        params,
+        contentType,
+        headers_param,
+        body,
+        method,
+        credentials,
+    } = options;
 
     const headers: Record<string, string> = {
         ...(contentType && { "Content-Type": contentType }),
@@ -25,5 +33,5 @@ export const baseQuery = (options: BaseQueryOptions) => {
         params,
         headers,
         withCredentials: credentials === "include" ? true : false,
-    }).then((response) => response.data);
+    }).then((response) => response.data as T);
 };
