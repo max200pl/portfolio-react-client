@@ -1,45 +1,54 @@
-import { TokenResponse } from "@react-oauth/google";
 import { baseQuery } from "./api.helper";
 import { SubmitSignUpFormValues } from "../../pages/Auth/AuthSignUp/AuthSignUp";
 import { SubmitSignInFormValues } from "../../pages/Auth/AuthSignIn/AuthSignIn";
 import { AUTH_API_BASE_URL } from "./constants";
+import { SignUpWithForm, UserInfo } from "../../forms/AuthForm/auth";
 
 export type TypeActionAuth = "sign-up" | "login";
 
-export const getAuthGoole = (
+export type FIREBASE_ID_TOKEN = string;
+
+export const authWithGoogle = (
     type: TypeActionAuth,
-    codeResponse: TokenResponse
+    idToken: FIREBASE_ID_TOKEN
 ) => {
     const baseQueryFn = baseQuery;
 
-    return baseQueryFn({
+    return baseQueryFn<{ user: UserInfo }>({
         url: `${AUTH_API_BASE_URL}/${type}/google`,
-        body: codeResponse,
+        body: {
+            idToken,
+        },
         method: "post",
-        credentials: "include",
     });
 };
 
-export const getAuthForm = (
+export const authWithForm = (
     type: TypeActionAuth,
-    submitFormValues: SubmitSignUpFormValues | SubmitSignInFormValues
+    submitFormValues:
+        | {
+              firstName: SignUpWithForm["firstName"];
+              lastName: SignUpWithForm["lastName"];
+              idToken: FIREBASE_ID_TOKEN;
+          }
+        | SubmitSignInFormValues
 ) => {
     const baseQueryFn = baseQuery;
 
-    return baseQueryFn({
+    return baseQueryFn<{ user: UserInfo }>({
         url: `${AUTH_API_BASE_URL}/${type}/form`,
         body: submitFormValues,
         method: "post",
     });
 };
 
-export const getAuthGitHub = (
+export const authWithGitHub = (
     type: TypeActionAuth,
     codeResponse: { code: string }
 ) => {
     const baseQueryFn = baseQuery;
 
-    return baseQueryFn({
+    return baseQueryFn<{ token: string }>({
         url: `${AUTH_API_BASE_URL}/${type}/github`,
         body: codeResponse,
         method: "post",
@@ -51,7 +60,7 @@ export const logOutUser = async () => {
     const baseQueryFn = baseQuery;
     console.log(AUTH_API_BASE_URL, "AUTH_API_BASE_URL");
     try {
-        await baseQueryFn({
+        await baseQueryFn<void>({
             url: `${AUTH_API_BASE_URL}/logout`,
             method: "post",
             contentType: "application/json",
