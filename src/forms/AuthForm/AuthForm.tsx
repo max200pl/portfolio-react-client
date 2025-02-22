@@ -16,14 +16,15 @@ import {
 } from "@mui/material";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import { TypeActionAuth, getAuthForm } from "../../assets/api/auth.api";
+import { TypeActionAuth } from "../../assets/api/auth.api";
 import s from "./AuthForm.module.scss";
 import { SubmitSignInFormValues } from "../../pages/Auth/AuthSignIn/AuthSignIn";
 import { AnyObject, Maybe, ObjectSchema } from "yup";
 import { SubmitSignUpFormValues } from "../../pages/Auth/AuthSignUp/AuthSignUp";
 import { SetStateAction } from "../../assets/interfaces/interfaces.helpers";
 import { ErrorMessage } from "./ErrorMessage";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { AuthContext } from "../../context/auth-context";
 
 interface AuthFormProps<T extends Maybe<AnyObject>> {
     type: TypeActionAuth;
@@ -37,8 +38,7 @@ const AuthForm = <T extends SubmitSignUpFormValues | SubmitSignInFormValues>({
     defaultValues,
 }: AuthFormProps<T>) => {
     const navigate = useNavigate();
-    // Remove unused variable
-    // const userCtx = useContext(UserContext);
+    const authCtx = useContext(AuthContext);
     const [showPassword, setShowPassword] = useState(false);
     const [showError, setError] = useState<{ message: "string" }>();
 
@@ -52,16 +52,13 @@ const AuthForm = <T extends SubmitSignUpFormValues | SubmitSignInFormValues>({
         defaultValues,
     });
 
-    const onSubmit: SubmitHandler<
-        SubmitSignUpFormValues | SubmitSignInFormValues
-    > = async (data) => {
+    const onSubmit: SubmitHandler<SubmitSignUpFormValues> = async (data) => {
         console.log("SubmitFormValues", data);
         try {
-            const response = await getAuthForm(type, data);
+            const response = await authCtx.signUpWithForm(data);
 
             console.log("response", response);
             setError(undefined);
-            // userCtx.setUserAuthentication(response.user);
             navigate("/");
         } catch (error) {
             const { response } = error as {
