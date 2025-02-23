@@ -5,7 +5,6 @@ import s from "./ButtonAuthGoole.module.scss";
 import { ErrorMessage } from "../../../forms/AuthForm/ErrorMessage";
 import { AuthContext } from "../../../context/auth-context";
 import { useNavigate } from "react-router-dom";
-import { formatFirebaseErrorMessages } from "../../../forms/forms.helpers";
 
 const ButtonAuthGoole = ({ typeAction }: { typeAction: TypeActionAuth }) => {
     const authCtx = useContext(AuthContext);
