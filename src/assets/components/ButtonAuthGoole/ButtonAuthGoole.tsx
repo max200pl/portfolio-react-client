@@ -4,15 +4,26 @@ import { TypeActionAuth } from "../../api/auth.api";
 import s from "./ButtonAuthGoole.module.scss";
 import { ErrorMessage } from "../../../forms/AuthForm/ErrorMessage";
 import { AuthContext } from "../../../context/auth-context";
+import { Navigate, useNavigate } from "react-router-dom";
 
 const ButtonAuthGoole = ({ typeAction }: { typeAction: TypeActionAuth }) => {
     const authCtx = useContext(AuthContext);
+    const navigate = useNavigate();
     const [showError] = useState<{ message: "string" }>();
 
-    const googleLoginHandler = () => {
-        console.log("Google login handler");
+    const googleLoginHandler = async () => {
+        try {
+            console.log("Google login handler");
 
-        authCtx.signInWithGoogle();
+            await authCtx.signInWithGoogle();
+            navigate("/");
+        } catch (error) {
+            const { response } = error as {
+                response: { data: { message: string } };
+            };
+            console.log(response.data);
+            console.log(error);
+        }
     };
 
     return (
