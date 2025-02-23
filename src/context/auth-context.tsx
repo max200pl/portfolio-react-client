@@ -53,7 +53,7 @@ interface Props {
 const AuthContextProvider = ({ children }: Props) => {
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, async (user) => {
-            console.log(`User State Changed: ${user?.email}`);
+            console.log(`User State Changed: ${JSON.stringify(user)}`);
         });
 
         return () => {
