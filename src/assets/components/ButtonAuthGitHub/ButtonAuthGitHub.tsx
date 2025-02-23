@@ -5,7 +5,6 @@ import { TypeActionAuth } from "../../api/auth.api";
 import s from "./ButtonAuthGitHub.module.scss";
 import { ErrorMessage } from "../../../forms/AuthForm/ErrorMessage";
 import { AuthContext } from "../../../context/auth-context";
-import { formatFirebaseErrorMessages } from "../../../forms/forms.helpers";
 
 const ButtonAuthGitHub = ({ typeAction }: { typeAction: TypeActionAuth }) => {
     const authCtx = useContext(AuthContext);
