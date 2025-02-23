@@ -4,28 +4,22 @@ import { GithubLoginButton } from "react-social-login-buttons";
 import { TypeActionAuth } from "../../api/auth.api";
 import s from "./ButtonAuthGitHub.module.scss";
 import { ErrorMessage } from "../../../forms/AuthForm/ErrorMessage";
-import { SetStateAction } from "../../interfaces/interfaces.helpers";
 import { AuthContext } from "../../../context/auth-context";
+import { formatFirebaseErrorMessages } from "../../../forms/forms.helpers";
 
 const ButtonAuthGitHub = ({ typeAction }: { typeAction: TypeActionAuth }) => {
     const authCtx = useContext(AuthContext);
     const navigate = useNavigate();
-    const [showError, setError] = useState<{ message: "string" }>();
+    const [showError, setError] = useState<{ message: string }>();
 
     const githubLoginHandler = async () => {
         try {
             await authCtx.signInWithGitHub();
             navigate("/");
         } catch (error) {
-            const { response } = error as {
-                response: { data: { message: string } };
-            };
-            setError(
-                response.data as SetStateAction<
-                    { message: "string" } | undefined
-                >
-            );
-            console.log(error);
+            const errorMessage = (error as Error).message;
+            setError({ message: errorMessage });
+            console.error("Error logging in with GitHub:", errorMessage);
         }
     };
 

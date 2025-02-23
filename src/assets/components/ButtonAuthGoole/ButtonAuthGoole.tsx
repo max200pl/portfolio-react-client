@@ -4,12 +4,13 @@ import { TypeActionAuth } from "../../api/auth.api";
 import s from "./ButtonAuthGoole.module.scss";
 import { ErrorMessage } from "../../../forms/AuthForm/ErrorMessage";
 import { AuthContext } from "../../../context/auth-context";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { formatFirebaseErrorMessages } from "../../../forms/forms.helpers";
 
 const ButtonAuthGoole = ({ typeAction }: { typeAction: TypeActionAuth }) => {
     const authCtx = useContext(AuthContext);
     const navigate = useNavigate();
-    const [showError] = useState<{ message: "string" }>();
+    const [showError, setError] = useState<{ message: string }>();
 
     const googleLoginHandler = async () => {
         try {
@@ -18,11 +19,9 @@ const ButtonAuthGoole = ({ typeAction }: { typeAction: TypeActionAuth }) => {
             await authCtx.signInWithGoogle();
             navigate("/");
         } catch (error) {
-            const { response } = error as {
-                response: { data: { message: string } };
-            };
-            console.log(response.data);
-            console.log(error);
+            const errorMessage = (error as Error).message;
+            setError({ message: errorMessage });
+            console.error("Error logging in with Google:", errorMessage);
         }
     };
 
