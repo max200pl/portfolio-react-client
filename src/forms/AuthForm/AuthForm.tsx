@@ -21,10 +21,10 @@ import s from "./AuthForm.module.scss";
 import { SubmitSignInFormValues } from "../../pages/Auth/AuthSignIn/AuthSignIn";
 import { AnyObject, Maybe, ObjectSchema } from "yup";
 import { SubmitSignUpFormValues } from "../../pages/Auth/AuthSignUp/AuthSignUp";
-import { SetStateAction } from "../../assets/interfaces/interfaces.helpers";
 import { ErrorMessage } from "./ErrorMessage";
 import { useContext, useState } from "react";
 import { AuthContext } from "../../context/auth-context";
+import { log, logError } from "../../utils/logger";
 
 interface AuthFormProps<T extends Maybe<AnyObject>> {
     type: TypeActionAuth;
@@ -52,21 +52,41 @@ const AuthForm = <T extends SubmitSignUpFormValues | SubmitSignInFormValues>({
         defaultValues,
     });
 
-    const onSubmit: SubmitHandler<SubmitSignUpFormValues> = async (data) => {
-        console.log("SubmitFormValues", data);
+    const onSubmit: SubmitHandler<
+        SubmitSignUpFormValues | SubmitSignInFormValues
+    > = async (data) => {
+        log("🚨 Submitting form with data:", data);
+
         try {
-            await authCtx.signUpWithForm(data);
+            if (type === "sign-up") {
+                await authCtx.signUpWithForm(data as SubmitSignUpFormValues);
+                log("User signed up successfully", data);
+            } else if (type === "login") {
+                await authCtx.signInWithForm(data as SubmitSignInFormValues);
+                log("User signed in successfully", data);
+            }
             setError(undefined);
             navigate("/");
         } catch (error) {
             const errorMessage = (error as Error).message;
             setError({ message: errorMessage });
-            console.error("Error signing up with Form:", errorMessage);
+            logError(
+                `Error ${
+                    type === "sign-up" ? "signing up" : "signing in"
+                } with Form`,
+                errorMessage
+            );
         }
     };
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)} className={s.form}>
+        <form
+            onSubmit={(e) => {
+                console.log("🚨 Form submitted!");
+                handleSubmit(onSubmit)(e);
+            }}
+            className={s.form}
+        >
             {showError && <ErrorMessage message={showError.message} />}
             {type === "sign-up" && (
                 <Stack

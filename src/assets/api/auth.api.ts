@@ -1,5 +1,4 @@
 import { baseQuery } from "./api.helper";
-import { SubmitSignInFormValues } from "../../pages/Auth/AuthSignIn/AuthSignIn";
 import { AUTH_API_BASE_URL } from "./constants";
 import { SignUpWithForm, UserInfo } from "../../forms/AuthForm/auth";
 
@@ -30,7 +29,7 @@ export const authWithForm = (
               lastName: SignUpWithForm["lastName"];
               idToken: FIREBASE_ID_TOKEN;
           }
-        | SubmitSignInFormValues
+        | { idToken: FIREBASE_ID_TOKEN }
 ) => {
     const baseQueryFn = baseQuery;
 

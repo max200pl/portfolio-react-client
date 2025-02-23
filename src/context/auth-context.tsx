@@ -5,6 +5,7 @@ import {
     GithubAuthProvider,
     GoogleAuthProvider,
     onAuthStateChanged,
+    signInWithEmailAndPassword,
     signInWithPopup,
 } from "firebase/auth";
 import { createContext, useEffect } from "react";
@@ -13,7 +14,7 @@ import {
     authWithGitHub,
     authWithGoogle,
 } from "../assets/api/auth.api";
-import { SignUpWithForm } from "../forms/AuthForm/auth";
+import { SignInWithForm, SignUpWithForm } from "../forms/AuthForm/auth";
 import { formatFirebaseErrorMessages } from "../forms/forms.helpers";
 
 // Your web app's Firebase configuration using environment variables
@@ -33,7 +34,7 @@ const auth = getAuth(app);
 
 type AuthContextType = {
     signInWithGoogle: () => Promise<void>;
-    signInWithForm: () => void;
+    signInWithForm: (param: SignInWithForm) => void;
     signUpWithForm: (param: SignUpWithForm) => void;
     signInWithGitHub: () => Promise<void>;
 };
@@ -123,8 +124,31 @@ const AuthContextProvider = ({ children }: Props) => {
         }
     };
 
-    const signInWithForm = () => {
-        console.log("Sign in with Form");
+    const signInWithForm = async ({ email, password }: SignInWithForm) => {
+        try {
+            const result = await signInWithEmailAndPassword(
+                auth,
+                email,
+                password
+            );
+
+            console.info(`Signed in with Form: ${result}`);
+
+            const idToken = await result.user?.getIdToken();
+
+            const { user } = await authWithForm("login", {
+                idToken,
+            });
+
+            console.info(`User: ${JSON.stringify(user)}`);
+            localStorage.setItem("user", JSON.stringify(user));
+            console.info(`Local storage: ${localStorage.getItem("user")}`);
+        } catch (error) {
+            const errorCode = (error as { code: string }).code;
+            const errorMessage = formatFirebaseErrorMessages(errorCode, "form");
+            console.error("Error signing up with Form:", errorMessage);
+            throw new Error(errorMessage);
+        }
     };
 
     const signInWithGitHub = async (): Promise<void> => {

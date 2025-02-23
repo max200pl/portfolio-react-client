@@ -18,3 +18,8 @@ export type SignUpWithForm = {
     email: string;
     password: string;
 };
+
+export type SignInWithForm = {
+    email: string;
+    password: string;
+};
