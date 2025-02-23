@@ -40,7 +40,7 @@ const AuthForm = <T extends SubmitSignUpFormValues | SubmitSignInFormValues>({
     const navigate = useNavigate();
     const authCtx = useContext(AuthContext);
     const [showPassword, setShowPassword] = useState(false);
-    const [showError, setError] = useState<{ message: "string" }>();
+    const [showError, setError] = useState<{ message: string } | undefined>();
 
     const {
         control,
@@ -55,21 +55,13 @@ const AuthForm = <T extends SubmitSignUpFormValues | SubmitSignInFormValues>({
     const onSubmit: SubmitHandler<SubmitSignUpFormValues> = async (data) => {
         console.log("SubmitFormValues", data);
         try {
-            const response = await authCtx.signUpWithForm(data);
-
-            console.log("response", response);
+            await authCtx.signUpWithForm(data);
             setError(undefined);
             navigate("/");
         } catch (error) {
-            const { response } = error as {
-                response: { data: { message: string } };
-            };
-            setError(
-                response.data as SetStateAction<
-                    { message: "string" } | undefined
-                >
-            );
-            console.log(error);
+            const errorMessage = (error as Error).message;
+            setError({ message: errorMessage });
+            console.error("Error signing up with Form:", errorMessage);
         }
     };
 

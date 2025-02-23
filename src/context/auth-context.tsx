@@ -39,8 +39,8 @@ type AuthContextType = {
 };
 
 export const AuthContext = createContext<AuthContextType>({
-    signInWithForm: () => {},
-    signUpWithForm: () => {},
+    signInWithForm: async () => {},
+    signUpWithForm: async () => {},
     signInWithGoogle: async () => {},
     signInWithGitHub: async () => {},
 });
@@ -116,7 +116,10 @@ const AuthContextProvider = ({ children }: Props) => {
             localStorage.setItem("user", JSON.stringify(user));
             console.info(`Local storage: ${localStorage.getItem("user")}`);
         } catch (error) {
-            console.error("Error signing up with Form:", error);
+            const errorCode = (error as { code: string }).code;
+            const errorMessage = formatFirebaseErrorMessages(errorCode, "form");
+            console.error("Error signing up with Form:", errorMessage);
+            throw new Error(errorMessage);
         }
     };
 
