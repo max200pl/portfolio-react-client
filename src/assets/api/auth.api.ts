@@ -1,5 +1,4 @@
 import { baseQuery } from "./api.helper";
-import { SubmitSignUpFormValues } from "../../pages/Auth/AuthSignUp/AuthSignUp";
 import { SubmitSignInFormValues } from "../../pages/Auth/AuthSignIn/AuthSignIn";
 import { AUTH_API_BASE_URL } from "./constants";
 import { SignUpWithForm, UserInfo } from "../../forms/AuthForm/auth";
@@ -44,13 +43,15 @@ export const authWithForm = (
 
 export const authWithGitHub = (
     type: TypeActionAuth,
-    codeResponse: { code: string }
+    idToken: FIREBASE_ID_TOKEN
 ) => {
     const baseQueryFn = baseQuery;
 
-    return baseQueryFn<{ token: string }>({
+    return baseQueryFn<{ user: UserInfo }>({
         url: `${AUTH_API_BASE_URL}/${type}/github`,
-        body: codeResponse,
+        body: {
+            idToken,
+        },
         method: "post",
         credentials: "include",
     });

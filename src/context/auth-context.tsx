@@ -2,12 +2,17 @@ import { initializeApp } from "firebase/app";
 import {
     createUserWithEmailAndPassword,
     getAuth,
+    GithubAuthProvider,
     GoogleAuthProvider,
     onAuthStateChanged,
     signInWithPopup,
 } from "firebase/auth";
 import { createContext, useEffect } from "react";
-import { authWithForm, authWithGoogle } from "../assets/api/auth.api";
+import {
+    authWithForm,
+    authWithGitHub,
+    authWithGoogle,
+} from "../assets/api/auth.api";
 import { SignUpWithForm } from "../forms/AuthForm/auth";
 
 // Your web app's Firebase configuration using environment variables
@@ -112,8 +117,23 @@ const AuthContextProvider = ({ children }: Props) => {
         console.log("Sign in with Form");
     };
 
-    const signInWithGitHub = () => {
+    const signInWithGitHub = async () => {
         console.log("Sign in with GitHub");
+
+        const provider = new GithubAuthProvider();
+
+        const result = await signInWithPopup(auth, provider);
+
+        const idToken = await result.user?.getIdToken();
+
+        console.info(`Token: ${idToken}`);
+
+        const { user } = await authWithGitHub("sign-up", idToken);
+
+        console.info(`User: ${user}`);
+
+        localStorage.setItem("user", JSON.stringify(user));
+        console.info(`Local storage: ${localStorage.getItem("user")}`);
     };
 
     const contextValue = {
