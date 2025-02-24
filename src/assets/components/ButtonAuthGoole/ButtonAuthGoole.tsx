@@ -4,45 +4,25 @@ import { TypeActionAuth } from "../../api/auth.api";
 import s from "./ButtonAuthGoole.module.scss";
 import { ErrorMessage } from "../../../forms/AuthForm/ErrorMessage";
 import { AuthContext } from "../../../context/auth-context";
+import { useNavigate } from "react-router-dom";
 
 const ButtonAuthGoole = ({ typeAction }: { typeAction: TypeActionAuth }) => {
     const authCtx = useContext(AuthContext);
-    const [showError] = useState<{ message: "string" }>();
+    const navigate = useNavigate();
+    const [showError, setError] = useState<{ message: string }>();
 
-    const googleLoginHandler = () => {
-        console.log("Google login handler");
+    const googleLoginHandler = async () => {
+        try {
+            console.log("Google login handler");
 
-        authCtx.signInWithGoogle();
+            await authCtx.signInWithGoogle();
+            navigate("/");
+        } catch (error) {
+            const errorMessage = (error as Error).message;
+            setError({ message: errorMessage });
+            console.error("Error logging in with Google:", errorMessage);
+        }
     };
-    // const googleLoginHandler = useGoogleLogin({
-    //     onSuccess: async (codeResponse) => {
-    //         try {
-    //             console.log("codeResponse", codeResponse);
-
-    //             const authGooleResponse = await getAuthGoole(
-    //                 typeAction,
-    //                 codeResponse
-    //             );
-
-    //             console.log("authGooleResponse", authGooleResponse);
-    //             if (authGooleResponse.user === undefined) {
-    //                 throw new Error("User not found");
-    //             }
-    //             // userCtx.setUserAuthentication(authGooleResponse.user);
-    //             navigate("/");
-    //         } catch (error: any) {
-    //             if (error.response && error.response.data) {
-    //                 setError({
-    //                     message: error.response.data.message,
-    //                 });
-    //             } else {
-    //                 setError({ message: error.message });
-    //             }
-    //             console.error("Error during Google authentication:", error);
-    //         }
-    //     },
-    //     onError: (error) => console.log("Login with Goole Failed:", error),
-    // });
 
     return (
         <>

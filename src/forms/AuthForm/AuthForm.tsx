@@ -16,14 +16,15 @@ import {
 } from "@mui/material";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import { TypeActionAuth, getAuthForm } from "../../assets/api/auth.api";
+import { TypeActionAuth } from "../../assets/api/auth.api";
 import s from "./AuthForm.module.scss";
 import { SubmitSignInFormValues } from "../../pages/Auth/AuthSignIn/AuthSignIn";
 import { AnyObject, Maybe, ObjectSchema } from "yup";
 import { SubmitSignUpFormValues } from "../../pages/Auth/AuthSignUp/AuthSignUp";
-import { SetStateAction } from "../../assets/interfaces/interfaces.helpers";
 import { ErrorMessage } from "./ErrorMessage";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { AuthContext } from "../../context/auth-context";
+import { log, logError } from "../../utils/logger";
 
 interface AuthFormProps<T extends Maybe<AnyObject>> {
     type: TypeActionAuth;
@@ -37,10 +38,9 @@ const AuthForm = <T extends SubmitSignUpFormValues | SubmitSignInFormValues>({
     defaultValues,
 }: AuthFormProps<T>) => {
     const navigate = useNavigate();
-    // Remove unused variable
-    // const userCtx = useContext(UserContext);
+    const authCtx = useContext(AuthContext);
     const [showPassword, setShowPassword] = useState(false);
-    const [showError, setError] = useState<{ message: "string" }>();
+    const [showError, setError] = useState<{ message: string } | undefined>();
 
     const {
         control,
@@ -55,29 +55,38 @@ const AuthForm = <T extends SubmitSignUpFormValues | SubmitSignInFormValues>({
     const onSubmit: SubmitHandler<
         SubmitSignUpFormValues | SubmitSignInFormValues
     > = async (data) => {
-        console.log("SubmitFormValues", data);
-        try {
-            const response = await getAuthForm(type, data);
+        log("🚨 Submitting form with data:", data);
 
-            console.log("response", response);
+        try {
+            if (type === "sign-up") {
+                await authCtx.signUpWithForm(data as SubmitSignUpFormValues);
+                log("User signed up successfully", data);
+            } else if (type === "login") {
+                await authCtx.signInWithForm(data as SubmitSignInFormValues);
+                log("User signed in successfully", data);
+            }
             setError(undefined);
-            // userCtx.setUserAuthentication(response.user);
             navigate("/");
         } catch (error) {
-            const { response } = error as {
-                response: { data: { message: string } };
-            };
-            setError(
-                response.data as SetStateAction<
-                    { message: "string" } | undefined
-                >
+            const errorMessage = (error as Error).message;
+            setError({ message: errorMessage });
+            logError(
+                `Error ${
+                    type === "sign-up" ? "signing up" : "signing in"
+                } with Form`,
+                errorMessage
             );
-            console.log(error);
         }
     };
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)} className={s.form}>
+        <form
+            onSubmit={(e) => {
+                console.log("🚨 Form submitted!");
+                handleSubmit(onSubmit)(e);
+            }}
+            className={s.form}
+        >
             {showError && <ErrorMessage message={showError.message} />}
             {type === "sign-up" && (
                 <Stack

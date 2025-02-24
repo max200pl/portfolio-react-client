@@ -8,14 +8,12 @@ import AuthForm from "../../../forms/AuthForm/AuthForm";
 import AuthModal from "../AuthModal";
 import s from "./AuthSignIn.module.scss";
 import { useNavigate } from "react-router-dom";
-import { TypeActionAuth } from "../../../assets/api/auth.api";
 import * as yup from "yup";
 import { emailRegExp } from "../../../assets/helpers/regular-expressions";
 
 export type SubmitSignInFormValues = {
     email: string;
     password: string;
-    remember: boolean;
 };
 
 const schema = yup.object().shape({
@@ -36,15 +34,13 @@ const schema = yup.object().shape({
         .required("Enter password")
         .min(6, "Password must be at least 6 characters long.")
         .defined(),
-    remember: yup.boolean().defined(),
 });
 
 const AuthSignIn: React.FC = () => {
     const navigate = useNavigate();
-    const typeAction = "login" as TypeActionAuth;
 
     return (
-        <AuthModal typeAction={typeAction}>
+        <AuthModal typeAction={"login"}>
             <ButtonAuthGoole typeAction="login" />
             <ButtonAuthGitHub typeAction="login" />
 
@@ -52,7 +48,7 @@ const AuthSignIn: React.FC = () => {
                 <Chip label="Or with email and password" size="small" />
             </Divider>
 
-            <AuthForm type={typeAction} schema={schema} />
+            <AuthForm type={"login"} schema={schema} />
 
             <Divider className={s["form_control"]} sx={{ mt: "6px" }}>
                 <Chip label="Don't have an account?" size="small" />

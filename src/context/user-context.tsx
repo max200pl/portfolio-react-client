@@ -1,5 +1,5 @@
 import Cookies from "js-cookie";
-import { FC, createContext, useState } from "react";
+import { FC, createContext, useState, useEffect } from "react";
 import { logOutUser } from "../assets/api/auth.api";
 
 interface User {
@@ -30,7 +30,18 @@ interface Props {
 
 const UserSessionContextProvider: FC<Props> = ({ children }) => {
     const [user, setUser] = useState<User>();
-    const userCookies = Cookies.get("user");
+
+    const getUserFromCookies = () => {
+        const userCookies = Cookies.get("user");
+        if (userCookies) {
+            const user = JSON.parse(userCookies);
+            setUser(user);
+        }
+    };
+
+    useEffect(() => {
+        getUserFromCookies();
+    }, []);
 
     const clearSession = async () => {
         try {
@@ -46,18 +57,11 @@ const UserSessionContextProvider: FC<Props> = ({ children }) => {
         Cookies.remove("session.sig");
         console.info("Cookies removed");
 
-        console.info(`
-                User ${user?.email} signed out
-            `);
+        console.info(`User ${user?.email} signed out`);
     };
 
-    if (userCookies !== undefined && user === undefined) {
-        const user = JSON.parse(userCookies ?? "{}");
-        setUser(user);
-    }
-
     const contextValue: UserSessionContextType = {
-        isAuth: !!user,
+        isAuth: Boolean(user),
         user: user,
         clearSession: clearSession,
     };
