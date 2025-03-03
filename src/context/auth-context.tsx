@@ -1,14 +1,11 @@
-import { initializeApp } from "firebase/app";
+import { createContext, useEffect } from "react";
 import {
     createUserWithEmailAndPassword,
-    getAuth,
-    GithubAuthProvider,
-    GoogleAuthProvider,
     onAuthStateChanged,
-    signInWithEmailAndPassword,
-    signInWithPopup,
+    GoogleAuthProvider,
+    GithubAuthProvider,
 } from "firebase/auth";
-import { createContext, useEffect } from "react";
+import { auth } from "../firebaseConfig";
 import {
     authWithForm,
     authWithGitHub,
@@ -16,27 +13,13 @@ import {
 } from "../assets/api/auth.api";
 import { SignInWithForm, SignUpWithForm } from "../forms/AuthForm/auth";
 import { formatFirebaseErrorMessages } from "../forms/forms.helpers";
-
-// Your web app's Firebase configuration using environment variables
-const firebaseConfig = {
-    apiKey: process.env.REACT_APP_API_KEY,
-    authDomain: process.env.REACT_APP_AUTH_DOMAIN,
-    databaseURL: process.env.REACT_APP_DATABASE_URL,
-    projectId: process.env.REACT_APP_PROJECT_ID,
-    storageBucket: process.env.REACT_APP_STORAGE_BUCKET,
-    messagingSenderId: process.env.REACT_APP_MESSAGING_SENDER_ID,
-    appId: process.env.REACT_APP_APP_ID,
-};
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
+import { signInOrLink } from "../utils/authHelpers";
 
 type AuthContextType = {
-    signInWithGoogle: () => Promise<void>;
-    signInWithForm: (param: SignInWithForm) => void;
+    signInWithGoogle: (knownPassword?: string) => Promise<void>;
+    signInWithForm: (param: SignInWithForm, knownPassword?: string) => void;
     signUpWithForm: (param: SignUpWithForm) => void;
-    signInWithGitHub: () => Promise<void>;
+    signInWithGitHub: (knownPassword?: string) => Promise<void>;
 };
 
 export const AuthContext = createContext<AuthContextType>({
@@ -52,6 +35,11 @@ interface Props {
 
 const AuthContextProvider = ({ children }: Props) => {
     useEffect(() => {
+        if (!auth) {
+            console.error("Firebase auth is not initialized.");
+            return;
+        }
+
         const unsubscribe = onAuthStateChanged(auth, async (user) => {
             console.log(`User State Changed: ${JSON.stringify(user)}`);
         });
@@ -61,22 +49,22 @@ const AuthContextProvider = ({ children }: Props) => {
         };
     }, []);
 
-    const signInWithGoogle = async (): Promise<void> => {
+    const signInWithGoogle = async (knownPassword?: string): Promise<void> => {
         console.log("Sign in with Google");
 
         const provider = new GoogleAuthProvider();
 
         try {
-            const result = await signInWithPopup(auth, provider);
-            console.info(`Signed in with Google: ${result.user?.email}`);
+            const user = await signInOrLink(provider, knownPassword);
+            console.info(`Signed in with Google: ${user?.email}`);
 
-            const idToken = await result.user?.getIdToken();
+            const idToken = await user?.getIdToken();
 
             console.info(`Token: ${idToken}`);
-            const { user } = await authWithGoogle("sign-up", idToken);
+            const { user: apiUser } = await authWithGoogle("sign-up", idToken);
 
-            console.info(`User: ${user}`);
-            localStorage.setItem("user", JSON.stringify(user));
+            console.info(`User: ${apiUser}`);
+            localStorage.setItem("user", JSON.stringify(apiUser));
             console.info(`Local storage: ${localStorage.getItem("user")}`);
         } catch (error) {
             const errorCode = (error as { code: string }).code;
@@ -124,29 +112,30 @@ const AuthContextProvider = ({ children }: Props) => {
         }
     };
 
-    const signInWithForm = async ({ email, password }: SignInWithForm) => {
+    const signInWithForm = async (
+        { email, password }: SignInWithForm,
+        knownPassword?: string
+    ) => {
         try {
-            const result = await signInWithEmailAndPassword(
-                auth,
-                email,
-                password
+            const user = await signInOrLink(
+                new GoogleAuthProvider(),
+                knownPassword || password
             );
+            console.info(`Signed in with Form: ${user}`);
 
-            console.info(`Signed in with Form: ${result}`);
+            const idToken = await user?.getIdToken();
 
-            const idToken = await result.user?.getIdToken();
-
-            const { user } = await authWithForm("login", {
+            const { user: apiUser } = await authWithForm("login", {
                 idToken,
             });
 
-            console.info(`User: ${JSON.stringify(user)}`);
-            localStorage.setItem("user", JSON.stringify(user));
+            console.info(`User: ${JSON.stringify(apiUser)}`);
+            localStorage.setItem("user", JSON.stringify(apiUser));
             console.info(`Local storage: ${localStorage.getItem("user")}`);
         } catch (error) {
             const errorCode = (error as { code: string }).code;
             const errorMessage = formatFirebaseErrorMessages(errorCode, "form");
-            console.error("Error signing up with Form:", errorMessage);
+            console.error("Error signing in with Form:", errorMessage);
             throw new Error(errorMessage);
         }
     };
@@ -156,19 +145,18 @@ const AuthContextProvider = ({ children }: Props) => {
         try {
             const provider = new GithubAuthProvider();
 
-            const result = await signInWithPopup(auth, provider);
+            const user = await signInOrLink(provider);
+            console.info(`Signed in with GitHub: ${user}`);
 
-            console.info(`Signed in with GitHub: ${result}`);
-
-            const idToken = await result.user?.getIdToken();
+            const idToken = await user?.getIdToken();
 
             console.info(`Token: ${idToken}`);
 
-            const { user } = await authWithGitHub("sign-up", idToken);
+            const { user: apiUser } = await authWithGitHub("sign-up", idToken);
 
-            console.info(`User: ${user}`);
+            console.info(`User: ${apiUser}`);
 
-            localStorage.setItem("user", JSON.stringify(user));
+            localStorage.setItem("user", JSON.stringify(apiUser));
             console.info(`Local storage: ${localStorage.getItem("user")}`);
         } catch (error) {
             const errorCode = (error as { code: string }).code;
