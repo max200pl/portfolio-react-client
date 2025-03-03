@@ -4,7 +4,7 @@ import { SignUpWithForm, UserInfo } from "../../forms/AuthForm/auth";
 
 export type TypeActionAuth = "sign-up" | "login";
 
-export type FIREBASE_ID_TOKEN = string;
+export type FIREBASE_ID_TOKEN = string | undefined;
 
 export const authWithGoogle = (
     type: TypeActionAuth,
