@@ -13,9 +13,8 @@ import {
     authWithGoogle,
 } from "../assets/api/auth.api";
 import { SignInWithForm, SignUpWithForm } from "../forms/AuthForm/auth";
-import { formatFirebaseErrorMessages } from "../forms/forms.helpers";
 import { signInOrLinkProvider } from "../utils/authHelpers";
-import { logInfo, logError, logWarn, logDebug } from "../utils/loggingHelpers";
+import { logInfo, logError } from "../utils/loggingHelpers";
 
 type AuthContextType = {
     signInWithGoogle: (knownPassword?: string) => Promise<void>;
