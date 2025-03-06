@@ -24,6 +24,7 @@ import { SubmitSignUpFormValues } from "../../pages/Auth/AuthSignUp/AuthSignUp";
 import { ErrorMessage } from "./ErrorMessage";
 import { useContext, useState } from "react";
 import { AuthContext } from "../../context/auth-context";
+import { formatFirebaseErrorMessages } from "../../forms/forms.helpers";
 import { log, logError } from "../../utils/logger";
 
 interface AuthFormProps<T extends Maybe<AnyObject>> {
@@ -73,14 +74,20 @@ const AuthForm = <T extends SubmitSignUpFormValues | SubmitSignInFormValues>({
             setError(undefined);
             navigate("/");
         } catch (error) {
-            const errorMessage = (error as Error).message;
-            setError({ message: errorMessage });
+            console.error("Error signing in with form:", error);
+            const errorCode = (error as { code: string }).code;
+            const errorMessage = formatFirebaseErrorMessages(
+                errorCode,
+                type === "sign-up" ? "signup" : "login"
+            );
             logError(
                 `Error ${
                     type === "sign-up" ? "signing up" : "signing in"
-                } with Form`,
+                } with Form:`,
                 errorMessage
             );
+
+            setError({ message: errorMessage });
         }
     };
 
