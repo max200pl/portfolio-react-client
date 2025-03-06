@@ -38,6 +38,8 @@ export const formatFirebaseErrorMessages = (
             message = "Password must be at least 6 characters long.";
         } else if (errorCode === "auth/email-already-in-use") {
             message = "Email already in use.";
+        } else {
+            message = "An error occurred during signup. Please try again.";
         }
     } else if (action === "login") {
         if (
@@ -55,11 +57,20 @@ export const formatFirebaseErrorMessages = (
             errorCode === "auth/invalid-credential"
         ) {
             message = "Account not found.";
+        } else {
+            message = "An error occurred during login. Please try again.";
         }
     } else if (action === "github" || action === "google") {
         if (errorCode === "auth/account-exists-with-different-credential") {
             message = "Account exists with different credentials.";
+        } else if (errorCode === "auth/provider-already-linked") {
+            message = "Provider already linked to another account.";
+        } else {
+            message =
+                "An error occurred during authentication. Please try again.";
         }
+    } else {
+        message = "An unknown error occurred. Please try again.";
     }
 
     return message;
