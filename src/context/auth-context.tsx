@@ -4,6 +4,7 @@ import {
     onAuthStateChanged,
     GoogleAuthProvider,
     GithubAuthProvider,
+    EmailAuthProvider,
 } from "firebase/auth";
 import { auth } from "../firebaseConfig";
 import {
@@ -13,12 +14,16 @@ import {
 } from "../assets/api/auth.api";
 import { SignInWithForm, SignUpWithForm } from "../forms/AuthForm/auth";
 import { formatFirebaseErrorMessages } from "../forms/forms.helpers";
-import { signInOrLink } from "../utils/authHelpers";
+import { signInOrLinkProvider } from "../utils/authHelpers";
+import { logInfo, logError, logWarn, logDebug } from "../utils/loggingHelpers";
 
 type AuthContextType = {
     signInWithGoogle: (knownPassword?: string) => Promise<void>;
-    signInWithForm: (param: SignInWithForm, knownPassword?: string) => void;
-    signUpWithForm: (param: SignUpWithForm) => void;
+    signInWithForm: (
+        data: SignInWithForm,
+        knownPassword?: string
+    ) => Promise<void>;
+    signUpWithForm: (data: SignUpWithForm) => Promise<void>;
     signInWithGitHub: (knownPassword?: string) => Promise<void>;
 };
 
@@ -36,12 +41,12 @@ interface Props {
 const AuthContextProvider = ({ children }: Props) => {
     useEffect(() => {
         if (!auth) {
-            console.error("Firebase auth is not initialized.");
+            logError("Firebase auth is not initialized.");
             return;
         }
 
         const unsubscribe = onAuthStateChanged(auth, async (user) => {
-            console.log(`User State Changed: ${JSON.stringify(user)}`);
+            logInfo("User State Changed:", user);
         });
 
         return () => {
@@ -49,41 +54,47 @@ const AuthContextProvider = ({ children }: Props) => {
         };
     }, []);
 
+    /**
+     * Sign In / Link with Google
+     */
     const signInWithGoogle = async (knownPassword?: string): Promise<void> => {
-        console.log("Sign in with Google");
-
+        logInfo("Attempting to sign in with Google...");
         const provider = new GoogleAuthProvider();
 
         try {
-            const user = await signInOrLink(provider, knownPassword);
-            console.info(`Signed in with Google: ${user?.email}`);
+            const user = await signInOrLinkProvider(
+                auth,
+                provider,
+                undefined,
+                knownPassword
+            );
+            logInfo("Signed in with Google →", user?.email);
 
             const idToken = await user?.getIdToken();
+            logInfo("Google ID Token:", idToken);
 
-            console.info(`Token: ${idToken}`);
-            const { user: apiUser } = await authWithGoogle("sign-up", idToken);
+            const { user: apiUser } = await authWithGoogle("login", idToken);
+            logInfo("User from backend:", apiUser);
 
-            console.info(`User: ${apiUser}`);
             localStorage.setItem("user", JSON.stringify(apiUser));
-            console.info(`Local storage: ${localStorage.getItem("user")}`);
+            logInfo("Stored user →", localStorage.getItem("user"));
         } catch (error) {
             const errorCode = (error as { code: string }).code;
             const errorMessage = formatFirebaseErrorMessages(
                 errorCode,
                 "google"
             );
-            console.error("Error signing in with Google:", errorMessage);
+            logError("Error signing in with Google:", errorMessage);
             throw new Error(errorMessage);
         }
     };
 
-    const signUpWithForm = async ({
-        email,
-        firstName,
-        lastName,
-        password,
-    }: SignUpWithForm) => {
-        console.log("Sign up with Form", firstName, lastName);
+    /**
+     * Sign Up via Email/Password (Form)
+     */
+    const signUpWithForm = async (data: SignUpWithForm) => {
+        const { email, firstName, lastName, password } = data;
+        logInfo("Attempting sign up with form...");
 
         try {
             const result = await createUserWithEmailAndPassword(
@@ -91,80 +102,94 @@ const AuthContextProvider = ({ children }: Props) => {
                 email,
                 password
             );
+            logInfo("Created user with email/password →", result.user?.email);
 
-            const idToken = await result.user?.getIdToken();
-
+            const idToken = await result.user.getIdToken();
             const { user } = await authWithForm("sign-up", {
                 firstName,
                 lastName,
                 idToken,
             });
 
-            console.info(`User: ${user}`);
+            logInfo("User from backend:", user);
 
             localStorage.setItem("user", JSON.stringify(user));
-            console.info(`Local storage: ${localStorage.getItem("user")}`);
+            logInfo("Stored user →", localStorage.getItem("user"));
         } catch (error) {
             const errorCode = (error as { code: string }).code;
             const errorMessage = formatFirebaseErrorMessages(errorCode, "form");
-            console.error("Error signing up with Form:", errorMessage);
+            logError("Error signing up with form:", errorMessage);
             throw new Error(errorMessage);
         }
     };
 
+    /**
+     * Sign In / Link via Email/Password (Form)
+     */
     const signInWithForm = async (
         { email, password }: SignInWithForm,
         knownPassword?: string
     ) => {
+        logInfo("Attempting to sign in with email/password...");
+
         try {
-            const user = await signInOrLink(
-                new GoogleAuthProvider(),
+            const provider = new EmailAuthProvider();
+            const user = await signInOrLinkProvider(
+                auth,
+                provider,
+                email,
                 knownPassword || password
             );
-            console.info(`Signed in with Form: ${user}`);
+            logInfo("Signed in with email/password →", user?.email);
 
             const idToken = await user?.getIdToken();
-
             const { user: apiUser } = await authWithForm("login", {
                 idToken,
             });
 
-            console.info(`User: ${JSON.stringify(apiUser)}`);
+            logInfo("User from backend:", apiUser);
             localStorage.setItem("user", JSON.stringify(apiUser));
-            console.info(`Local storage: ${localStorage.getItem("user")}`);
+
+            logInfo("Stored user →", localStorage.getItem("user"));
         } catch (error) {
             const errorCode = (error as { code: string }).code;
             const errorMessage = formatFirebaseErrorMessages(errorCode, "form");
-            console.error("Error signing in with Form:", errorMessage);
+            logError("Error signing in with form:", errorMessage);
             throw new Error(errorMessage);
         }
     };
 
-    const signInWithGitHub = async (): Promise<void> => {
-        console.log("Sign in with GitHub");
+    /**
+     * Sign In / Link via GitHub
+     */
+    const signInWithGitHub = async (knownPassword?: string): Promise<void> => {
+        logInfo("Attempting to sign in with GitHub...");
+
         try {
             const provider = new GithubAuthProvider();
-
-            const user = await signInOrLink(provider);
-            console.info(`Signed in with GitHub: ${user}`);
+            const user = await signInOrLinkProvider(
+                auth,
+                provider,
+                undefined,
+                knownPassword
+            );
+            logInfo("Signed in with GitHub →", user?.email);
 
             const idToken = await user?.getIdToken();
+            logInfo("GitHub ID Token:", idToken);
 
-            console.info(`Token: ${idToken}`);
-
-            const { user: apiUser } = await authWithGitHub("sign-up", idToken);
-
-            console.info(`User: ${apiUser}`);
+            const { user: apiUser } = await authWithGitHub("login", idToken);
+            logInfo("User from backend:", apiUser);
 
             localStorage.setItem("user", JSON.stringify(apiUser));
-            console.info(`Local storage: ${localStorage.getItem("user")}`);
+            logInfo("Stored user →", localStorage.getItem("user"));
         } catch (error) {
             const errorCode = (error as { code: string }).code;
             const errorMessage = formatFirebaseErrorMessages(
                 errorCode,
                 "github"
             );
-            console.error("Error signing in with GitHub:", errorMessage);
+            logError("Error signing in with GitHub:", errorMessage);
             throw new Error(errorMessage);
         }
     };
