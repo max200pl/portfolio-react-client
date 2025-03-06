@@ -49,7 +49,12 @@ const AuthForm = <T extends SubmitSignUpFormValues | SubmitSignInFormValues>({
     } = useForm({
         mode: "onSubmit",
         resolver: yupResolver(schema),
-        defaultValues,
+        defaultValues: defaultValues || {
+            firstName: "",
+            lastName: "",
+            email: "",
+            password: "",
+        },
     });
 
     const onSubmit: SubmitHandler<

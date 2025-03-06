@@ -52,7 +52,6 @@ export const authWithGitHub = (
             idToken,
         },
         method: "post",
-        credentials: "include",
     });
 };
 
