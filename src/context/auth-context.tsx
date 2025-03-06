@@ -79,13 +79,8 @@ const AuthContextProvider = ({ children }: Props) => {
             localStorage.setItem("user", JSON.stringify(apiUser));
             logInfo("Stored user →", localStorage.getItem("user"));
         } catch (error) {
-            const errorCode = (error as { code: string }).code;
-            const errorMessage = formatFirebaseErrorMessages(
-                errorCode,
-                "google"
-            );
-            logError("Error signing in with Google:", errorMessage);
-            throw new Error(errorMessage);
+            logError("Error signing in with Google:", error);
+            throw error;
         }
     };
 
@@ -116,10 +111,8 @@ const AuthContextProvider = ({ children }: Props) => {
             localStorage.setItem("user", JSON.stringify(user));
             logInfo("Stored user →", localStorage.getItem("user"));
         } catch (error) {
-            const errorCode = (error as { code: string }).code;
-            const errorMessage = formatFirebaseErrorMessages(errorCode, "form");
-            logError("Error signing up with form:", errorMessage);
-            throw new Error(errorMessage);
+            logError("Error signing up with form:", error);
+            throw error;
         }
     };
 
@@ -152,10 +145,8 @@ const AuthContextProvider = ({ children }: Props) => {
 
             logInfo("Stored user →", localStorage.getItem("user"));
         } catch (error) {
-            const errorCode = (error as { code: string }).code;
-            const errorMessage = formatFirebaseErrorMessages(errorCode, "form");
-            logError("Error signing in with form:", errorMessage);
-            throw new Error(errorMessage);
+            logError("Error signing in with form:", error);
+            throw error;
         }
     };
 
@@ -184,13 +175,8 @@ const AuthContextProvider = ({ children }: Props) => {
             localStorage.setItem("user", JSON.stringify(apiUser));
             logInfo("Stored user →", localStorage.getItem("user"));
         } catch (error) {
-            const errorCode = (error as { code: string }).code;
-            const errorMessage = formatFirebaseErrorMessages(
-                errorCode,
-                "github"
-            );
-            logError("Error signing in with GitHub:", errorMessage);
-            throw new Error(errorMessage);
+            logError("Error signing in with GitHub:", error);
+            throw error;
         }
     };
 

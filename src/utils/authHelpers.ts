@@ -78,7 +78,14 @@ export async function signInOrLinkProvider(
                 );
                 return linkResult.user;
             } catch (linkError) {
-                logError("Error linking EmailAuthProvider:", linkError);
+                const err = linkError as FirebaseError;
+                logError("Error linking EmailAuthProvider:", err);
+
+                if (err.code === "auth/provider-already-linked") {
+                    logWarn("Provider already linked, returning current user.");
+                    return auth.currentUser;
+                }
+
                 throw linkError;
             }
         }
