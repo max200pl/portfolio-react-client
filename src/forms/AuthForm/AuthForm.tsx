@@ -25,7 +25,8 @@ import { ErrorMessage } from "./ErrorMessage";
 import { useContext, useState } from "react";
 import { AuthContext } from "../../context/auth-context";
 import { formatFirebaseErrorMessages } from "../../forms/forms.helpers";
-import { log, logError } from "../../utils/logger";
+import { logError } from "../../utils/logger";
+import { logInfo } from "../../utils/loggingHelpers";
 
 interface AuthFormProps<T extends Maybe<AnyObject>> {
     type: TypeActionAuth;
@@ -61,15 +62,15 @@ const AuthForm = <T extends SubmitSignUpFormValues | SubmitSignInFormValues>({
     const onSubmit: SubmitHandler<
         SubmitSignUpFormValues | SubmitSignInFormValues
     > = async (data) => {
-        log("🚨 Submitting form with data:", data);
+        logInfo("🚨 Submitting form with data:", data);
 
         try {
             if (type === "sign-up") {
                 await authCtx.signUpWithForm(data as SubmitSignUpFormValues);
-                log("User signed up successfully", data);
+                logInfo("User signed up successfully", data);
             } else if (type === "login") {
                 await authCtx.signInWithForm(data as SubmitSignInFormValues);
-                log("User signed in successfully", data);
+                logInfo("User signed in successfully", data);
             }
             setError(undefined);
             navigate("/");
@@ -94,7 +95,7 @@ const AuthForm = <T extends SubmitSignUpFormValues | SubmitSignInFormValues>({
     return (
         <form
             onSubmit={(e) => {
-                console.log("🚨 Form submitted!");
+                logInfo("🚨 Form submitted!");
                 handleSubmit(onSubmit)(e);
             }}
             className={s.form}
