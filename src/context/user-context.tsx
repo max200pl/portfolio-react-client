@@ -1,6 +1,6 @@
 import Cookies from "js-cookie";
 import { FC, createContext, useState, useEffect } from "react";
-import { logOutUser } from "../assets/api/auth.api";
+import { logoutUser } from "../assets/api/auth.api";
 
 interface User {
     name?: string;
@@ -45,7 +45,7 @@ const UserSessionContextProvider: FC<Props> = ({ children }) => {
 
     const clearSession = async () => {
         try {
-            await logOutUser();
+            await logoutUser();
         } catch (error) {
             console.error("Error logging out user:", error);
         }
