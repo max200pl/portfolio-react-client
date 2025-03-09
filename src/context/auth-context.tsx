@@ -154,6 +154,7 @@ const AuthContextProvider = ({ children }: Props) => {
             }
             const { user: apiUser } = await authWithGoogle("login", idToken);
 
+            setUser(apiUser);
             localStorage.setItem("user", JSON.stringify(apiUser));
             logInfo("Stored user →", localStorage.getItem("user"));
             setJustLoggedIn(true);
@@ -188,8 +189,8 @@ const AuthContextProvider = ({ children }: Props) => {
                 idToken,
             });
 
+            setUser(newUser);
             logInfo("User from backend:", newUser);
-
             localStorage.setItem("user", JSON.stringify(newUser));
             logInfo("Stored user →", localStorage.getItem("user"));
             setJustLoggedIn(true);
@@ -226,6 +227,7 @@ const AuthContextProvider = ({ children }: Props) => {
             const { user: apiUser } = await authWithForm("login", { idToken });
             logInfo("User from backend:", apiUser);
 
+            setUser(apiUser);
             localStorage.setItem("user", JSON.stringify(apiUser));
             logInfo("Stored user →", localStorage.getItem("user"));
             setJustLoggedIn(true);
@@ -258,6 +260,7 @@ const AuthContextProvider = ({ children }: Props) => {
             }
             const { user: apiUser } = await authWithGitHub("login", idToken);
 
+            setUser(apiUser);
             localStorage.setItem("user", JSON.stringify(apiUser));
             logInfo("Stored user →", localStorage.getItem("user"));
             setJustLoggedIn(true);
@@ -277,7 +280,7 @@ const AuthContextProvider = ({ children }: Props) => {
             await firebaseSignOut(auth);
             localStorage.removeItem("user");
             await logoutUser(); // Your backend request, if needed
-
+            setUser(null);
             logInfo("Successfully signed out.");
         } catch (error) {
             logError("Error signing out:", error);
