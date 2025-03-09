@@ -7,7 +7,10 @@ interface HeaderAuthInfoProps {
 }
 
 const HeaderAuthInfo: FC<HeaderAuthInfoProps> = ({ user }) => {
-    console.log("user", user);
+    const displayName =
+        user.displayName ||
+        user.fullName ||
+        `${user.firstName} ${user.lastName}`;
 
     return (
         <div className={s.auth_info}>
@@ -18,14 +21,7 @@ const HeaderAuthInfo: FC<HeaderAuthInfoProps> = ({ user }) => {
             />
             <div className={s.auth_info__data}>
                 <span>You: </span>
-                {user.firstName ? (
-                    <span>{user.firstName}</span>
-                ) : (
-                    <>
-                        <span>{user.firstName} </span>
-                        <span>{user.lastName}</span>
-                    </>
-                )}
+                <span>{displayName}</span>
             </div>
         </div>
     );
