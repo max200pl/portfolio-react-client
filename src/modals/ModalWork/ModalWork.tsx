@@ -3,12 +3,14 @@ import ModalWorkSkills from "./ModalWorkSkills/ModalWorkSkills";
 import { getYear } from "../../assets/helpers/helpers";
 import { Fade } from "react-awesome-reveal";
 import ButtonModalClose from "../../assets/components/ButtonModalClose/ButtonModalClose";
-import { FC, useEffect, useState } from "react";
+import { FC, useContext, useEffect, useState } from "react";
 import { Button, Stack } from "@mui/material";
 import editImg from "../../assets/images/modal/edit.svg";
 import { modifyTechnologyUsage } from "./ModalWork.helpers";
 import { useUpdateWorkMutation } from "../../assets/api/works.api";
 import { IWork } from "../../assets/interfaces/NewInterfaces";
+import { logInfo } from "../../utils/loggingHelpers";
+import { AuthContext } from "../../context/auth-context";
 
 interface ModalWorkProps {
     onClose: () => void;
@@ -16,11 +18,11 @@ interface ModalWorkProps {
 }
 
 const ModalWork: FC<ModalWorkProps> = ({ onClose, work }) => {
-    console.log(`===== ModalWork =====`);
+    logInfo(`===== ModalWork =====`);
     const [editSkills, setEditSkills] = useState(false);
     const [currentWork, setCurrentWork] = useState<IWork>(work as IWork);
     const [skillsUpdated, setSkillsUpdated] = useState(false);
-
+    const { user } = useContext(AuthContext);
     const { mutate: updateWork } = useUpdateWorkMutation();
 
     const onHandleEditSkills = () => {
@@ -29,8 +31,8 @@ const ModalWork: FC<ModalWorkProps> = ({ onClose, work }) => {
 
     const updateWorkHandler = () => {
         if (!currentWork) return;
-        console.log(`===== ModalWork =====`);
-        console.log(`currentWork:`, currentWork.frontTech);
+        logInfo(`===== ModalWork =====`);
+        logInfo(`currentWork:`, currentWork.frontTech);
 
         updateWork({
             _id: currentWork._id,
@@ -85,17 +87,19 @@ const ModalWork: FC<ModalWorkProps> = ({ onClose, work }) => {
                 </a>
 
                 <div className={s.content__container + " custom_scroll"}>
-                    <button
-                        className={s.button_edit}
-                        onClick={() => onHandleEditSkills()}
-                        type="button"
-                    >
-                        <img
-                            className={s.button_edit__image}
-                            src={editImg}
-                            alt="Close"
-                        />
-                    </button>
+                    {!!user && (
+                        <button
+                            className={s.button_edit}
+                            onClick={() => onHandleEditSkills()}
+                            type="button"
+                        >
+                            <img
+                                className={s.button_edit__image}
+                                src={editImg}
+                                alt="Edit skills"
+                            />
+                        </button>
+                    )}
                     {work?.frontTech && Object.keys(work.frontTech).length ? (
                         <ModalWorkSkills
                             title={"Frontend"}

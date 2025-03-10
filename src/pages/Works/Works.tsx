@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import s from "./Works.module.scss";
 import Modal from "../../assets/components/Modal/Modal";
 import ModalHireMe from "../../modals/ModalHireMe/ModalHireMe";
@@ -15,6 +15,7 @@ import { Work } from "./Work/Work";
 import { LazyLoadComponent } from "react-lazy-load-image-component";
 import { getUniqCategoriesWork } from "./Works.helpers";
 import { Box, Grid, Skeleton } from "@mui/material";
+import { AuthContext } from "../../context/auth-context";
 
 const Works = () => {
     const [isOpenHireMeModal, setIsOpenHireMeModal] = useState(false);
@@ -25,6 +26,7 @@ const Works = () => {
     const [filter, setFilter] = useState<Category["_id"] | undefined>();
     const { status, data: works } = useGetWorksQuery(filter);
     const [editSection, setEditSection] = useState(false);
+    const { user } = useContext(AuthContext);
 
     const [categoriesInitialized, setCategoriesInitialized] = useState(false);
     const [uniqueCategories, setUniqueCategories] = useState<Category[]>([]);
@@ -43,7 +45,10 @@ const Works = () => {
                 <SectionTitle text="My Works" />
 
                 <ActionPanel
-                    getStatusEditSection={(status) => setEditSection(status)}
+                    isShowEditButton={!!user}
+                    getStatusEditSection={(status) => {
+                        !!user && setEditSection(status);
+                    }}
                     onClickPluseButton={() => {
                         setCurrentWork(undefined);
                         toggleEditOpenModal(true);

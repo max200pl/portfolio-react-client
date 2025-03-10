@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import s from "./Certificates.module.scss";
 import Modal from "../../assets/components/Modal/Modal";
 import ModalHireMe from "../../modals/ModalHireMe/ModalHireMe";
@@ -17,6 +17,7 @@ import Filter from "../../assets/components/Filter/Filter";
 import { Category, ICertificate } from "../../assets/interfaces/NewInterfaces";
 import { getUniqCategoriesCertificates } from "./Certificates.helpers";
 import { Box, Grid, Skeleton } from "@mui/material";
+import { AuthContext } from "../../context/auth-context";
 
 const Certificates = () => {
     const [isOpenHireMeModal, setIsOpenHireMeModal] = useState(false);
@@ -33,6 +34,8 @@ const Certificates = () => {
         useGetCategoriesCertificatesQuery();
 
     const [editSection, setEditSection] = useState(false);
+
+    const { user } = useContext(AuthContext);
 
     const [categoriesInitialized, setCategoriesInitialized] = useState(false);
     const [uniqueCategories, setUniqueCategories] = useState<Category[]>([]);
@@ -53,6 +56,25 @@ const Certificates = () => {
         <section className={s.certificates}>
             <div className="container">
                 <SectionTitle text="Certifications" />
+
+                <ActionPanel
+                    isShowEditButton={!!user}
+                    getStatusEditSection={(status) =>
+                        !!user && setEditSection(status)
+                    }
+                    onClickPluseButton={() => {
+                        setCurrentCertificate(undefined);
+                        toggleEditOpenModal(true);
+                    }}
+                >
+                    {categoriesInitialized && (
+                        <Filter
+                            currentFilter={filter}
+                            onFilterChange={setFilter}
+                            categories={uniqueCategories}
+                        />
+                    )}
+                </ActionPanel>
 
                 {!certificates && (
                     <>
@@ -99,22 +121,6 @@ const Certificates = () => {
                         </Grid>
                     </>
                 )}
-
-                <ActionPanel
-                    getStatusEditSection={(status) => setEditSection(status)}
-                    onClickPluseButton={() => {
-                        setCurrentCertificate(undefined);
-                        toggleEditOpenModal(true);
-                    }}
-                >
-                    {categoriesInitialized && (
-                        <Filter
-                            currentFilter={filter}
-                            onFilterChange={setFilter}
-                            categories={uniqueCategories}
-                        />
-                    )}
-                </ActionPanel>
 
                 {status === "success" && certificates.length ? (
                     <div className={s.certificates_container}>
