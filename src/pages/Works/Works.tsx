@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import s from "./Works.module.scss";
 import Modal from "../../assets/components/Modal/Modal";
 import ModalHireMe from "../../modals/ModalHireMe/ModalHireMe";
@@ -15,6 +15,10 @@ import { Work } from "./Work/Work";
 import { LazyLoadComponent } from "react-lazy-load-image-component";
 import { getUniqCategoriesWork } from "./Works.helpers";
 import { Box, Grid, Skeleton } from "@mui/material";
+import { AuthContext } from "../../context/auth-context";
+import { AccessDenied } from "../../assets/components/AccessDenied/AccessDenied";
+import { useNavigate } from "react-router-dom";
+import { logInfo } from "../../utils/loggingHelpers";
 
 const Works = () => {
     const [isOpenHireMeModal, setIsOpenHireMeModal] = useState(false);
@@ -23,8 +27,16 @@ const Works = () => {
     const [isOpenEditModal, toggleEditOpenModal] = useState(false);
     const [currentWork, setCurrentWork] = useState<IWork>();
     const [filter, setFilter] = useState<Category["_id"] | undefined>();
-    const { status, data: works } = useGetWorksQuery(filter);
+    const { user } = useContext(AuthContext);
+    const {
+        status,
+        data: works,
+        error,
+    } = useGetWorksQuery(filter, {
+        skip: !user,
+    });
     const [editSection, setEditSection] = useState(false);
+    const navigate = useNavigate();
 
     const [categoriesInitialized, setCategoriesInitialized] = useState(false);
     const [uniqueCategories, setUniqueCategories] = useState<Category[]>([]);
@@ -34,8 +46,10 @@ const Works = () => {
             const categories = getUniqCategoriesWork(works);
             setUniqueCategories(categories);
             setCategoriesInitialized(true);
+        } else if (status === "error") {
+            setCategoriesInitialized(false);
         }
-    }, [status, works, categoriesInitialized]);
+    }, [status, works, categoriesInitialized, error]);
 
     return (
         <section className={s.works}>
@@ -43,7 +57,10 @@ const Works = () => {
                 <SectionTitle text="My Works" />
 
                 <ActionPanel
-                    getStatusEditSection={(status) => setEditSection(status)}
+                    isShowEditButton={!!user}
+                    getStatusEditSection={(status) => {
+                        !!user && setEditSection(status);
+                    }}
                     onClickPluseButton={() => {
                         setCurrentWork(undefined);
                         toggleEditOpenModal(true);
@@ -57,12 +74,20 @@ const Works = () => {
                         />
                     )}
                 </ActionPanel>
-
-                {!works && (
+                {!user ? (
+                    <AccessDenied
+                        onClick={() => {
+                            logInfo("[AccessDenied] onClick");
+                            navigate("/auth/login");
+                        }}
+                    />
+                ) : null}
+                {((!works && user) || !user) && (
                     <>
                         <Grid
                             sx={{
                                 markerEnd: "15px",
+                                filter: !user ? "blur(5px)" : "none", // Add blur effect if no user
                             }}
                             container
                             wrap="wrap"
@@ -91,19 +116,24 @@ const Works = () => {
                                     >
                                         <Skeleton
                                             width="100%"
+                                            animation={!user ? "wave" : "pulse"}
                                             sx={{
                                                 height: "330px",
                                                 transform: "scale(1)",
                                             }}
                                         />
-                                        <Skeleton height="60px" width="60%" />
+                                        <Skeleton
+                                            height="60px"
+                                            width="60%"
+                                            animation={!user ? "wave" : "pulse"}
+                                        />
                                     </Box>
                                 </Box>
                             ))}
                         </Grid>
                     </>
                 )}
-                {status === "success" && (
+                {status === "success" && user && (
                     <div className={s.works_container}>
                         <Fade
                             triggerOnce={true}

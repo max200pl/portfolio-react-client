@@ -8,12 +8,14 @@ interface ActionPanelProps {
     onClickPluseButton: () => void;
     getStatusEditSection: (status: boolean) => void;
     children: ReactNode;
+    isShowEditButton?: boolean;
 }
 
 const ActionPanel: React.FC<ActionPanelProps> = ({
     onClickPluseButton,
     getStatusEditSection,
     children,
+    isShowEditButton = true,
 }) => {
     const [editSection, setEditSection] = useState<boolean>(false);
 
@@ -37,17 +39,19 @@ const ActionPanel: React.FC<ActionPanelProps> = ({
                     </Fade>
                 )}
 
-                <button
-                    className={s.action_panel__edit_section__button}
-                    onClick={() => setEditSection(!editSection)}
-                    type="button"
-                >
-                    <img
-                        className={s.button__image}
-                        src={editIcon}
-                        alt="EditSection"
-                    />
-                </button>
+                {isShowEditButton && (
+                    <button
+                        className={s.action_panel__edit_section__button}
+                        onClick={() => setEditSection(!editSection)}
+                        type="button"
+                    >
+                        <img
+                            className={s.button__image}
+                            src={editIcon}
+                            alt="EditSection"
+                        />
+                    </button>
+                )}
             </div>
         </div>
     );

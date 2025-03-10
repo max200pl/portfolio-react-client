@@ -24,7 +24,9 @@ import { SubmitSignUpFormValues } from "../../pages/Auth/AuthSignUp/AuthSignUp";
 import { ErrorMessage } from "./ErrorMessage";
 import { useContext, useState } from "react";
 import { AuthContext } from "../../context/auth-context";
-import { log, logError } from "../../utils/logger";
+import { formatFirebaseErrorMessages } from "../../forms/forms.helpers";
+import { logError } from "../../utils/logger";
+import { logInfo } from "../../utils/loggingHelpers";
 
 interface AuthFormProps<T extends Maybe<AnyObject>> {
     type: TypeActionAuth;
@@ -49,40 +51,51 @@ const AuthForm = <T extends SubmitSignUpFormValues | SubmitSignInFormValues>({
     } = useForm({
         mode: "onSubmit",
         resolver: yupResolver(schema),
-        defaultValues,
+        defaultValues: defaultValues || {
+            firstName: "",
+            lastName: "",
+            email: "",
+            password: "",
+        },
     });
 
     const onSubmit: SubmitHandler<
         SubmitSignUpFormValues | SubmitSignInFormValues
     > = async (data) => {
-        log("🚨 Submitting form with data:", data);
+        logInfo("🚨 Submitting form with data:", data);
 
         try {
             if (type === "sign-up") {
                 await authCtx.signUpWithForm(data as SubmitSignUpFormValues);
-                log("User signed up successfully", data);
+                logInfo("User signed up successfully", data);
             } else if (type === "login") {
                 await authCtx.signInWithForm(data as SubmitSignInFormValues);
-                log("User signed in successfully", data);
+                logInfo("User signed in successfully", data);
             }
             setError(undefined);
             navigate("/");
         } catch (error) {
-            const errorMessage = (error as Error).message;
-            setError({ message: errorMessage });
+            console.error("Error signing in with form:", error);
+            const errorCode = (error as { code: string }).code;
+            const errorMessage = formatFirebaseErrorMessages(
+                errorCode,
+                type === "sign-up" ? "signup" : "login"
+            );
             logError(
                 `Error ${
                     type === "sign-up" ? "signing up" : "signing in"
-                } with Form`,
+                } with Form:`,
                 errorMessage
             );
+
+            setError({ message: errorMessage });
         }
     };
 
     return (
         <form
             onSubmit={(e) => {
-                console.log("🚨 Form submitted!");
+                logInfo("🚨 Form submitted!");
                 handleSubmit(onSubmit)(e);
             }}
             className={s.form}

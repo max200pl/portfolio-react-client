@@ -45,7 +45,7 @@ body {
             padding: 0;
         }
 
-        padding: 0 15px;
+        padding: 20px;
     }
 
     @include xs-sm {
@@ -55,6 +55,7 @@ body {
 
         max-width: 320px;
         padding: 0 15px;
+        padding-top: 20px;
     }
 }
 
