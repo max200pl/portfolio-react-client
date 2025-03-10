@@ -18,7 +18,7 @@ export const baseQuery = <T>(options: BaseQueryOptions): Promise<T> => {
         headers_param,
         body,
         method,
-        credentials,
+        credentials = "include",
     } = options;
 
     const headers: Record<string, string> = {
