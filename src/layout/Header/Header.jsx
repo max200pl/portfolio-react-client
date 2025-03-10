@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import s from "./Header.module.scss";
 import loginImg from "../../assets/images/header/login.svg";
 import home from "../../assets/images/header/home.svg";
@@ -52,11 +52,23 @@ const dataNavLink = (isAuth) => [
     },
 ];
 
+const handleLogoutClick = async (navigate, signOut) => {
+    try {
+        await signOut();
+        // alert("Successfully signed out.");
+        navigate("/");
+    } catch (error) {
+        console.error("Error signing out:", error);
+        // alert("Error signing out. Please try again.");
+    }
+};
+
 const Header = () => {
     const { user, signOut } = useContext(AuthContext);
     const [isOpenHireMeModal, setIsOpenHireMeModal] = useState(false);
     const [showMobileMenu, setShowMobileMenu] = useState(false);
     const [isInitialized, setIsInitialized] = useState(false);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const handleResize = () => {
@@ -108,9 +120,12 @@ const Header = () => {
                                         to={data.to}
                                         target={data.target}
                                         rel={data.rel}
-                                        onClick={() => {
+                                        onClick={async () => {
                                             if (data.name === "LogOut") {
-                                                signOut();
+                                                await handleLogoutClick(
+                                                    navigate,
+                                                    signOut
+                                                );
                                             }
                                         }}
                                     >

@@ -20,7 +20,10 @@ enum Tag {
     TECHNOLOGIES = "technologies",
 }
 
-export const useGetWorksQuery = (filter: Category["_id"] | undefined) => {
+export const useGetWorksQuery = (
+    filter: Category["_id"] | undefined,
+    options?: { skip: boolean }
+) => {
     const baseQueryFn = baseQuery;
 
     const url = `${WORKS_API_BASE_URL}`;
@@ -33,6 +36,13 @@ export const useGetWorksQuery = (filter: Category["_id"] | undefined) => {
                 url,
                 params,
             }),
+        enabled: !options?.skip,
+        retry: (failureCount, error: any) => {
+            if (error?.response?.status === 401) {
+                return false;
+            }
+            return failureCount < 3;
+        },
     });
 };
 
