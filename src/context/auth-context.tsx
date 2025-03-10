@@ -99,11 +99,13 @@ const AuthContextProvider = ({ children }: Props) => {
                 setUser(null);
                 localStorage.removeItem("user");
                 setLoading(false);
+
                 return;
             }
 
             try {
                 logInfo("Firebase: user found:", firebaseUser.email);
+
                 // const idToken = await firebaseUser.getIdToken();
                 // const userProfile = await fetchUserProfile(idToken);
 
@@ -120,6 +122,8 @@ const AuthContextProvider = ({ children }: Props) => {
 
                 setUser(null);
                 localStorage.removeItem("user");
+
+                logInfo("Signed out due to error.");
             } finally {
                 setLoading(false);
             }
