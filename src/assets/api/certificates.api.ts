@@ -25,7 +25,8 @@ enum Tag {
 }
 
 export const useGetCertificatesQuery = (
-    filter: Category["_id"] | undefined
+    filter: Category["_id"] | undefined,
+    options?: { skip: boolean }
 ) => {
     const baseQueryFn = baseQuery;
 
@@ -39,6 +40,13 @@ export const useGetCertificatesQuery = (
                 url,
                 params,
             }),
+        enabled: !options?.skip,
+        retry: (failureCount, error: any) => {
+            if (error?.response?.status === 401) {
+                return false;
+            }
+            return failureCount < 3;
+        },
     });
 };
 
