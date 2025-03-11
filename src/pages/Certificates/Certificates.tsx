@@ -18,6 +18,9 @@ import { Category, ICertificate } from "../../assets/interfaces/NewInterfaces";
 import { getUniqCategoriesCertificates } from "./Certificates.helpers";
 import { Box, Grid, Skeleton } from "@mui/material";
 import { AuthContext } from "../../context/auth-context";
+import { CertificatesAccessDenied } from "../../assets/components/AccessDenied/AccessDenied";
+import { logInfo } from "../../utils/loggingHelpers";
+import { useNavigate } from "react-router-dom";
 
 const Certificates = () => {
     const [isOpenHireMeModal, setIsOpenHireMeModal] = useState(false);
@@ -27,15 +30,21 @@ const Certificates = () => {
         useState<ICertificate>();
 
     const [filter, setFilter] = useState<Category["_id"] | undefined>();
+    const { user } = useContext(AuthContext);
+    const {
+        status,
+        data: certificates,
+        error,
+    } = useGetCertificatesQuery(filter, {
+        skip: !user,
+    });
 
-    const { status, data: certificates } = useGetCertificatesQuery(filter);
+    const navigate = useNavigate();
 
     const { status: statusCategories, data: categories = [] } =
         useGetCategoriesCertificatesQuery();
 
     const [editSection, setEditSection] = useState(false);
-
-    const { user } = useContext(AuthContext);
 
     const [categoriesInitialized, setCategoriesInitialized] = useState(false);
     const [uniqueCategories, setUniqueCategories] = useState<Category[]>([]);
@@ -49,8 +58,17 @@ const Certificates = () => {
             const categories = getUniqCategoriesCertificates(certificates);
             setUniqueCategories(categories);
             setCategoriesInitialized(true);
+        } else if (status === "error") {
+            setCategoriesInitialized(false);
         }
-    }, [categories, categoriesInitialized, certificates, statusCategories]);
+    }, [
+        categories,
+        categoriesInitialized,
+        certificates,
+        statusCategories,
+        error,
+        status,
+    ]);
 
     return (
         <section className={s.certificates}>
@@ -76,11 +94,12 @@ const Certificates = () => {
                     )}
                 </ActionPanel>
 
-                {!certificates && (
+                {((!certificates && user) || !user) && (
                     <>
                         <Grid
                             sx={{
                                 markerEnd: "15px",
+                                filter: !user ? "blur(5px)" : "none", // Add blur effect if no user
                             }}
                             container
                             wrap="wrap"
@@ -109,20 +128,32 @@ const Certificates = () => {
                                     >
                                         <Skeleton
                                             width="100%"
+                                            animation={!user ? "wave" : "pulse"}
                                             sx={{
                                                 height: "330px",
                                                 transform: "scale(1)",
                                             }}
                                         />
-                                        <Skeleton height="60px" width="60%" />
+                                        <Skeleton
+                                            height="60px"
+                                            width="60%"
+                                            animation={!user ? "wave" : "pulse"}
+                                        />
                                     </Box>
                                 </Box>
                             ))}
                         </Grid>
                     </>
                 )}
-
-                {status === "success" && certificates.length ? (
+                {!user ? (
+                    <CertificatesAccessDenied
+                        onClick={() => {
+                            logInfo("[AccessDenied] onClick");
+                            navigate("/auth/login");
+                        }}
+                    />
+                ) : null}
+                {status === "success" && user ? (
                     <div className={s.certificates_container}>
                         <Fade
                             triggerOnce={true}

@@ -16,7 +16,7 @@ import { LazyLoadComponent } from "react-lazy-load-image-component";
 import { getUniqCategoriesWork } from "./Works.helpers";
 import { Box, Grid, Skeleton } from "@mui/material";
 import { AuthContext } from "../../context/auth-context";
-import { AccessDenied } from "../../assets/components/AccessDenied/AccessDenied";
+import { WorksAccessDenied } from "../../assets/components/AccessDenied/AccessDenied";
 import { useNavigate } from "react-router-dom";
 import { logInfo } from "../../utils/loggingHelpers";
 
@@ -75,7 +75,7 @@ const Works = () => {
                     )}
                 </ActionPanel>
                 {!user ? (
-                    <AccessDenied
+                    <WorksAccessDenied
                         onClick={() => {
                             logInfo("[AccessDenied] onClick");
                             navigate("/auth/login");
