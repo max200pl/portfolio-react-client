@@ -3,6 +3,7 @@ import s from "./Header.module.scss";
 import loginImg from "../../assets/images/header/login.svg";
 import home from "../../assets/images/header/home.svg";
 import PortfolioImg from "../../assets/images/header/portfolio.svg";
+import CertificatesImg from "../../assets/images/header/certificates.svg";
 import AboutImg from "../../assets/images/header/about.svg";
 import ContactImg from "../../assets/images/header/contact.svg";
 import { useContext, useEffect, useState } from "react";
@@ -35,7 +36,7 @@ const dataNavLink = (isAuth) => [
         name: "Certificates",
         to: "/certificates",
         alt: "certificates",
-        iconUrl: PortfolioImg,
+        iconUrl: CertificatesImg,
     },
     {
         name: isAuth ? "LogOut" : "LogIn",
