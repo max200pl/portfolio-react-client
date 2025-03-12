@@ -30,7 +30,7 @@ const dataSocialLinks = [
     },
     {
         icon: socialLink5,
-        link: "https://t.me/max200pl",
+        link: "https://t.me/MaksymPoskanniy",
     },
 ];
 
