@@ -51,7 +51,8 @@
     "start": "cross-env REACT_APP_MODE=development react-scripts start",
     "build": "cross-env REACT_APP_MODE=production react-scripts build",
     "test": "react-scripts test --passWithNoTests",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "sync": "browser-sync start --config bs-config.js"
   },
   "eslintConfig": {
     "extends": [
@@ -75,6 +76,7 @@
     "@tanstack/eslint-plugin-query": "^5.12.1",
     "@types/react-datepicker": "^4.19.3",
     "@types/react-lazy-load-image-component": "^1.6.4",
+    "browser-sync": "^3.0.3",
     "cross-env": "^7.0.3",
     "jest": "^27.5.1",
     "react-transition-group": "^4.4.5",
