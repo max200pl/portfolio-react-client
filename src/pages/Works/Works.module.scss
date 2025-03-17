@@ -20,7 +20,9 @@
         }
     }
 }
-
+.grid_container {
+    position: relative;
+}
 .works_container {
     display: flex;
     flex-wrap: wrap;

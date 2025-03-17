@@ -75,65 +75,71 @@ const Works = () => {
                         />
                     )}
                 </ActionPanel>
-                {!user ? (
-                    <WorksAccessDenied
-                        onClick={() => {
-                            logInfo("[AccessDenied] onClick");
-                            navigate("/auth/login");
-                        }}
-                    />
-                ) : null}
-                {((!works && user) || !user) && (
-                    <>
-                        <Grid
-                            sx={{
-                                markerEnd: "15px",
-                                filter: !user ? "blur(5px)" : "none", // Add blur effect if no user
+                <div className={s.grid_container}>
+                    {!user ? (
+                        <WorksAccessDenied
+                            onClick={() => {
+                                logInfo("[AccessDenied] onClick");
+                                navigate("/auth/login");
                             }}
-                            container
-                            wrap="wrap"
-                            boxSizing={"border-box"}
-                        >
-                            {new Array(6).fill(0).map((_, index) => (
-                                <Box
-                                    key={index}
-                                    flexBasis={[
-                                        "100%",
-                                        "50%",
-                                        "50%",
-                                        "33.333%",
-                                    ]}
-                                    sx={{
-                                        my: 0,
-                                    }}
-                                >
+                        />
+                    ) : null}
+                    {((!works && user) || !user) && (
+                        <>
+                            <Grid
+                                sx={{
+                                    markerEnd: "15px",
+                                    filter: !user ? "blur(5px)" : "none", // Add blur effect if no user
+                                }}
+                                container
+                                wrap="wrap"
+                                boxSizing={"border-box"}
+                            >
+                                {new Array(6).fill(0).map((_, index) => (
                                     <Box
-                                        display={"flex"}
-                                        flexDirection={"column"}
-                                        justifyContent={"space-between"}
+                                        key={index}
+                                        flexBasis={[
+                                            "100%",
+                                            "50%",
+                                            "50%",
+                                            "33.333%",
+                                        ]}
                                         sx={{
-                                            margin: "15px",
+                                            my: 0,
                                         }}
                                     >
-                                        <Skeleton
-                                            width="100%"
-                                            animation={!user ? "wave" : "pulse"}
+                                        <Box
+                                            display={"flex"}
+                                            flexDirection={"column"}
+                                            justifyContent={"space-between"}
                                             sx={{
-                                                height: "330px",
-                                                transform: "scale(1)",
+                                                margin: "15px",
                                             }}
-                                        />
-                                        <Skeleton
-                                            height="60px"
-                                            width="60%"
-                                            animation={!user ? "wave" : "pulse"}
-                                        />
+                                        >
+                                            <Skeleton
+                                                width="100%"
+                                                animation={
+                                                    !user ? "wave" : "pulse"
+                                                }
+                                                sx={{
+                                                    height: "330px",
+                                                    transform: "scale(1)",
+                                                }}
+                                            />
+                                            <Skeleton
+                                                height="60px"
+                                                width="60%"
+                                                animation={
+                                                    !user ? "wave" : "pulse"
+                                                }
+                                            />
+                                        </Box>
                                     </Box>
-                                </Box>
-                            ))}
-                        </Grid>
-                    </>
-                )}
+                                ))}
+                            </Grid>
+                        </>
+                    )}
+                </div>
                 {status === "success" && user && (
                     <div className={s.works_container}>
                         <Fade
