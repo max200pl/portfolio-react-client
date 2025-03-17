@@ -19,6 +19,7 @@ import { AuthContext } from "../../context/auth-context";
 import { WorksAccessDenied } from "../../assets/components/AccessDenied/AccessDenied";
 import { useNavigate } from "react-router-dom";
 import { logInfo } from "../../utils/loggingHelpers";
+import DownloadCVButton from "../../components/DownloadCVButton/DownloadCVButton";
 
 const Works = () => {
     const [isOpenHireMeModal, setIsOpenHireMeModal] = useState(false);
@@ -176,12 +177,13 @@ const Works = () => {
                     >
                         Hire Me
                     </button>
-                    <button
+                    {/* <button
                         className={"btn"}
                         onClick={() => setIsOpenSeeMyResumeModal(true)}
                     >
                         See My Resume
-                    </button>
+                    </button> */}
+                    <DownloadCVButton />
                 </div>
             </div>
 

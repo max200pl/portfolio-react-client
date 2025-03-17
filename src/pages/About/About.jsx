@@ -4,6 +4,7 @@ import Modal from "../../assets/components/Modal/Modal";
 import ModalHireMe from "../../modals/ModalHireMe/ModalHireMe";
 import ModalSeeMyResume from "../../modals/ModalSeeMyResume/ModalSeeMyResume";
 import SectionTitle from "../../assets/components/SectionTitle/SectionTitle";
+import DownloadCVButton from "../../components/DownloadCVButton/DownloadCVButton";
 
 //import aboutPhoto from "../../img/About__me/about__photo.png";
 
@@ -78,12 +79,13 @@ const About = () => {
                         >
                             Hire Me
                         </button>
-                        <button
+                        {/* <button
                             className={"btn"}
                             onClick={() => setIsOpenSeeMyResumeModal(true)}
                         >
                             See My Resume
-                        </button>
+                        </button> */}
+                        <DownloadCVButton />
                     </div>
                 </div>
             </div>

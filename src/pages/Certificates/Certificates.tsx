@@ -21,6 +21,7 @@ import { AuthContext } from "../../context/auth-context";
 import { CertificatesAccessDenied } from "../../assets/components/AccessDenied/AccessDenied";
 import { logInfo } from "../../utils/loggingHelpers";
 import { useNavigate } from "react-router-dom";
+import DownloadCVButton from "../../components/DownloadCVButton/DownloadCVButton";
 
 const Certificates = () => {
     const [isOpenHireMeModal, setIsOpenHireMeModal] = useState(false);
@@ -203,12 +204,13 @@ const Certificates = () => {
                     >
                         Hire Me
                     </button>
-                    <button
+                    {/* <button
                         className={"btn"}
                         onClick={() => setIsOpenSeeMyResumeModal(true)}
                     >
                         See My Resume
-                    </button>
+                    </button> */}
+                     <DownloadCVButton />
                 </div>
             </div>
 
