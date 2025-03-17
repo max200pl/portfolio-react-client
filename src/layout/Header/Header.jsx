@@ -12,6 +12,7 @@ import ModalHireMe from "../../modals/ModalHireMe/ModalHireMe";
 import { ButtonBurger } from "../../assets/components/ButtonBurger/ButtonBurger";
 import HeaderAuthInfo from "./HeaderAuthInfo";
 import { AuthContext } from "../../context/auth-context";
+import { CSSTransition } from "react-transition-group";
 
 const dataNavLink = (isAuth) => [
     {
@@ -106,65 +107,79 @@ const Header = () => {
             </div>
 
             <header className={s.header}>
-                <nav className={s.nav} id="nav">
-                    {dataNavLink(!!user).map((data, id) => {
-                        return (
-                            <div key={id}>
-                                {!data.isButton ? (
-                                    <NavLink
-                                        key={id}
-                                        className={({ isActive }) =>
-                                            isActive
-                                                ? s.nav__link_active
-                                                : s.nav__link
-                                        }
-                                        to={data.to}
-                                        target={data.target}
-                                        rel={data.rel}
-                                        onClick={async () => {
-                                            if (data.name === "LogOut") {
-                                                await handleLogoutClick(
-                                                    navigate,
-                                                    signOut
-                                                );
+                <CSSTransition
+                    in={showMobileMenu}
+                    timeout={300}
+                    classNames={{
+                        enter: s["fade-enter"],
+                        enterActive: s["fade-enter-active"],
+                        exit: s["fade-exit"],
+                        exitActive: s["fade-exit-active"],
+                    }}
+                    unmountOnExit
+                >
+                    <nav className={s.nav} id="nav">
+                        {dataNavLink(!!user).map((data, id) => {
+                            return (
+                                <div key={id}>
+                                    {!data.isButton ? (
+                                        <NavLink
+                                            key={id}
+                                            className={({ isActive }) =>
+                                                isActive
+                                                    ? s.nav__link_active
+                                                    : s.nav__link
                                             }
-                                        }}
-                                    >
-                                        <img
-                                            className={s.nav__link_img}
-                                            src={data.iconUrl}
-                                            alt={data.alt}
-                                            loading="lazy"
-                                        ></img>
+                                            to={data.to}
+                                            target={data.target}
+                                            rel={data.rel}
+                                            onClick={async () => {
+                                                if (data.name === "LogOut") {
+                                                    await handleLogoutClick(
+                                                        navigate,
+                                                        signOut
+                                                    );
+                                                }
+                                            }}
+                                        >
+                                            <img
+                                                className={s.nav__link_img}
+                                                src={data.iconUrl}
+                                                alt={data.alt}
+                                                loading="lazy"
+                                            ></img>
 
-                                        <span className={s.nav__link_text}>
-                                            {data.name}
-                                        </span>
-                                    </NavLink>
-                                ) : (
-                                    <button
-                                        key={id}
-                                        onClick={() =>
-                                            setIsOpenHireMeModal(
-                                                !isOpenHireMeModal
-                                            )
-                                        }
-                                        className={
-                                            s.nav__link + " " + s.nav__link_btn
-                                        }
-                                    >
-                                        <img
-                                            className={s.nav__link_img}
-                                            src={ContactImg}
-                                            alt="contact me"
-                                        ></img>
-                                        <span>Contact me</span>
-                                    </button>
-                                )}
-                            </div>
-                        );
-                    })}
-                </nav>
+                                            <span className={s.nav__link_text}>
+                                                {data.name}
+                                            </span>
+                                        </NavLink>
+                                    ) : (
+                                        <button
+                                            key={id}
+                                            onClick={() =>
+                                                setIsOpenHireMeModal(
+                                                    !isOpenHireMeModal
+                                                )
+                                            }
+                                            className={
+                                                s.nav__link +
+                                                " " +
+                                                s.nav__link_btn
+                                            }
+                                        >
+                                            <img
+                                                className={s.nav__link_img}
+                                                src={ContactImg}
+                                                alt="contact me"
+                                            ></img>
+                                            <span>Contact me</span>
+                                        </button>
+                                    )}
+                                </div>
+                            );
+                        })}
+                    </nav>
+                </CSSTransition>
             </header>
 
             <Modal
