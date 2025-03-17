@@ -87,7 +87,7 @@ const ModalWork: FC<ModalWorkProps> = ({ onClose, work }) => {
                 </a>
 
                 <div className={s.content__container + " custom_scroll"}>
-                    {!!user && (
+                    {user?.roles.includes("admin") && (
                         <button
                             className={s.button_edit}
                             onClick={() => onHandleEditSkills()}

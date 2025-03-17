@@ -76,7 +76,7 @@ const Certificates = () => {
                 <SectionTitle text="Certifications" />
 
                 <ActionPanel
-                    isShowEditButton={!!user}
+                    isShowEditButton={user?.roles.includes("admin")}
                     getStatusEditSection={(status) =>
                         !!user && setEditSection(status)
                     }
