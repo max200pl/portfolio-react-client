@@ -57,7 +57,7 @@ const Works = () => {
                 <SectionTitle text="My Works" />
 
                 <ActionPanel
-                    isShowEditButton={user?.roles.includes("admin")}
+                    isShowEditButton={!!user?.roles.includes("admin")}
                     getStatusEditSection={(status) => {
                         !!user && setEditSection(status);
                     }}
