@@ -4,6 +4,7 @@ import Modal from "../../assets/components/Modal/Modal";
 import { SocialLinks } from "../../assets/components/SocialLinks/SocialLinks";
 import s from "./Intro.module.scss";
 import ModalHireMe from "../../modals/ModalHireMe/ModalHireMe";
+import DownloadCVButton from "../../components/DownloadCVButton/DownloadCVButton";
 
 const Intro = () => {
     const [isOpenHireMeModal, setIsOpenHireMeModal] = useState(false);
@@ -35,12 +36,14 @@ const Intro = () => {
                             >
                                 Hire Me
                             </button>
+                            <DownloadCVButton />
+                            {/*
                             <button
                                 className={"btn"}
                                 onClick={() => setIsOpenSeeMyResumeModal(true)}
                             >
                                 See My Resume
-                            </button>
+                            </button> */}
                         </div>
                     </div>
                 </div>

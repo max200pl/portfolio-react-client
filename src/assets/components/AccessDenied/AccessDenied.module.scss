@@ -17,5 +17,20 @@
     p {
         font-size: 1.5rem;
         margin-bottom: 1rem;
+
+        @include xs-mb {
+            font-size: 1.2rem;
+        }
+    }
+
+    @include mb-lg {
+        position: fixed;
+
+        top: 60%;
+    }
+
+    @include xs-mb {
+        position: fixed;
+        min-width: 90%;
     }
 }

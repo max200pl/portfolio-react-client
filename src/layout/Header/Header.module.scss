@@ -53,7 +53,7 @@
 
     @include xs-mb {
         position: fixed;
-        z-index: 1;
+        z-index: 1000;
         padding: 0;
         left: 50%;
         transform: translateX(-50%);
@@ -94,7 +94,7 @@
     cursor: pointer;
 
     @include xs-mb {
-        width: 60px;
+        width: 50px;
         justify-content: center;
         padding: 0;
         margin-left: 0px;
@@ -109,6 +109,7 @@
     &_img {
         display: none;
         @include xs-mb {
+            max-width: 30px;
             display: block;
         }
     }

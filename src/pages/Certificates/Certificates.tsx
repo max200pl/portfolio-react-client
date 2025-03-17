@@ -21,6 +21,7 @@ import { AuthContext } from "../../context/auth-context";
 import { CertificatesAccessDenied } from "../../assets/components/AccessDenied/AccessDenied";
 import { logInfo } from "../../utils/loggingHelpers";
 import { useNavigate } from "react-router-dom";
+import DownloadCVButton from "../../components/DownloadCVButton/DownloadCVButton";
 
 const Certificates = () => {
     const [isOpenHireMeModal, setIsOpenHireMeModal] = useState(false);
@@ -38,6 +39,8 @@ const Certificates = () => {
     } = useGetCertificatesQuery(filter, {
         skip: !user,
     });
+
+    console.log("user?.roles.includes('admin')", user?.roles);
 
     const navigate = useNavigate();
 
@@ -76,7 +79,7 @@ const Certificates = () => {
                 <SectionTitle text="Certifications" />
 
                 <ActionPanel
-                    isShowEditButton={!!user}
+                    isShowEditButton={!!user?.roles.includes("admin")}
                     getStatusEditSection={(status) =>
                         !!user && setEditSection(status)
                     }
@@ -85,7 +88,7 @@ const Certificates = () => {
                         toggleEditOpenModal(true);
                     }}
                 >
-                    {categoriesInitialized && (
+                    {categoriesInitialized && user && (
                         <Filter
                             currentFilter={filter}
                             onFilterChange={setFilter}
@@ -93,66 +96,71 @@ const Certificates = () => {
                         />
                     )}
                 </ActionPanel>
-
-                {((!certificates && user) || !user) && (
-                    <>
-                        <Grid
-                            sx={{
-                                markerEnd: "15px",
-                                filter: !user ? "blur(5px)" : "none", // Add blur effect if no user
-                            }}
-                            container
-                            wrap="wrap"
-                            boxSizing={"border-box"}
-                        >
-                            {new Array(6).fill(0).map((_, index) => (
-                                <Box
-                                    key={index}
-                                    flexBasis={[
-                                        "100%",
-                                        "50%",
-                                        "50%",
-                                        "33.333%",
-                                    ]}
-                                    sx={{
-                                        my: 0,
-                                    }}
-                                >
+                <div className={s.grid_container}>
+                    {((!certificates && user) || !user) && (
+                        <>
+                            <Grid
+                                sx={{
+                                    markerEnd: "15px",
+                                    filter: !user ? "blur(5px)" : "none", // Add blur effect if no user
+                                }}
+                                container
+                                wrap="wrap"
+                                boxSizing={"border-box"}
+                            >
+                                {new Array(6).fill(0).map((_, index) => (
                                     <Box
-                                        display={"flex"}
-                                        flexDirection={"column"}
-                                        justifyContent={"space-between"}
+                                        key={index}
+                                        flexBasis={[
+                                            "100%",
+                                            "50%",
+                                            "50%",
+                                            "33.333%",
+                                        ]}
                                         sx={{
-                                            margin: "15px",
+                                            my: 0,
                                         }}
                                     >
-                                        <Skeleton
-                                            width="100%"
-                                            animation={!user ? "wave" : "pulse"}
+                                        <Box
+                                            display={"flex"}
+                                            flexDirection={"column"}
+                                            justifyContent={"space-between"}
                                             sx={{
-                                                height: "330px",
-                                                transform: "scale(1)",
+                                                margin: "15px",
                                             }}
-                                        />
-                                        <Skeleton
-                                            height="60px"
-                                            width="60%"
-                                            animation={!user ? "wave" : "pulse"}
-                                        />
+                                        >
+                                            <Skeleton
+                                                width="100%"
+                                                animation={
+                                                    !user ? "wave" : "pulse"
+                                                }
+                                                sx={{
+                                                    height: "330px",
+                                                    transform: "scale(1)",
+                                                }}
+                                            />
+                                            <Skeleton
+                                                height="60px"
+                                                width="60%"
+                                                animation={
+                                                    !user ? "wave" : "pulse"
+                                                }
+                                            />
+                                        </Box>
                                     </Box>
-                                </Box>
-                            ))}
-                        </Grid>
-                    </>
-                )}
-                {!user ? (
-                    <CertificatesAccessDenied
-                        onClick={() => {
-                            logInfo("[AccessDenied] onClick");
-                            navigate("/auth/login");
-                        }}
-                    />
-                ) : null}
+                                ))}
+                            </Grid>
+                        </>
+                    )}
+                    {!user ? (
+                        <CertificatesAccessDenied
+                            onClick={() => {
+                                logInfo("[AccessDenied] onClick");
+                                navigate("/auth/login");
+                            }}
+                        />
+                    ) : null}
+                </div>
                 {status === "success" && user ? (
                     <div className={s.certificates_container}>
                         <Fade
@@ -196,12 +204,13 @@ const Certificates = () => {
                     >
                         Hire Me
                     </button>
-                    <button
+                    {/* <button
                         className={"btn"}
                         onClick={() => setIsOpenSeeMyResumeModal(true)}
                     >
                         See My Resume
-                    </button>
+                    </button> */}
+                     <DownloadCVButton />
                 </div>
             </div>
 
