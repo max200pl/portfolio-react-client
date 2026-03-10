@@ -40,7 +40,6 @@ const Certificates = () => {
         skip: !user,
     });
 
-    console.log("user?.roles.includes('admin')", user?.roles);
 
     const navigate = useNavigate();
 
