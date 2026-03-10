@@ -51,6 +51,8 @@
     "start": "cross-env REACT_APP_MODE=development react-scripts start",
     "build": "cross-env REACT_APP_MODE=production react-scripts build",
     "test": "react-scripts test --passWithNoTests",
+    "test:e2e": "dotenv -e .env.test -- playwright test",
+    "test:e2e:ui": "dotenv -e .env.test -- playwright test --ui",
     "eject": "react-scripts eject",
     "sync": "browser-sync start --config bs-config.js"
   },
@@ -79,6 +81,7 @@
     "@types/react-lazy-load-image-component": "^1.6.4",
     "browser-sync": "^3.0.3",
     "cross-env": "^7.0.3",
+    "dotenv-cli": "^11.0.0",
     "jest": "^27.5.1",
     "react-transition-group": "^4.4.5",
     "sass": "^1.69.5"
