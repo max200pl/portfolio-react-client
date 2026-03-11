@@ -50,7 +50,9 @@
   "scripts": {
     "start": "cross-env REACT_APP_MODE=development react-scripts start",
     "build": "cross-env REACT_APP_MODE=production react-scripts build",
-    "test": "react-scripts test --passWithNoTests",
+    "test": "react-scripts test --passWithNoTests --watchAll=false",
+    "test:watch": "react-scripts test --passWithNoTests",
+    "test:coverage": "react-scripts test --passWithNoTests --watchAll=false --coverage",
     "test:e2e": "dotenv -e .env.test -- playwright test",
     "test:e2e:ui": "dotenv -e .env.test -- playwright test --ui",
     "eject": "react-scripts eject",
