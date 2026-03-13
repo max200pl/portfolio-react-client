@@ -19,6 +19,7 @@ const HeaderAuthInfo: FC<HeaderAuthInfoProps> = ({ user }) => {
                 className={s.auth_info__avatar}
                 src={user.photoURL ?? UserImg}
                 alt="avatar"
+                referrerPolicy="no-referrer"
             />
             <div className={s.auth_info__data}>
                 <span>You: </span>
